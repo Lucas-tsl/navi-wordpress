@@ -1,0 +1,335 @@
+/* Lien d'évitement (WCAG 2.4.1), includes/modules/accessibility/public-display.php :
+   invisible tant qu'il n'a pas le focus clavier, comme tout skip-link standard. */
+.navi-a11y-skip-link {
+    position: fixed;
+    top: -100px;
+    left: 12px;
+    z-index: 999999;
+    background: #111;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-family: sans-serif;
+    transition: top 0.2s ease;
+}
+
+.navi-a11y-skip-link:focus {
+    top: 12px;
+}
+
+/* Panneau Accessibilité, ancré au bouton engrenage (même position que le
+   panneau cookies : assets/css/cookie-consent.css). */
+.navi-a11y-panel,
+.navi-a11y-panel *,
+.navi-a11y-panel *::before,
+.navi-a11y-panel *::after {
+    box-sizing: border-box;
+}
+
+.navi-a11y-panel {
+    /* display: flex est posé par assets/css/core.css (sélecteur par id, plus
+       spécifique) : ne pas le redéclarer ici, au risque d'entrer en conflit
+       d'ordre de cascade avec la règle qui masque ce panneau par défaut. */
+    flex-direction: column;
+    width: 100%;
+
+    /* max-height (pas height:100%) : #navi-fab grandit selon son propre
+       contenu (height: auto), donc un pourcentage ici ne se résoudrait
+       jamais et la zone de défilement plus bas ne saurait jamais quand
+       s'activer. */
+    max-height: calc(100vh - 140px);
+    min-height: 0;
+    font-family: sans-serif;
+}
+
+@media (max-width: 1440px) {
+    .navi-a11y-panel {
+        max-height: calc(100vh - 120px);
+    }
+}
+
+@media (max-width: 480px) {
+    .navi-a11y-panel {
+        max-height: calc(100vh - 110px);
+    }
+}
+
+.navi-a11y-close {
+    position: absolute;
+    top: 8px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    border-radius: 0;
+    border: none;
+    background: rgba(0, 0, 0, 0.06);
+    color: #333;
+    font-size: 0.875rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.navi-a11y-close:hover {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+/* Seule cette zone défile si le contenu dépasse : la croix, elle, reste
+   toujours en place et cliquable dans son intégralité. */
+.navi-a11y-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden auto;
+
+    /* Marge droite plus large que les autres côtés : laisse de la place à la
+       barre de défilement, pour qu'elle n'arrive pas juste sous la croix de
+       fermeture (position: absolute, hors de cette zone qui défile). */
+    padding: 34px 20px 16px 16px;
+}
+
+/* Police héritée du thème hôte (inherit), comme les titres/boutons du
+   panneau cookies (assets/css/cookie-consent.css) — les panneaux doivent se
+   lire comme un seul système, cohérent avec n'importe quel site. */
+.navi-a11y-title {
+    margin: 0 0 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navi-color-ink);
+    font-family: inherit;
+}
+
+.navi-a11y-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid #eee;
+}
+
+.navi-a11y-row:first-of-type {
+    border-top: none;
+}
+
+.navi-a11y-row label,
+.navi-a11y-row span {
+    font-size: 0.8125rem;
+    color: var(--navi-color-ink);
+}
+
+#navi-a11y-lang {
+    font-size: 0.8125rem;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    background: var(--navi-color-surface);
+    color: var(--navi-color-ink);
+    font-family: inherit;
+}
+
+/* Le widget GTranslate à côté (voir .navi-a11y-gtranslate plus bas) rend
+   souvent une boîte plus haute que ce simple texte : align-items:center sur
+   .navi-a11y-row ci-dessus centre déjà les deux boîtes l'une par rapport à
+   l'autre, mais pas nécessairement le TEXTE à l'intérieur de celle du
+   libellé si elle reste à sa hauteur intrinsèque. align-self:stretch
+   l'étire à la hauteur de la ligne, display:flex + align-items:center
+   centre alors le texte dans cette hauteur complète — aligné avec le texte
+   de la langue sélectionnée, quelle que soit la hauteur réelle du widget. */
+#navi-a11y-gtranslate-label {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    padding-top: 10px;
+}
+
+/* Conteneur du shortcode [gtranslate] (voir public-display.php) : occupe
+   l'espace restant de la ligne à côté du libellé, marge du plugin GTranslate
+   réinitialisée (sa feuille de style pose parfois une marge par défaut sur
+   .gtranslate_wrapper, pensée pour un usage en pleine largeur ailleurs sur
+   le site, pas dans une ligne compacte comme celle-ci). */
+.navi-a11y-gtranslate {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.navi-a11y-gtranslate .gtranslate_wrapper {
+    margin: 0;
+}
+
+/* .gt_selector est le VRAI sélecteur du plugin GTranslate, pas un composant
+   du hub — simplement restylé ici pour se fondre dans le panneau plutôt que
+   de garder l'apparence par défaut de GTranslate. */
+.navi-a11y-gtranslate .gt_selector {
+    width: 100%;
+    font-size: 0.8125rem;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    background: var(--navi-color-surface);
+    color: var(--navi-color-ink);
+    font-family: inherit;
+}
+
+/* GTranslate imbrique aussi le widget Google natif complet (liste de ~130
+   langues, logo "Traduit par Google") sous son propre sélecteur .gt_selector
+   — redondant avec lui dans l'espace restreint de ce panneau, où
+   .gt_selector suffit déjà à piloter la traduction. */
+.navi-a11y-gtranslate #google_translate_element2 {
+    display: none;
+}
+
+.navi-a11y-switch {
+    width: 42px;
+    height: 24px;
+    border-radius: 0;
+    border: none;
+    background: #ccc;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+}
+
+.navi-a11y-switch-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
+    transition: transform 0.2s ease;
+}
+
+/* Accent de marque (variante --deep, voir la note de contraste dans
+   assets/css/core.css) plutôt que noir plat pour l'état "activé" : reste
+   nettement distinct du gris "désactivé" (#ccc) ci-dessus et suffisamment
+   contrasté sur le fond du panneau. */
+.navi-a11y-switch[aria-pressed="true"] {
+    background: var(--navi-color-accent-deep);
+}
+
+.navi-a11y-switch[aria-pressed="true"] .navi-a11y-switch-knob {
+    transform: translateX(18px);
+}
+
+.navi-a11y-note {
+    margin: 12px 0 0;
+    font-size: 0.6875rem;
+    color: #888;
+    line-height: 1.4;
+}
+
+/* Stepper "Taille du texte" */
+.navi-a11y-stepper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navi-a11y-stepper button {
+    width: 26px;
+    height: 26px;
+    border-radius: 0;
+    border: 1px solid #ccc;
+    background: var(--navi-color-surface);
+    color: var(--navi-color-ink);
+    font-size: 0.9375rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.navi-a11y-stepper button:hover:not(:disabled) {
+    background: #f0f0f0;
+}
+
+.navi-a11y-stepper button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.navi-a11y-stepper span {
+    min-width: 42px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: #333;
+}
+
+/* Bouton "Réinitialiser les réglages" */
+.navi-a11y-reset {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 8px;
+    background: none;
+    border: 1px solid #ccc;
+    color: #333;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.navi-a11y-reset:hover {
+    background: #f0f0f0;
+    border-color: #999;
+}
+
+/* ========================================
+   Effets appliqués au site : contraste, curseur agrandi, liens soulignés
+   ======================================== */
+
+/* Un filtre CSS global ne garantit aucun ratio de contraste WCAG précis, et
+   peut même dégrader un contraste déjà correct sur certaines combinaisons de
+   couleurs — un vrai jeu de couleurs de substitution testées serait plus
+   fiable, mais suppose de connaître les couleurs du thème actif. En
+   attendant, on limite l'intensité du filtre et on ajoute un signal de
+   distinction des liens qui ne dépend pas de la couleur (soulignement). */
+html.navi-a11y-contrast {
+    filter: contrast(1.2) saturate(1.05);
+}
+
+html.navi-a11y-contrast img,
+html.navi-a11y-contrast video {
+    filter: contrast(0.9);
+}
+
+html.navi-a11y-contrast a {
+    text-decoration: underline;
+}
+
+html.navi-a11y-underline-links a {
+    text-decoration: underline !important;
+    text-underline-offset: 2px;
+}
+
+html.navi-a11y-large-cursor,
+html.navi-a11y-large-cursor a,
+html.navi-a11y-large-cursor button,
+html.navi-a11y-large-cursor input,
+html.navi-a11y-large-cursor select,
+html.navi-a11y-large-cursor textarea,
+html.navi-a11y-large-cursor [role="button"] {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 32 32'%3E%3Cpath d='M6 2 L6 28 L13 21 L18 30 L22 28 L17 19 L26 19 Z' fill='black' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 6 4, auto !important;
+}
+
+/* Focus clavier visible, cohérent avec le panneau cookies. */
+.navi-a11y-close:focus-visible,
+.navi-a11y-switch:focus-visible,
+#navi-a11y-lang:focus-visible,
+.navi-a11y-gtranslate .gt_selector:focus-visible {
+    outline: 2px solid var(--navi-color-accent);
+    outline-offset: 2px;
+}

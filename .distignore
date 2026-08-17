@@ -1,0 +1,17 @@
+.git/
+.github/
+.gitignore
+.distignore
+docs/
+node_modules/
+vendor/
+build/
+*.zip
+composer.json
+composer.lock
+package.json
+package-lock.json
+phpcs.xml.dist
+eslint.config.js
+.stylelintrc.json
+README.md

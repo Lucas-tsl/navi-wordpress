@@ -1,0 +1,478 @@
+/* Couleurs de la DA du plugin (FAB + panneaux cookies/accessibilité) —
+   palette neutre par défaut, pensée pour convenir à n'importe quel site
+   plutôt que réglée sur une identité visuelle précise :
+   --navi-color-ink = noir doux (texte, icônes, bordures),
+   --navi-color-ink-soft = gris discret (légendes, texte secondaire),
+   --navi-color-accent / --navi-color-accent-deep = bleu (états actifs,
+   focus clavier), --navi-color-surface = blanc (fond des panneaux).
+
+   --navi-color-ink-soft et --navi-color-accent-deep sont des variantes
+   volontairement plus soutenues que la teinte "décorative" correspondante,
+   pour rester lisibles (contraste AA) en tant que texte ou état
+   fonctionnel — l'accent clair reste réservé aux usages décoratifs.
+
+   Restent en variables CSS (pas de valeurs figées) : réglables sans toucher
+   au CSS via Navi > Couleurs (includes/core/admin-menu.php), qui injecte
+   une surcharge de :root en style inline (includes/core/frontend.php) si le
+   site s'écarte de ces valeurs par défaut. --navi-color-ink-rgb/-accent-rgb
+   (triplets R,G,B) sont nécessaires à côté des hex : les usages en
+   rgba(..., alpha) ci-dessous ne peuvent pas convertir un hex eux-mêmes. Ce
+   fichier charge sur toutes les pages (includes/core/frontend.php), donc ces
+   variables sont toujours définies avant que cookie-consent.css/
+   accessibility.css ne les utilisent. */
+:root {
+    --navi-color-ink: #1a1a1a;
+    --navi-color-ink-rgb: 26, 26, 26;
+    --navi-color-ink-soft: #6b6b6b;
+    --navi-color-accent: #2563eb;
+    --navi-color-accent-rgb: 37, 99, 235;
+    --navi-color-accent-deep: #1e40af;
+    --navi-color-surface: #ffffff;
+}
+
+/* Lien d'évitement vers le FAB (includes/core/frontend.php) : invisible tant
+   qu'il n'a pas le focus clavier, comme tout skip-link standard. Cible le
+   bouton engrenage lui-même, pas seulement le conteneur, pour que le focus
+   atterrisse directement sur un élément activable. */
+.navi-skip-link {
+    position: fixed;
+    top: -100px;
+    left: 12px;
+    z-index: 999999;
+    background: #111;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-family: sans-serif;
+    transition: top 0.2s ease;
+}
+
+.navi-skip-link:focus {
+    top: 12px;
+}
+
+/* Navi - Bouton flottant (FAB), unifié en un seul objet qui grandit à
+   travers 3 états (voir assets/js/core.js pour la machine à états) :
+   1. fermé   : petit cercle avec l'engrenage
+   2. menu    : le MÊME élément s'agrandit pour révéler le choix des icônes
+   3. détail  : le MÊME élément s'agrandit encore pour le contenu du module
+   Il n'y a plus deux blocs séparés (engrenage + panneau) : #navi-fab EST le
+   panneau, à chaque état. */
+.navi-fab {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 999997;
+    font-family: sans-serif;
+
+    --navi-scroll: 0;
+
+    width: 48px;
+    height: 48px;
+
+    /* Coins carrés dès l'état fermé (pas de cercle) : signature visuelle
+       volontairement minimale, conservée dans les 3 états du bouton. */
+    border-radius: 0;
+
+    /* Quasi invisible tant qu'il n'est pas utilisé, un simple filet fin
+       plutôt qu'un disque plein. */
+    background-color: var(--navi-color-surface);
+    border: 1.5px solid rgba(var(--navi-color-ink-rgb), 0.55);
+    box-shadow: 0 2px 8px rgba(var(--navi-color-ink-rgb), 0.1);
+    overflow: hidden;
+
+    /* Durée allongée + courbe plus douce (décélération progressive) qu'un
+       simple ease, pour un agrandissement plus fluide. */
+    transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                border-radius 0.35s ease,
+                background-color 0.35s ease,
+                border-color 0.2s ease,
+                box-shadow 0.35s ease;
+}
+
+/* Réglage admin (Navi > position du bouton) : évite une collision avec un
+   widget tiers (chat, WhatsApp...) déjà logé en bas droite. */
+.navi-fab[data-position="left"] {
+    right: auto;
+    left: 20px;
+}
+
+/* Fond clair, un seul filet gris très discret et aucune ombre, quasi
+   invisible tant qu'il n'est pas utilisé. border-radius déjà à 0 dans les
+   3 états (voir .navi-fab ci-dessus), pas besoin de le répéter ici. */
+.navi-fab[data-state="menu"],
+.navi-fab[data-state="detail"] {
+    background-color: var(--navi-color-surface);
+    border: 1px solid rgba(var(--navi-color-ink-rgb), 0.12);
+    box-shadow: none;
+}
+
+/* Largeur intrinsèque (pas une valeur fixe) : le menu ne compte que 3-4
+   icônes, autant qu'il s'ajuste à son contenu et reste sur une seule ligne
+   (voir flex-wrap: nowrap sur .navi-fab-menu) plutôt que de forcer un retour
+   à la ligne au milieu des icônes. Le mobile repasse en wrap plus bas. */
+.navi-fab[data-state="menu"] {
+    width: max-content;
+    height: auto;
+    max-height: 320px;
+}
+
+.navi-fab[data-state="detail"] {
+    width: 340px;
+    height: auto;
+    max-height: calc(100vh - 140px);
+}
+
+/* Largeur adaptée par module affiché en détail (repli 340px ci-dessus).
+   Le panier a besoin de plus de place que les autres : avec plusieurs
+   variations, les boutons (vignette + libellé) ne tiennent plus sur une
+   seule ligne et retombent en colonne faute d'espace. */
+.navi-fab[data-state="detail"][data-detail="cookie-consent"] { width: 420px; }
+.navi-fab[data-state="detail"][data-detail="accessibility"] { width: 320px; }
+.navi-fab[data-state="detail"][data-detail="sticky-cart"] { width: 480px; }
+
+/* ============================================================
+   État 1 : bouton fermé (engrenage)
+   ============================================================ */
+.navi-fab-toggle {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    color: var(--navi-color-ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.15s ease;
+}
+
+.navi-fab[data-state="menu"] .navi-fab-toggle,
+.navi-fab[data-state="detail"] .navi-fab-toggle {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.navi-fab-gear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(calc(var(--navi-scroll, 0) * 1.8deg));
+    transition: transform 0.6s ease;
+}
+
+.navi-fab-gear svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+/* ============================================================
+   État 2 : choix des icônes, à l'intérieur du même objet
+   ============================================================ */
+.navi-fab-menu {
+    display: none;
+
+    /* nowrap : toutes les icônes restent sur une seule ligne (le conteneur
+       est dimensionné à son contenu, voir width: max-content plus haut).
+       Repasse en wrap uniquement sur mobile (media query plus bas), où la
+       largeur de l'écran ne permet plus de garder tout aligné. */
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    height: 100%;
+    padding: 10px;
+}
+
+.navi-fab[data-state="menu"] .navi-fab-menu {
+    display: flex;
+}
+
+/* Le bouton n'est pas une bulle : un simple conteneur en colonne (icône +
+   légende, voir .navi-fab-item-ring/.navi-fab-item-label), sans fond ni
+   bordure propres — rien ne doit ajouter de poids visuel autour de l'icône
+   elle-même. */
+.navi-fab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: auto;
+    height: auto;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--navi-color-ink);
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+    /* Pas de délai par défaut : à la fermeture, les bulles doivent
+       disparaître tout de suite, pendant que la boîte se rétrécit. */
+}
+
+/* Pas de fond/bordure/ombre ici : seule la taille du cadre de clic est
+   fixée, l'icône reste nue. */
+.navi-fab-item-ring {
+    width: 32px;
+    height: 32px;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Majuscules + espacement des lettres + graisse 600, pour une lecture
+   claire même à petite taille.
+
+   Pas de max-width : un libellé long en majuscules se ferait couper en "…"
+   avec une largeur fixée trop étroite. Se dimensionne naturellement à son
+   contenu (white-space: normal, pas de troncature possible). */
+.navi-fab-item-label {
+    font-family: inherit;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    color: var(--navi-color-ink-soft);
+    text-align: center;
+    white-space: normal;
+
+    /* Soulignement toujours présent mais transparent par défaut : seule sa
+       couleur transitionne au survol (text-decoration-line, lui, ne peut
+       pas s'animer). Retour discret plutôt qu'un effet de grossissement. */
+    text-decoration-line: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.15s ease;
+}
+
+.navi-fab-item:hover .navi-fab-item-label {
+    text-decoration-color: currentcolor;
+}
+
+.navi-fab[data-state="menu"] .navi-fab-item {
+    opacity: 1;
+    transform: scale(1);
+
+    /* Délai à l'ouverture seulement : le temps que #navi-fab ait fini de
+       s'élargir (transition width, ~0.45s) avant de révéler les bulles —
+       sinon on voit le réagencement flex en cours de route (les icônes
+       passent brièvement à la ligne, verticales, avant de se remettre en
+       ligne une fois la largeur finale atteinte). */
+    transition-delay: calc(220ms + var(--navi-index, 0) * 40ms);
+}
+
+/* Croix de sortie de l'état 2 (choix des icônes), affichée à droite des
+   bulles : referme entièrement et retrouve l'engrenage de départ, sans
+   devoir cliquer en dehors ou faire Échap. Rien ne se montre tant qu'on ne
+   l'utilise pas (ni fond, ni bordure, ni ombre) : seul un cercle discret
+   apparaît au survol pour signaler le clic. */
+.navi-fab-menu-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: none;
+    color: var(--navi-color-ink-soft);
+    font-size: 0.875rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.navi-fab-menu-close:hover {
+    background: rgba(var(--navi-color-ink-rgb), 0.06);
+    color: var(--navi-color-ink);
+}
+
+.navi-fab[data-state="menu"] .navi-fab-menu-close {
+    opacity: 1;
+    transform: scale(1);
+    transition-delay: calc(220ms + var(--navi-index, 0) * 40ms);
+}
+
+.navi-fab-item-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+/* Icônes SVG dessinées maison (voir includes/core/class-navi-module-registry.php) :
+   currentColor suit directement la couleur du bouton, sans filtre nécessaire
+   et sans dépendre du rendu des emojis selon l'OS/le navigateur. */
+.navi-fab-item-icon--svg svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+/* Le tracé du panier (icône du mini-panier WooCommerce, voir
+   includes/modules/sticky-cart/module.php) laisse une marge interne bien
+   plus généreuse dans son propre viewBox que les icônes maison du hub
+   (cookie, accessibilité) : à 18px comme les autres, son dessin réel
+   paraissait nettement plus petit. Légèrement agrandi pour compenser, sans
+   pour autant toucher la taille des autres icônes. */
+.navi-fab-item-icon--svg svg.navi-fab-icon-cart {
+    width: 22px;
+    height: 22px;
+}
+
+/* Repli emoji pour un module qui n'a pas encore d'icône SVG dédiée (ex. la
+   flèche "haut de page" ↑, déjà monochrome). grayscale/contraste/luminosité
+   reste un compromis : brightness(0) seul écrase tout le détail interne du
+   dessin en silhouette noire méconnaissable pour un emoji illustré. */
+.navi-fab-item-icon--emoji {
+    filter: grayscale(1) contrast(1.3) brightness(0.55);
+}
+
+/* ============================================================
+   État 3 : contenu détaillé d'un module, injecté dans ce slot
+   ============================================================ */
+.navi-fab-detail {
+    display: none;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.navi-fab[data-state="detail"] .navi-fab-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Un seul module visible à la fois dans le slot détail, celui désigné par
+   data-detail sur #navi-fab (voir includes/core/frontend.php pour la liste
+   des ids : cookie-consent, sticky-cart, accessibility). */
+.navi-fab-detail > * {
+    display: none;
+}
+
+.navi-fab[data-detail="cookie-consent"] .navi-fab-detail > #navi-cookie-modal-overlay,
+.navi-fab[data-detail="sticky-cart"] .navi-fab-detail > #naviStickyVariationBar,
+.navi-fab[data-detail="accessibility"] .navi-fab-detail > #navi-a11y-panel {
+    display: flex;
+}
+
+/* Écrans laptop : le bouton et ses icônes sont un peu trop imposants tels
+   que dimensionnés pour un grand écran, on réduit d'un cran. */
+@media (max-width: 1440px) {
+    .navi-fab {
+        width: 40px;
+        height: 40px;
+    }
+
+    .navi-fab-gear svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    /* Largeur toujours intrinsèque (width: max-content, règle par défaut) :
+       seule la hauteur max diffère à ce point de rupture. */
+    .navi-fab[data-state="menu"] {
+        max-height: 280px;
+    }
+
+    .navi-fab[data-state="detail"] {
+        width: 280px;
+        max-height: calc(100vh - 120px);
+    }
+
+    .navi-fab[data-state="detail"][data-detail="cookie-consent"] { width: 340px; }
+    .navi-fab[data-state="detail"][data-detail="accessibility"] { width: 270px; }
+    .navi-fab[data-state="detail"][data-detail="sticky-cart"] { width: 400px; }
+
+    .navi-fab-item-ring {
+        width: 38px;
+        height: 38px;
+        font-size: 1.0625rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navi-fab {
+        right: 14px;
+        bottom: 14px;
+    }
+
+    .navi-fab[data-position="left"] {
+        right: auto;
+        left: 14px;
+    }
+
+    .navi-fab[data-state="menu"],
+    .navi-fab[data-state="detail"] {
+        width: auto;
+        max-width: calc(100vw - 28px);
+    }
+
+    /* Seul point de rupture où les icônes reviennent à la ligne : la largeur
+       de l'écran ne permet plus de toutes les garder alignées. */
+    .navi-fab-menu {
+        flex-flow: row wrap;
+    }
+
+    .navi-fab[data-state="menu"] {
+        max-height: 260px;
+    }
+
+    .navi-fab[data-state="detail"] {
+        max-height: calc(100vh - 110px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navi-fab,
+    .navi-fab-gear,
+    .navi-fab-item,
+    .navi-fab-item-ring,
+    .navi-fab-menu-close,
+    .navi-fab-toggle {
+        transition: none;
+    }
+}
+
+/* Focus clavier visible, cohérent avec le contenu des modules (assets/css/*-cart.css,
+   cookie-consent.css, accessibility.css) : couleur unique repérable sur
+   fond clair comme sur fond sombre. */
+.navi-fab-toggle:focus-visible,
+.navi-fab-item:focus-visible,
+.navi-fab-menu-close:focus-visible {
+    outline: 2px solid var(--navi-color-accent);
+    outline-offset: 2px;
+}
+
+/* Filet de sécurité : certains navigateurs affichent quand même l'anneau de
+   focus après un clic souris malgré :focus-visible. La modalité réelle est
+   détectée en JS (assets/js/core.js) ; on masque ici l'anneau sur nos
+   propres composants seulement (pas sur le reste du site). */
+html.navi-mouse-user #navi-fab *:focus-visible {
+    outline: none;
+}
+
+/* Ces 3 conteneurs (un par module) ne reçoivent le focus programmatique
+   qu'en simple point d'entrée clavier (voir focusActiveDetail, assets/js/core.js) :
+   pas d'anneau de focus visible sur le conteneur lui-même, les vrais éléments
+   interactifs à l'intérieur (boutons, cases à cocher) gardent le leur. */
+#navi-cookie-modal-overlay:focus,
+#naviStickyVariationBar:focus,
+#navi-a11y-panel:focus {
+    outline: none;
+}

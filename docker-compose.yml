@@ -1,0 +1,46 @@
+services:
+  navi_wp_db:
+    image: mysql:8.0
+    container_name: navi_wp_db
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - navi_wp_db_data:/var/lib/mysql
+
+  navi_wp_web:
+    image: wordpress:php8.1-apache
+    container_name: navi_wp_web
+    depends_on:
+      - navi_wp_db
+    ports:
+      - "8082:80"
+    environment:
+      WORDPRESS_DB_HOST: navi_wp_db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - navi_wp_data:/var/www/html
+
+  navi_wp_cli:
+    image: wordpress:cli-php8.1
+    container_name: navi_wp_cli
+    depends_on:
+      - navi_wp_db
+      - navi_wp_web
+    environment:
+      WORDPRESS_DB_HOST: navi_wp_db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - navi_wp_data:/var/www/html
+    entrypoint: ["tail", "-f", "/dev/null"]
+    user: "33:33"
+
+volumes:
+  navi_wp_db_data:
+  navi_wp_data:

@@ -1,0 +1,16 @@
+{
+    "name": "lucas-tsl/navi",
+    "description": "Hub d'engagement WordPress/WooCommerce : consentement cookies, ajout au panier automatique, accessibilité, pilotés depuis un bouton flottant unique.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.9",
+        "wp-coding-standards/wpcs": "^3.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

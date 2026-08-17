@@ -1,0 +1,216 @@
+/* Bannière Cookie — même identité que le FAB (assets/css/core.css) : filet
+   quasi invisible et ombre diffuse plutôt qu'une bordure épaisse et une
+   ombre portée dure. Couleurs de marque (--navi-color-*, définies dans
+   assets/css/core.css). */
+.navi-cookie-banner, .navi-cookie-banner *, .navi-cookie-banner *::before, .navi-cookie-banner *::after,
+.navi-cookie-modal-overlay, .navi-cookie-modal-overlay *, .navi-cookie-modal-overlay *::before, .navi-cookie-modal-overlay *::after {
+    box-sizing: border-box;
+}
+
+.navi-cookie-banner {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 380px;
+    max-width: calc(100% - 40px);
+
+    /* Sans limite de hauteur, une carte trop grande pour un écran laptop
+       (souvent moins haut qu'un grand moniteur) dépasse par le haut du
+       viewport : le logo, premier élément de la carte, devient invisible
+       et impossible à faire défiler (élément fixed). */
+    max-height: calc(100vh - 40px);
+    overflow: hidden auto;
+    background: var(--navi-color-surface);
+    border: 1px solid rgba(var(--navi-color-ink-rgb), 0.12);
+    box-shadow: 0 18px 40px rgba(var(--navi-color-ink-rgb), 0.14);
+    padding: 20px;
+    z-index: 999999;
+    font-family: sans-serif;
+    border-radius: 0;
+}
+.navi-cookie-logo { max-height: 65px; margin-bottom: 15px; }
+
+/* Police héritée du thème hôte (inherit) : les panneaux du FAB doivent se
+   lire comme un seul système, cohérent avec la typographie de n'importe
+   quel site, plutôt qu'imposer une police tierce jamais chargée par le
+   plugin (voir assets/css/accessibility.css, core.css). */
+.navi-cookie-title { margin: 0 0 10px 0; font-size: 1rem; font-weight: bold; color: var(--navi-color-ink); font-family: inherit; }
+.navi-cookie-desc { margin: 0 0 15px 0; font-size: 0.8125rem; color: #333; line-height: 1.4; }
+.navi-cookie-links { margin-bottom: 15px; font-size: 0.6875rem; }
+.navi-cookie-links a { color: var(--navi-color-ink); text-decoration: underline; }
+
+/* "Accepter" et "Refuser" sur la même rangée, même taille, même poids de
+   police : la CNIL exige une prééminence équivalente entre les deux
+   (recommandations 2020), voir la note dans public-display.php. */
+.navi-cookie-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.navi-cookie-btn { padding: 10px; font-size: 0.8125rem; font-weight: bold; cursor: pointer; border: 1.5px solid rgba(var(--navi-color-ink-rgb), 0.55); background: var(--navi-color-surface); color: var(--navi-color-ink); transition: all 0.2s; text-transform: uppercase; font-family: inherit; }
+.navi-cookie-btn-accepter { background: var(--navi-color-ink); color: var(--navi-color-surface); border-color: var(--navi-color-ink); }
+.navi-cookie-btn-accepter:hover { background: var(--navi-color-surface); color: var(--navi-color-ink); }
+.navi-cookie-btn-refuser:hover { background: rgba(var(--navi-color-ink-rgb), 0.06); }
+
+/* "Personnaliser" : action secondaire, un simple lien sous les deux boutons
+   principaux plutôt qu'un troisième bouton de même poids visuel. */
+.navi-cookie-btn-link {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 6px;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    font-size: 0.75rem;
+    color: #333;
+    cursor: pointer;
+    text-align: center;
+}
+
+.navi-cookie-btn-link:hover {
+    color: #000;
+}
+
+/* Panneau de préférences : un simple bloc de contenu affiché à l'intérieur
+   du slot partagé #navi-fab-detail (voir includes/core/frontend.php et
+   assets/css/core.css) plutôt qu'une modale flottante indépendante — la
+   réouverture après consentement se lit comme le MÊME objet que l'engrenage,
+   pas une fenêtre à part. Position, taille et habillage (fond, ombre,
+   bordure) sont désormais portés par #navi-fab lui-même. */
+.navi-cookie-modal-overlay {
+    width: 100%;
+
+    /* max-height (pas height:100%) : #navi-fab grandit selon son propre
+       contenu (height: auto), donc un pourcentage ici ne se résoudrait
+       jamais et la zone de défilement plus bas ne saurait jamais quand
+       s'activer — le bouton "Annuler" se retrouverait coupé, sans aucun
+       moyen d'y accéder. */
+    max-height: calc(100vh - 140px);
+    font-family: sans-serif;
+}
+
+/* .navi-cookie-modal reste un simple conteneur flex interne (l'habillage
+   vient de #navi-fab, l'objet visuel unique). */
+.navi-cookie-modal {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+}
+
+/* Seule cette zone défile si le contenu dépasse : la croix, elle, reste
+   toujours en place et cliquable dans son intégralité. */
+.navi-cookie-modal-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden auto;
+
+    /* Marge droite plus large que les autres côtés : laisse de la place à la
+       barre de défilement, pour qu'elle n'arrive pas juste sous la croix de
+       fermeture (position: absolute, hors de cette zone qui défile). */
+    padding: 34px 20px 16px 16px;
+}
+
+.navi-cookie-modal-close {
+    position: absolute;
+    top: 8px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    border-radius: 0;
+    border: none;
+    background: rgba(0, 0, 0, 0.06);
+    color: #333;
+    font-size: 0.875rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.navi-cookie-modal-close:hover {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.navi-cookie-type { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #ddd; gap: 15px; }
+.navi-cookie-type label { cursor: pointer; }
+.navi-cookie-type strong { font-size: 0.8125rem; }
+
+/* Le thème du site peut appliquer des styles globaux agressifs aux checkboxes
+   (reset, toggle personnalisé) : on force explicitement leur affichage natif. */
+.navi-cookie-modal input[type="checkbox"] {
+    appearance: auto;
+    display: inline-block !important;
+    position: static !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px;
+    flex-shrink: 0;
+    margin: 0;
+    accent-color: var(--navi-color-ink);
+    cursor: pointer;
+}
+
+/* Largeur du panneau de préférences gérée par #navi-fab (assets/css/core.css) ;
+   seule sa hauteur max doit rester alignée sur les mêmes points de rupture,
+   pour que la zone de défilement ci-dessus sache quand s'activer. */
+@media (max-width: 1440px) {
+    .navi-cookie-modal-overlay {
+        max-height: calc(100vh - 120px);
+    }
+}
+
+@media (max-width: 480px) {
+    /* max-width doit être surchargé ici aussi, pas seulement width : sans
+       ça, le max-width: calc(100% - 40px) du bloc desktop ci-dessus reste
+       actif et prend le dessus sur width: 100% (un max-width plus étroit
+       gagne toujours sur width). */
+    .navi-cookie-banner { width: 100%; max-width: 100%; bottom: 0; right: 0; border: none; border-top: 1px solid rgba(var(--navi-color-ink-rgb), 0.12); box-shadow: none; }
+
+    .navi-cookie-modal-overlay {
+        max-height: calc(100vh - 110px);
+    }
+}
+
+/* Confirmation brève après un choix enregistré (assets/js/cookie-consent.js,
+   showSavedToast). */
+.navi-cookie-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-50%, 12px);
+    background: var(--navi-color-ink);
+    color: var(--navi-color-surface);
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-family: sans-serif;
+    z-index: 999999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.navi-cookie-toast-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navi-cookie-toast {
+        transition: opacity 0.01ms;
+    }
+}
+
+/* Focus clavier visible, cohérent avec les autres panneaux. */
+.navi-cookie-modal-close:focus-visible,
+.navi-cookie-btn:focus-visible,
+.navi-cookie-btn-link:focus-visible,
+.navi-cookie-modal input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--navi-color-accent);
+    outline-offset: 2px;
+}
