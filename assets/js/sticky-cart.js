@@ -1112,13 +1112,27 @@
          $('form.variations_form').on('found_variation reset_data woocommerce_variation_has_changed', function() {
              isUpdating = true; // Verrouiller immédiatement
 
-             // Si le clic vient de la sticky bar, ne pas la masquer
-             if (!clickedFromStickyBar) {
+             if (clickedFromStickyBar) {
+                 // Le changement vient du panneau lui-même (sélecteur de
+                 // teinte) : ne PAS relancer debouncedCheckVisibility ici.
+                 // Cette fonction rappelle checkVisibility(), qui ne connaît
+                 // pas clickedFromStickyBar — seul le masquage immédiat
+                 // ci-dessous en tenait compte, mais checkVisibility()
+                 // pouvait quand même refermer le panneau 500ms plus tard
+                 // sur la base de sa propre évaluation générique (bouton
+                 // réel visible / proximité du pied de page), potentiellement
+                 // faussée par le léger réagencement de la page qu'entraîne
+                 // un changement de variation (image, largeur du prix...).
+                 // Résultat observé : le panneau se refermait tout seul
+                 // juste après avoir choisi une teinte depuis lui-même — le
+                 // prochain scroll/resize réel (throttledCheckVisibility)
+                 // suffit à rétablir une évaluation fiable ensuite.
+                 setTimeout(function() { isUpdating = false; }, 500);
+             } else {
                  setStickyBarVisible(false); // Masquer pendant la mise à jour
+                 // Utiliser un délai plus long pour laisser WooCommerce finir toutes ses mises à jour
+                 debouncedCheckVisibility(500);
              }
-
-             // Utiliser un délai plus long pour laisser WooCommerce finir toutes ses mises à jour
-             debouncedCheckVisibility(500);
          });
 
          // Écouter les clics sur les vignettes de swatches de la fiche
