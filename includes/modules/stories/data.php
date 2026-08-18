@@ -127,19 +127,27 @@ function navi_stories_upload_url() {
     return trailingslashit( $upload_dir['baseurl'] ) . 'navi-stories/';
 }
 
-function navi_stories_ensure_upload_dir() {
-    $dir = navi_stories_upload_dir();
-    if ( ! file_exists( $dir ) ) {
-        wp_mkdir_p( $dir );
-    }
-    return is_dir( $dir );
+/**
+ * Redirige wp_handle_upload() vers notre sous-dossier dédié
+ * (wp-content/uploads/navi-stories/) plutôt que le dossier daté standard
+ * de la médiathèque — wp_handle_upload() seul ne crée jamais d'entrée
+ * médiathèque (c'est wp_insert_attachment() qui le ferait, jamais appelé
+ * ici) : ce filtre ne fait que choisir où le fichier validé est déplacé.
+ */
+function navi_stories_upload_dir_filter( $dirs ) {
+    $dirs['subdir'] = '/navi-stories';
+    $dirs['path']   = $dirs['basedir'] . $dirs['subdir'];
+    $dirs['url']    = $dirs['baseurl'] . $dirs['subdir'];
+    return $dirs;
 }
 
 /**
- * Déplace un upload validé vers le dossier dédié et retourne son URL
- * publique, ou null si aucun fichier valide n'a été soumis pour cet index
- * (absence de fichier n'est pas une erreur : l'admin peut avoir laissé ce
- * champ vide volontairement).
+ * Déplace un upload validé vers le dossier dédié via l'API WordPress
+ * (wp_handle_upload(), jamais move_uploaded_file() directement — requis
+ * par les revues WordPress.org) et retourne son URL publique, ou null si
+ * aucun fichier valide n'a été soumis pour cet index (absence de fichier
+ * n'est pas une erreur : l'admin peut avoir laissé ce champ vide
+ * volontairement).
  */
 function navi_stories_handle_uploaded_preview( $index, &$errors ) {
     $field = 'navi_story_preview_file_' . (int) $index;
@@ -155,20 +163,26 @@ function navi_stories_handle_uploaded_preview( $index, &$errors ) {
         return null;
     }
 
-    if ( ! navi_stories_ensure_upload_dir() ) {
-        $errors[] = sprintf( '#%d — %s', $index, __( "Échec de la création du dossier d'upload.", 'navi' ) );
-        return null;
+    if ( ! function_exists( 'wp_handle_upload' ) ) {
+        require_once ABSPATH . 'wp-admin/includes/file.php';
     }
 
-    $filename    = 'story_' . (int) $index . '_' . time() . '_' . wp_generate_password( 8, false ) . '.mp4';
-    $destination = navi_stories_upload_dir() . $filename;
+    add_filter( 'upload_dir', 'navi_stories_upload_dir_filter' );
+    $moved = wp_handle_upload(
+        $file,
+        array(
+            'test_form' => false,
+            'mimes'     => array( 'mp4' => 'video/mp4' ),
+        )
+    );
+    remove_filter( 'upload_dir', 'navi_stories_upload_dir_filter' );
 
-    if ( ! move_uploaded_file( $file['tmp_name'], $destination ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_move_uploaded_file -- upload validé (extension/MIME/taille) ; wp_handle_upload attend un tableau $_FILES complet et déplacerait vers la médiathèque, pas le sous-dossier dédié voulu ici.
+    if ( ! isset( $moved['url'] ) || isset( $moved['error'] ) ) {
         $errors[] = sprintf( '#%d — %s', $index, __( "Échec de l'enregistrement du fichier.", 'navi' ) );
         return null;
     }
 
-    return navi_stories_upload_url() . $filename;
+    return $moved['url'];
 }
 
 /**

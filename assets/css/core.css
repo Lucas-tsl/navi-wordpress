@@ -143,8 +143,18 @@
 /* Le mockup de téléphone (largeur configurable, voir --navi-story-phone-width,
    assets/css/stories.css) reste centré et plafonné dans ce panneau quelle
    que soit sa taille réglée en admin — 340px accueille confortablement la
-   largeur par défaut (200px) et la plage réglable jusqu'à 280px. */
-.navi-fab[data-state="detail"][data-detail="stories"] { width: 340px; }
+   largeur par défaut (200px) et la plage réglable jusqu'à 280px.
+   Fond/bordure/ombre du bouton flottant retirés pour ce panneau
+   uniquement : ne garder que le mockup (déjà sur fond noir, voir
+   assets/css/stories.css) et la croix de fermeture, pas la carte claire
+   derrière — évite le flash de fond blanc visible autour du mockup à
+   l'ouverture (même correctif que Navi PrestaShop, views/css/core.css). */
+.navi-fab[data-state="detail"][data-detail="stories"] {
+    width: 340px;
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
 
 /* ============================================================
    État 1 : bouton fermé (engrenage)

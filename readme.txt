@@ -1,132 +1,134 @@
-=== Navi ===
+=== Saito Navi ===
 Contributors: lucastsl
 Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
 Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
 
-Un seul bouton flottant pour le consentement cookies, l'accessibilité, l'ajout au panier automatique et des stories vidéo produit.
+One floating button for cookie consent, accessibility, sticky add-to-cart and product video stories.
 
 == Description ==
 
-Navi regroupe, derrière **un seul bouton flottant** (icône engrenage, coin
-de l'écran), plusieurs modules d'engagement client pour WooCommerce :
+Saito Navi gathers several customer engagement modules for WooCommerce
+behind **a single floating button** (gear icon, corner of the screen):
 
-* **Consentement cookies** — bannière RGPD, Google Consent Mode V2, modale
-  de préférences, logo auto-détecté depuis l'identité du site si aucune
-  URL n'est configurée.
-* **Accessibilité** — sélecteur de langue (compatible WPML, repli
-  GTranslate si WPML absent), taille du texte, contraste élevé, curseur
-  agrandi, soulignage des liens.
-* **Panier automatique** (sticky add-to-cart) — panneau qui suit le
-  visiteur sur la fiche produit WooCommerce, produits simples et à
-  variations, sélecteur de teinte accessible au clavier, compatible
-  WCBoost Variation Swatches, réglage de sélecteurs CSS personnalisés pour
-  les thèmes non reconnus par la chaîne de secours intégrée.
-* **Stories** — jusqu'à 4 bulles vidéo par produit (YouTube ou MP4
-  importé), onglet dédié sur la fiche produit WooCommerce, panneau
-  desktop avec mockup de téléphone en CSS pur (aucune image externe),
-  plein écran mobile façon stories.
+* **Cookie consent** — GDPR banner, Google Consent Mode V2, preferences
+  modal, logo auto-detected from the site identity if no URL is set.
+* **Accessibility** — language switcher (WPML-compatible, falls back to
+  GTranslate if WPML is absent), text size, high contrast, enlarged
+  cursor, underlined links.
+* **Sticky add-to-cart** — a panel that follows the visitor on the
+  WooCommerce product page, works with simple and variable products, a
+  keyboard-accessible swatch selector, compatible with WCBoost Variation
+  Swatches, and a custom CSS selector setting for themes not covered by
+  the built-in fallback chain.
+* **Stories** — up to 4 video bubbles per product (YouTube or an
+  uploaded MP4), a dedicated tab on the WooCommerce product page, a
+  desktop panel with a pure-CSS phone mockup (no external image), and a
+  mobile full-screen stories-style view.
 
-Conçu dès le départ pour accueillir de nouveaux modules sans toucher au
-noyau : chaque module se déclare auprès d'un registre et communique avec
-le bouton central via un événement générique, aucun module ne connaît les
-autres.
+Built from the ground up to welcome new modules without touching the
+core: each module registers itself and talks to the central button
+through a generic event, and no module knows about the others.
 
-Tout est réglable depuis le Back Office (menu **Navi**) : couleurs,
-arrondis, position du bouton, et pour chaque module son propre réglage
-"Afficher sur ordinateur" / "Afficher sur mobile".
+Everything is configurable from the Back Office (**Navi** menu): colors,
+corner radius, button position, and for each module its own "Show on
+desktop" / "Show on mobile" setting.
 
-Sœur du module [Navi pour PrestaShop](https://github.com/Lucas-tsl/navi-prestashop)
-— même nom, même esprit (un hub plutôt que des widgets indépendants), deux
-implémentations distinctes adaptées à chaque écosystème.
+Sibling of [Navi for PrestaShop](https://github.com/Lucas-tsl/navi-prestashop)
+— same name, same spirit (one hub rather than independent widgets), two
+separate implementations adapted to each ecosystem.
 
-= Services et contenus externes =
+= External services and embedded content =
 
-* **Google Consent Mode V2** : le module Consentement cookies pousse les
-  choix du visiteur dans `window.dataLayer` (mécanisme standard Google
-  Tag Manager/gtag.js). Navi lui-même n'envoie aucune requête à un
-  serveur Google — c'est au site d'avoir déjà en place gtag.js/GTM pour
-  que ce signal soit exploité.
-* **YouTube (mode "no-cookie")** : le module Stories affiche les vidéos
-  configurées via `youtube-nocookie.com` dans une iframe, uniquement sur
-  les fiches produit où une story YouTube a été configurée par
-  l'administrateur du site. Voir la
-  [politique de confidentialité YouTube](https://policies.google.com/privacy).
+* **Google Consent Mode V2**: the Cookie consent module pushes the
+  visitor's choices into `window.dataLayer` (the standard Google Tag
+  Manager/gtag.js mechanism). The plugin itself never sends any request
+  to a Google server — the site must already have gtag.js/GTM in place
+  for this signal to be used.
+* **YouTube ("no-cookie" mode)**: the Stories module displays configured
+  videos via `youtube-nocookie.com` in an iframe, only on product pages
+  where a YouTube story has been configured by the site administrator.
+  See the [YouTube privacy policy](https://policies.google.com/privacy).
 
 == Installation ==
 
-1. Téléverser le dossier `navi` dans `/wp-content/plugins/`, ou installer
-   directement depuis **Extensions > Ajouter**.
-2. Activer le plugin depuis le menu **Extensions**.
-3. WooCommerce doit être installé et activé (requis pour les modules
-   Panier automatique et Stories ; les modules Cookies et Accessibilité
-   fonctionnent sans).
-4. Configurer les modules depuis le nouveau menu **Navi** du Back Office.
+1. Upload the `navi` folder to `/wp-content/plugins/`, or install
+   directly from **Plugins > Add New**.
+2. Activate the plugin from the **Plugins** menu.
+3. WooCommerce must be installed and active (required for the Sticky
+   add-to-cart and Stories modules; the Cookie consent and Accessibility
+   modules work without it).
+4. Configure the modules from the new **Navi** menu in the Back Office.
 
 == Frequently Asked Questions ==
 
-= WooCommerce est-il obligatoire ? =
+= Is WooCommerce required? =
 
-Le noyau et les modules Consentement cookies / Accessibilité fonctionnent
-sans WooCommerce. Les modules Panier automatique et Stories sont liés à la
-fiche produit WooCommerce et nécessitent donc son activation — une notice
-s'affiche dans le Back Office si WooCommerce est absent ou inactif.
+The core and the Cookie consent / Accessibility modules work without
+WooCommerce. The Sticky add-to-cart and Stories modules are tied to the
+WooCommerce product page and therefore require it to be active — a
+notice is shown in the Back Office if WooCommerce is missing or inactive.
 
-= Où sont stockées les vidéos MP4 importées pour les stories ? =
+= Where are uploaded MP4 story videos stored? =
 
-Dans le dossier uploads standard de WordPress
-(`wp-content/uploads/navi-stories/`), jamais dans le dossier du plugin —
-ce dernier peut être écrasé à chaque mise à jour, contrairement au dossier
-uploads.
+In the standard WordPress uploads folder
+(`wp-content/uploads/navi-stories/`), never inside the plugin folder —
+the latter can be overwritten on every plugin update, unlike the uploads
+folder.
 
-= Le sélecteur de langue du module Accessibilité fonctionne-t-il sans WPML ? =
+= Does the Accessibility module's language switcher work without WPML? =
 
-Oui : s'il détecte le plugin GTranslate installé, il l'utilise en repli ;
-sinon le sélecteur de langue ne s'affiche simplement pas (les autres
-réglages d'accessibilité restent disponibles).
+Yes: if it detects the GTranslate plugin installed, it falls back to it;
+otherwise the language switcher simply doesn't appear (the other
+accessibility settings remain available).
 
-= Le panier automatique fonctionne-t-il avec mon thème ? =
+= Does the sticky add-to-cart work with my theme? =
 
-Une chaîne de sélecteurs CSS de secours couvre les structures WooCommerce
-classiques et les thèmes les plus courants. Si votre thème a une structure
-inhabituelle, un réglage "sélecteur CSS personnalisé" par donnée (prix,
-nom, image) est disponible dans Navi > Panier.
+A fallback chain of CSS selectors covers standard WooCommerce markup and
+the most common themes. If your theme has an unusual structure, a
+"custom CSS selector" setting per field (price, name, image) is
+available under Navi > Cart.
 
 == Screenshots ==
 
-1. Le bouton flottant Navi et son menu de modules.
-2. Réglages du module Consentement cookies.
-3. Panneau du panier automatique sur une fiche produit à variations.
-4. Onglet Stories sur la fiche produit (Back Office).
-5. Bulles vidéo Stories affichées sur la fiche produit.
+1. Navi dashboard (Back Office): module activation, floating button
+   position, appearance (colors, corner radius).
+2. Navi menu in the Back Office, with the plugin icon.
+3. The Navi floating button and its module menu (front-end).
+4. Sticky add-to-cart panel on a variable product page, swatch selector.
+5. Cookie preferences (GDPR, Google Consent Mode V2) on the visitor side.
+6. Stories tab on the WooCommerce product page (Back Office).
+7. Stories module settings, with a live preview of the phone mockup.
+8. Story video bubble and desktop panel (phone mockup) on the product
+   page.
 
 == Changelog ==
 
 = 0.4.0 =
-* Nouveau module Stories : bulles vidéo produit (YouTube/MP4), panneau
-  desktop, plein écran mobile, réglages d'aspect dans Navi > Stories.
+* New Stories module: product video bubbles (YouTube/MP4), desktop
+  panel, mobile full-screen view, appearance settings under Navi >
+  Stories.
 
 = 0.3.0 =
-* Parité d'apparence avec Navi PrestaShop : arrondis configurables,
-  visibilité par appareil par module, logo du plugin comme icône du menu
-  admin.
+* Appearance parity with Navi for PrestaShop: configurable corner
+  radius, per-module visibility by device, plugin logo as the admin
+  menu icon.
 
 = 0.2.0 =
-* Module Panier automatique (sticky add-to-cart) : produits simples et à
-  variations, sélecteur de teinte, réglages de sélecteurs CSS
-  personnalisés.
+* Sticky add-to-cart module: simple and variable products, swatch
+  selector, custom CSS selector settings.
 
 = 0.1.0 =
-* Version initiale : noyau (bouton flottant à 3 états), modules
-  Consentement cookies et Accessibilité.
+* Initial release: core (3-state floating button), Cookie consent and
+  Accessibility modules.
 
 == Upgrade Notice ==
 
 = 0.4.0 =
-Ajoute le module Stories (bulles vidéo produit) — aucune action requise
-lors de la mise à jour.
+Adds the Stories module (product video bubbles) — no action required on
+upgrade.
