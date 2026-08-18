@@ -26,10 +26,14 @@ soumise au [répertoire officiel WordPress.org](https://wordpress.org/plugins/).
 - Module **Accessibilité** : fonctionnel (langue via WPML ou repli
   GTranslate, taille du texte, contraste élevé, curseur agrandi,
   soulignage des liens).
-- Module **Panier automatique** (`sticky-cart`, panneau produit ancré au
-  bouton pour les fiches WooCommerce) : **pas encore porté** — c'est le
-  prochain chantier (généralisation des chaînes de sélecteurs par thème et
-  de la gestion des produits à variations, voir Développement ci-dessous).
+- Module **Panier automatique** (`sticky-cart`) : fonctionnel (produits
+  simples et à variations, sélecteur de teinte accessible au clavier,
+  lecture de couleur via WCBoost Variation Swatches si présent, réglage de
+  sélecteurs CSS personnalisés pour les thèmes non reconnus par la chaîne
+  de secours intégrée — voir Navi > Panier dans le Back Office).
+- Suite de tests Playwright automatisée : pas encore mise en place (prochain
+  chantier — vérification faite manuellement jusqu'ici contre un catalogue
+  de démonstration, voir Développement ci-dessous).
 - Préparation à la soumission WordPress.org (`readme.txt`, bannière/icône,
   captures d'écran) : pas encore commencée.
 
@@ -48,6 +52,7 @@ includes/
   modules/
     cookie-consent/    # Consentement cookies + Google Consent Mode V2
     accessibility/      # Panneau langue, contraste, curseur agrandi, soulignage des liens
+    sticky-cart/         # Panneau produit WooCommerce (image, variation, ajout au panier)
 assets/
   css/core.css, js/core.js        # Bouton engrenage + menu
   css/*, js/*                     # Un fichier par module actif
@@ -170,6 +175,25 @@ docker exec navi_wp_cli wp core install --path=/var/www/html \
 
 docker exec navi_wp_cli wp plugin install woocommerce --activate --path=/var/www/html
 docker exec navi_wp_cli wp theme install storefront --activate --path=/var/www/html
+docker exec navi_wp_cli wp plugin install wcboost-variation-swatches --activate --path=/var/www/html
+```
+
+**Catalogue de démonstration** (utile pour tester le module Panier —
+produits simples et à variations) :
+
+```bash
+# Simple, en stock
+docker exec navi_wp_cli wp wc product create --path=/var/www/html --user=admin \
+  --name="T-shirt Uni" --type=simple --regular_price=25.00 \
+  --manage_stock=true --stock_quantity=50 --backorders=no --status=publish
+
+# Variable (attribut Couleur), une variation créée par couleur
+PARENT=$(docker exec navi_wp_cli wp wc product create --path=/var/www/html --user=admin --porcelain \
+  --name="Mug Céramique" --type=variable --status=publish \
+  --attributes='[{"name":"Couleur","options":["Rouge","Bleu"],"visible":true,"variation":true}]')
+docker exec navi_wp_cli wp wc product_variation create $PARENT --path=/var/www/html --user=admin \
+  --regular_price=12.00 --manage_stock=true --stock_quantity=15 --backorders=no \
+  --attributes='[{"name":"Couleur","option":"Rouge"}]'
 ```
 
 **Déployer le plugin** (à chaque changement) :

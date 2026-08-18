@@ -1,6 +1,6 @@
 {
   "name": "navi",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Hub d'engagement WordPress/WooCommerce : consentement cookies, ajout au panier automatique, accessibilité, pilotés depuis un bouton flottant unique.",
   "scripts": {
