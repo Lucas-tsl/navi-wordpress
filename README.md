@@ -38,8 +38,14 @@ soumise au [répertoire officiel WordPress.org](https://wordpress.org/plugins/).
 - Suite de tests Playwright automatisée : pas encore mise en place (prochain
   chantier — vérification faite manuellement jusqu'ici contre un catalogue
   de démonstration, voir Développement ci-dessous).
-- Préparation à la soumission WordPress.org (`readme.txt`, bannière/icône,
-  captures d'écran) : pas encore commencée.
+- Préparation à la soumission WordPress.org : `readme.txt` et
+  bannière/icône (`.wordpress-org/assets/`) prêts. Restent à faire avant
+  soumission effective : renseigner le vrai pseudo du compte développeur
+  (`Contributors:` dans `readme.txt`, actuellement un placeholder) et
+  capturer les 5 captures d'écran listées dans `readme.txt` (à déposer
+  dans le dossier SVN `assets/` du plugin sur WordPress.org, nommées
+  `screenshot-1.png` à `screenshot-5.png` — voir Soumission WordPress.org
+  ci-dessous).
 
 ## Architecture
 
@@ -235,6 +241,36 @@ le site répond. Variables d'environnement :
 `.github/workflows/ci.yml` : lint PHP (`php -l` + WordPress Coding
 Standards, matrice PHP 7.4/8.1/8.3), lint JS/CSS (ESLint/Stylelint), build
 du zip (artefact + attaché à une Release GitHub).
+
+## Soumission WordPress.org
+
+`readme.txt` (racine du dépôt, format strict WordPress.org) et
+`.wordpress-org/assets/` (bannière 772×250, icônes 128×128/256×256)
+sont prêts pour la soumission. **Important** : ce dossier `.wordpress-org/`
+n'est distribué ni dans le zip du plugin (exclu via `.distignore`) ni sur
+WordPress.org de la même façon que les fichiers du plugin — une fois le
+dépôt SVN attribué par l'équipe WordPress.org (après acceptation), son
+contenu doit être copié manuellement dans le dossier `assets/` du **SVN**
+(distinct du dossier `assets/` du plugin lui-même, qui contient le CSS/JS
+réel) :
+
+```bash
+svn co https://plugins.svn.wordpress.org/navi navi-svn
+cp .wordpress-org/assets/*.png navi-svn/assets/
+cp screenshot-*.png navi-svn/assets/   # captures d'écran, à réaliser avant soumission
+svn add navi-svn/assets/*.png
+svn commit -m "Ajout bannière, icônes et captures d'écran"
+```
+
+Le code du plugin lui-même va dans `navi-svn/trunk/` (assemblé via le même
+mécanisme `.distignore` que `scripts/deploy-local.sh` et le job `build` de
+la CI), puis `navi-svn/tags/0.4.0/` etc. à chaque version publiée.
+
+Avant la soumission effective (formulaire sur
+[wordpress.org/plugins/developers/add/](https://wordpress.org/plugins/developers/add/)) :
+renseigner le vrai pseudo du compte développeur dans `Contributors:`
+(`readme.txt`), capturer les captures d'écran, et passer `readme.txt` au
+[validateur officiel](https://wordpress.org/plugins/developers/readme-validator/).
 
 ## Licence
 

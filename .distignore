@@ -2,6 +2,7 @@
 .github/
 .gitignore
 .distignore
+.wordpress-org/
 docs/
 node_modules/
 vendor/
