@@ -44,6 +44,7 @@ function navi_stories_enqueue_assets() {
     $overlay      = navi_stories_color_overlay();
     $padding      = navi_stories_phone_padding();
     $width        = navi_stories_phone_width();
+    $videoZoom    = navi_stories_video_zoom();
     $overrides    = array();
 
     if ( NAVI_STORIES_DEFAULT_BORDER_WIDTH !== $border ) {
@@ -72,6 +73,9 @@ function navi_stories_enqueue_assets() {
     }
     if ( NAVI_STORIES_DEFAULT_PHONE_WIDTH !== $width ) {
         $overrides['--navi-story-phone-width'] = $width . 'px';
+    }
+    if ( NAVI_STORIES_DEFAULT_VIDEO_ZOOM !== $videoZoom ) {
+        $overrides['--navi-story-video-zoom'] = ( $videoZoom / 100 );
     }
 
     if ( ! empty( $overrides ) ) {

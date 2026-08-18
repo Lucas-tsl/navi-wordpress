@@ -50,18 +50,19 @@ Check**, plus deux corrections front trouvées pendant cette passe.
   écran mobile) : même à `controls=0`, le lecteur YouTube dessine
   toujours son propre bandeau titre/chaîne et son filigrane "Shorts"
   (chrome du lecteur dans une iframe cross-origin, aucun contournement
-  possible en CSS/JS — Same-Origin Policy). Plusieurs essais de recadrage
-  par zoom (`scale()` de 1.2 à 1.35) ont été tentés puis **tous
-  abandonnés** : la hauteur réelle du bandeau varie avec la longueur du
-  nom de la chaîne YouTube, donc aucune valeur fixe ne le masque sans
-  rogner excessivement l'image sur les vidéos qui en ont le moins besoin.
-  **Vérifié directement sur l'instance PrestaShop réelle**
-  (`localhost:8080`, produit 134, story "Snack sain") : le même bandeau y
-  est bel et bien visible, capture d'écran à l'appui — ce n'est donc pas
-  une régression WordPress mais une limitation YouTube partagée à
-  l'identique par les deux plugins. `assets/css/stories.css` revient
-  définitivement aux paramètres bruts de Navi PrestaShop (aucun zoom),
-  qui étaient donc corrects depuis le début.
+  possible en CSS/JS — Same-Origin Policy). **Vérifié directement sur
+  l'instance PrestaShop réelle** (`localhost:8080`, produit 134, story
+  "Snack sain") : le même bandeau y est bel et bien visible, capture
+  d'écran à l'appui — ce n'est donc pas une régression WordPress mais une
+  limitation YouTube partagée à l'identique par les deux plugins, aucune
+  valeur de recadrage fixe ne convenant à toutes les vidéos (la hauteur
+  du bandeau varie avec la longueur du nom de la chaîne). **Nouveau
+  réglage** plutôt qu'une constante décidée à la place du marchand :
+  "Zoom de la vidéo" (Navi > Stories > Mockup, curseur 100-150 %, défaut
+  135 % — masque le bandeau sur les cas testés ; 100 % = paramètres bruts
+  de Navi PrestaShop, aucun recadrage mais bandeau visible), avec aperçu
+  en direct. Nouvelle variable CSS `--navi-story-video-zoom`
+  (`assets/css/stories.css`), option `navi_stories_video_zoom`.
 - Renforcé (défensif, pour un centrage fiable de l'icône engrenage sur
   tous les navigateurs/appareils) : `assets/css/core.css` remet à zéro
   `padding`/`margin`/`appearance` sur le bouton `.navi-fab-toggle` (un

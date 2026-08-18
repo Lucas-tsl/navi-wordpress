@@ -42,6 +42,7 @@ $navi_options = array(
     'navi_stories_color_overlay',
     'navi_stories_phone_padding',
     'navi_stories_phone_width',
+    'navi_stories_video_zoom',
     // Visibilité par appareil (un réglage par module)
     'navi_show_desktop_cookie-consent',
     'navi_show_mobile_cookie-consent',
