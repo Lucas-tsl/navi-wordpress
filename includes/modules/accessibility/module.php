@@ -14,10 +14,13 @@ Navi_Module_Registry::register(
         'fab_action'      => 'open-accessibility-panel',
         'fab_condition'   => '',
         'available'       => true,
+        'settings_url'    => admin_url( 'admin.php?page=navi-accessibility' ),
+        'visibility_selector' => '.navi-fab-item[data-item-id="accessibility"]',
     )
 );
 
 if ( Navi_Module_Registry::is_active( 'accessibility' ) ) {
+    require_once __DIR__ . '/admin-settings.php';
     require_once __DIR__ . '/public-display.php';
 
     add_action( 'wp_enqueue_scripts', 'navi_a11y_enqueue_assets' );

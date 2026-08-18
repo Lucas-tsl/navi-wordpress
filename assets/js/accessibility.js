@@ -238,8 +238,8 @@
         function apply() {
             panel.classList.add('navi-a11y-panel-open');
         }
-        if (window.naviHub) {
-            window.naviHub.showDetail('accessibility', apply);
+        if (window.navi) {
+            window.navi.showDetail('accessibility', apply);
         } else {
             apply();
         }
@@ -251,8 +251,8 @@
         function apply() {
             panel.classList.remove('navi-a11y-panel-open');
         }
-        if (window.naviHub) {
-            window.naviHub.backToMenu('accessibility', apply);
+        if (window.navi) {
+            window.navi.backToMenu('accessibility', apply);
         } else {
             apply();
         }

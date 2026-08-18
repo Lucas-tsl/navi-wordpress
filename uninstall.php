@@ -10,9 +10,11 @@ $navi_options = array(
     'navi_module_active_sticky-cart',
     // Position du bouton flottant
     'navi_fab_position',
-    // Couleurs de la DA (Navi > Couleurs)
+    // Apparence (Navi > Apparence)
     'navi_color_ink',
     'navi_color_ink_soft',
+    'navi_radius_button',
+    'navi_radius_image',
     // Module Cookie Consent
     'navi_cookie_logo_url',
     'navi_cookie_texte_banniere',
@@ -22,6 +24,13 @@ $navi_options = array(
     'navi_sticky_selector_price',
     'navi_sticky_selector_name',
     'navi_sticky_selector_image',
+    // Visibilité par appareil (un réglage par module)
+    'navi_show_desktop_cookie-consent',
+    'navi_show_mobile_cookie-consent',
+    'navi_show_desktop_accessibility',
+    'navi_show_mobile_accessibility',
+    'navi_show_desktop_sticky-cart',
+    'navi_show_mobile_sticky-cart',
 );
 
 foreach ( $navi_options as $navi_option ) {

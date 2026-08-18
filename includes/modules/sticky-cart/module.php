@@ -32,6 +32,7 @@ Navi_Module_Registry::register(
         'fab_condition'   => 'is_product',
         'available'       => true,
         'settings_url'    => admin_url( 'admin.php?page=navi-sticky-cart' ),
+        'visibility_selector' => '#navi-sticky-bar, .navi-fab-item[data-item-id="sticky-cart"]',
     )
 );
 

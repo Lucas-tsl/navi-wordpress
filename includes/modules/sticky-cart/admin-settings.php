@@ -31,6 +31,10 @@ function navi_sticky_enregistrer_parametres() {
     register_setting( 'navi_sticky_options_group', 'navi_sticky_selector_price', array( 'sanitize_callback' => 'sanitize_text_field' ) );
     register_setting( 'navi_sticky_options_group', 'navi_sticky_selector_name', array( 'sanitize_callback' => 'sanitize_text_field' ) );
     register_setting( 'navi_sticky_options_group', 'navi_sticky_selector_image', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+
+    // Visibilité par appareil (voir navi_render_visibility_fields, helpers.php).
+    register_setting( 'navi_sticky_options_group', 'navi_show_desktop_sticky-cart', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
+    register_setting( 'navi_sticky_options_group', 'navi_show_mobile_sticky-cart', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
 }
 
 function navi_sticky_page_reglages_html() {
@@ -61,6 +65,7 @@ function navi_sticky_page_reglages_html() {
                     <th scope="row"><label for="navi_sticky_selector_image"><?php esc_html_e( 'Sélecteur CSS de l\'image du produit', 'navi' ); ?></label></th>
                     <td><input type="text" name="navi_sticky_selector_image" id="navi_sticky_selector_image" value="<?php echo esc_attr( get_option( 'navi_sticky_selector_image', '' ) ); ?>" class="regular-text" placeholder=".woocommerce-product-gallery__image img" /></td>
                 </tr>
+                <?php navi_render_visibility_fields( 'sticky-cart' ); ?>
             </table>
             <?php submit_button(); ?>
         </form>
