@@ -6,7 +6,7 @@
     // page finale.
     document.addEventListener('DOMContentLoaded', function () {
 
-    var config = window.naviStoriesI18n || { closeLabel: 'Fermer', prevLabel: 'Story précédente', nextLabel: 'Story suivante' };
+    var config = window.naviStoriesI18n || { closeLabel: 'Fermer', prevLabel: 'Story précédente', nextLabel: 'Story suivante', replayLabel: 'Relancer la vidéo' };
 
     // Bulles rendues nativement par Navi (voir includes/modules/stories/public-display.php)
     // — ce script reste inerte tant qu'aucune bulle n'est présente sur la
@@ -44,6 +44,111 @@
     }
 
     // ============================================================
+    // Masque anti-chrome YouTube. Le bandeau titre/chaîne et le filigrane
+    // "Shorts" (voir buildVideoUrl() ci-dessus) ne sont PAS affichés en
+    // continu : YouTube les montre au chargement puis les efface tout
+    // seul une fois la lecture active, avant de les remontrer une fois la
+    // vidéo terminée (écran de fin, bouton de reprise natif). On masque
+    // donc précisément ces deux fenêtres (chargement → PLAYING, puis
+    // ENDED) avec un cache à notre design plutôt que de recadrer la
+    // vidéo en permanence pendant toute sa durée (essayé, abandonné :
+    // voir assets/css/stories.css) — repose sur l'API IFrame officielle
+    // de YouTube, disponible grâce à `enablejsapi=1` déjà dans l'URL.
+    // ============================================================
+    var youTubeApiPromise = null;
+    function loadYouTubeApi() {
+        if (youTubeApiPromise) return youTubeApiPromise;
+        youTubeApiPromise = new Promise(function (resolve) {
+            if (window.YT && window.YT.Player) { resolve(window.YT); return; }
+            var previousCallback = window.onYouTubeIframeAPIReady;
+            window.onYouTubeIframeAPIReady = function () {
+                if (typeof previousCallback === 'function') previousCallback();
+                resolve(window.YT);
+            };
+            if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+                var tag = document.createElement('script');
+                tag.src = 'https://www.youtube.com/iframe_api';
+                document.head.appendChild(tag);
+            }
+        });
+        return youTubeApiPromise;
+    }
+
+    // Filet de sécurité à 6s : si l'API ne se charge pas (réseau,
+    // bloqueur) ou ne renvoie jamais PLAYING pour une raison quelconque,
+    // le masque ne doit pas rester affiché indéfiniment — mieux vaut
+    // revenir au comportement d'origine (bandeau parfois visible) que de
+    // cacher la vidéo en permanence derrière notre propre cache.
+    function attachVideoMask(iframeEl, maskEl, videoId) {
+        if (!maskEl) return;
+        maskEl.classList.add('is-visible');
+        maskEl.classList.remove('is-ended');
+
+        // Jeton de génération : le panneau desktop réutilise le MÊME
+        // élément iframe/masque à chaque bulle cliquée (buildPanel() ne le
+        // recrée pas), donc un YT.Player ou un setTimeout hérité d'un
+        // appel précédent pourrait sinon modifier l'état bien après coup
+        // (ex. l'utilisateur ferme puis rouvre une autre story avant que
+        // l'ancien délai de révélation n'ait eu le temps de se déclencher).
+        // Chaque appel invalide les callbacks asynchrones des appels
+        // précédents en comparant ce compteur avant d'agir.
+        var generation = ( maskEl._naviGen || 0 ) + 1;
+        maskEl._naviGen = generation;
+
+        var fallbackTimer = window.setTimeout(function () {
+            if (maskEl._naviGen !== generation) return;
+            maskEl.classList.remove('is-visible');
+        }, 9000);
+        // Le passage à l'état PLAYING ne signifie pas que le bandeau a
+        // déjà fini de s'effacer (constaté à l'usage : le chrome YouTube
+        // reste visible plusieurs secondes après le premier PLAYING) — un
+        // court délai supplémentaire avant de révéler la vidéo laisse le
+        // temps à ce fondu natif de se terminer. Annulé si l'état change
+        // de nouveau avant (ex. vidéo très courte déjà terminée) pour ne
+        // jamais révéler après coup une vidéo qui a déjà atteint ENDED.
+        var revealTimer = null;
+
+        loadYouTubeApi().then(function (YT) {
+            if (!iframeEl.isConnected || maskEl._naviGen !== generation) return;
+            try {
+                new YT.Player(iframeEl, {
+                    events: {
+                        onStateChange: function (event) {
+                            if (maskEl._naviGen !== generation) return;
+                            if (event.data === YT.PlayerState.PLAYING) {
+                                window.clearTimeout(revealTimer);
+                                revealTimer = window.setTimeout(function () {
+                                    if (maskEl._naviGen !== generation) return;
+                                    window.clearTimeout(fallbackTimer);
+                                    maskEl.classList.remove('is-visible', 'is-ended');
+                                }, 5000);
+                            } else if (event.data === YT.PlayerState.ENDED) {
+                                window.clearTimeout(revealTimer);
+                                window.clearTimeout(fallbackTimer);
+                                maskEl.classList.add('is-visible', 'is-ended');
+                            }
+                        }
+                    }
+                });
+            } catch {
+                // Le filet de sécurité ci-dessus prend le relais.
+            }
+        });
+
+        var replayBtn = maskEl.querySelector('.navi-story-video-mask-replay');
+        if (replayBtn) {
+            replayBtn.onclick = function () {
+                iframeEl.src = buildVideoUrl(videoId);
+                attachVideoMask(iframeEl, maskEl, videoId);
+            };
+        }
+    }
+
+    var videoMaskMarkup = '<div class="navi-story-video-mask" aria-hidden="true">'
+        + '<button type="button" class="navi-story-video-mask-replay" aria-label="' + config.replayLabel + '" tabindex="-1">⟳</button>'
+        + '</div>';
+
+    // ============================================================
     // Mode desktop/laptop/tablette — panneau ancré au bouton flottant,
     // mockup de téléphone en CSS pur (voir assets/css/stories.css). Construit
     // une seule fois, réutilisé à chaque bulle cliquée (même patron que le
@@ -52,6 +157,7 @@
     var panelDetail = document.getElementById('navi-fab-detail');
     var panel = null;
     var panelIframe = null;
+    var panelMask = null;
 
     function buildPanel() {
         if (panel || !panelDetail) return;
@@ -68,12 +174,14 @@
             '<iframe id="navi-story-iframe" src="" title="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture"></iframe>' +
             '<div class="navi-story-guard-top" aria-hidden="true"></div>' +
             '<div class="navi-story-guard-bottom" aria-hidden="true"></div>' +
+            videoMaskMarkup +
             '</div>' +
             '</div>' +
             '</div>';
         panelDetail.appendChild(panel);
 
         panelIframe = panel.querySelector('#navi-story-iframe');
+        panelMask = panel.querySelector('.navi-story-video-mask');
 
         var closeBtn = panel.querySelector('.navi-story-close');
         closeBtn.addEventListener('click', function () {
@@ -96,6 +204,7 @@
 
         panelIframe.src = buildVideoUrl(videoId);
         panelIframe.title = label || '';
+        attachVideoMask(panelIframe, panelMask, videoId);
 
         if (window.navi) {
             window.navi.showDetail('stories', function () {});
@@ -192,13 +301,22 @@
             entries.forEach(function (entry) {
                 var iframe = entry.target.querySelector('iframe');
                 if (!iframe) return;
+                var mask = entry.target.querySelector('.navi-story-video-mask');
+                var videoId = entry.target.getAttribute('data-video-id');
                 // getAttribute (pas la propriété .src) : un attribut src=""
                 // vide se lit, via la PROPRIÉTÉ .src, comme l'URL de la
                 // page courante résolue (jamais une chaîne vide).
                 if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-                    if (!iframe.getAttribute('src')) iframe.src = buildVideoUrl(entry.target.getAttribute('data-video-id'));
+                    if (!iframe.getAttribute('src')) {
+                        iframe.src = buildVideoUrl(videoId);
+                        attachVideoMask(iframe, mask, videoId);
+                    }
                 } else {
                     iframe.src = '';
+                    if (mask) {
+                        mask.classList.add('is-visible');
+                        mask.classList.remove('is-ended');
+                    }
                 }
             });
         }, { root: fullscreenTrack, threshold: [0, 0.6] });
@@ -377,7 +495,8 @@
             slide.innerHTML =
                 '<iframe src="" title="' + story.label + '" tabindex="-1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture"></iframe>' +
                 '<div class="navi-story-fullscreen-guard-top" aria-hidden="true"></div>' +
-                '<div class="navi-story-fullscreen-guard-bottom" aria-hidden="true"></div>';
+                '<div class="navi-story-fullscreen-guard-bottom" aria-hidden="true"></div>' +
+                videoMaskMarkup;
             fullscreenTrack.appendChild(slide);
             if (story.videoId === videoId) {
                 activeSlide = slide;
