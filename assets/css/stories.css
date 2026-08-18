@@ -213,26 +213,22 @@
    large que le conteneur), centrée horizontalement et débordant sur les
    côtés — équivalent d'un `object-fit: cover` (non supporté nativement sur
    une iframe), `overflow: hidden` du parent masque le débordement latéral.
-   `scale(1.35)` en plus : même à `controls=0`, le lecteur YouTube dessine
-   toujours son propre bandeau titre/chaîne en haut et son filigrane
-   "Shorts" en bas (chrome du lecteur, pas du CSS à nous, ni du JS — aucun
-   moyen de l'atteindre depuis une iframe cross-origin, Same-Origin
-   Policy — confirmé par échantillonnage de pixels). Paramètres bruts de
-   Navi PrestaShop (aucun zoom) essayés en premier, mais insuffisants en
-   pratique : PrestaShop y est exposé de façon identique (même
-   construction d'URL d'embed, assets/js/stories.js), le bandeau y est
-   simplement moins visible selon la vidéo/le thème testés. La hauteur
-   réelle du bandeau titre varie avec la longueur du nom de la chaîne (nom
-   court sur une ligne vs. nom long qui passe sur deux) : `1.2` et `1.25`
-   laissaient un résidu visible sur une chaîne au nom long (testé avec un
-   vrai compte YouTube) ; `1.35` couvre ce cas tout en restant en dessous
-   du premier essai à 1.32 jugé "trop zoomé" (celui-ci recadrait aussi
-   sur un test avec un nom de chaîne plus court, d'où l'impression d'un
-   zoom excessif). Les zones `.navi-story-guard-top/bottom` ci-dessous
-   restent en filet de sécurité (absorbent le tap) si un résidu dépasse
-   malgré tout sur une vidéo donnée — ajuster cette valeur ici si besoin,
-   un seul endroit à changer (les deux iframes, desktop et plein écran
-   mobile, partagent le même réglage). */
+   Mêmes paramètres que Navi PrestaShop (views/css/stories.css), aucun
+   zoom : le bandeau titre/chaîne YouTube (haut) et le filigrane "Shorts"
+   (bas) restent visibles quelques secondes à l'ouverture — vérifié
+   directement sur l'instance PrestaShop réelle (localhost:8080,
+   id_product=134, story "Snack sain") : le même bandeau y est bel et
+   bien visible, capture à l'appui — ce n'est donc pas une régression
+   WordPress mais une limitation YouTube partagée par les deux plugins
+   (chrome du lecteur dans une iframe cross-origin, Same-Origin Policy,
+   aucun contournement possible en CSS/JS). Plusieurs essais de recadrage
+   par zoom (`scale(1.2)` à `1.35`) ont été tentés puis abandonnés : la
+   hauteur réelle du bandeau varie selon la longueur du nom de la chaîne,
+   donc aucune valeur fixe ne masque le bandeau sans rogner excessivement
+   l'image sur les vidéos qui en ont le moins besoin. Les zones
+   `.navi-story-guard-top/bottom` ci-dessous absorbent le tap sur ce
+   bandeau plutôt que de laisser l'iframe y réagir, tout en laissant le
+   centre de la vidéo cliquable pour pause/lecture (`pointer-events: auto`). */
 .navi-story-phone-screen iframe {
     position: absolute;
     top: 0;
@@ -240,8 +236,7 @@
     height: 100%;
     width: auto;
     aspect-ratio: 9 / 16;
-    transform: translateX(-50%) scale(1.35);
-    transform-origin: center;
+    transform: translateX(-50%);
     border: 0;
     display: block;
     pointer-events: auto;
@@ -390,10 +385,6 @@
     background: var(--navi-story-overlay-bg);
 }
 
-/* scale(1.35) : même correctif que le panneau desktop
-   (.navi-story-phone-screen iframe plus haut) — pousse le bandeau
-   titre/chaîne et le filigrane "Shorts" du lecteur YouTube hors du cadre
-   visible. */
 .navi-story-fullscreen-slide iframe {
     position: absolute;
     top: 0;
@@ -402,8 +393,7 @@
     width: auto;
     aspect-ratio: 9 / 16;
     min-width: 100%;
-    transform: translateX(-50%) scale(1.35);
-    transform-origin: center;
+    transform: translateX(-50%);
     border: 0;
     display: block;
     pointer-events: auto;
