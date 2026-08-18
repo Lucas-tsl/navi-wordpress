@@ -21,6 +21,16 @@ const NAVI_STORIES_DEFAULT_BUBBLE_SIZE   = 64;
 const NAVI_STORIES_MIN_BUBBLE_SIZE       = 40;
 const NAVI_STORIES_MAX_BUBBLE_SIZE       = 120;
 
+// Bordure de bulle en dégradé par défaut (repris tel quel du motif de
+// référence lst-video-story : anneau "métallique" sombre/clair/sombre à
+// 45°) plutôt qu'une couleur unie — "gradient" reste le réglage par
+// défaut de navi_stories_bubble_border_style() ci-dessous.
+const NAVI_STORIES_DEFAULT_BUBBLE_BORDER_STYLE = 'gradient';
+const NAVI_STORIES_DEFAULT_GRADIENT_ANGLE       = 45;
+const NAVI_STORIES_DEFAULT_GRADIENT_COLOR_1     = '#101820';
+const NAVI_STORIES_DEFAULT_GRADIENT_COLOR_2     = '#cccccc';
+const NAVI_STORIES_DEFAULT_GRADIENT_COLOR_3     = '#101820';
+
 function navi_sanitize_story_border_width( $value ) {
     return max( 0, min( 20, (int) $value ) );
 }
@@ -35,6 +45,14 @@ function navi_sanitize_story_phone_width( $value ) {
 
 function navi_sanitize_story_bubble_size( $value ) {
     return max( NAVI_STORIES_MIN_BUBBLE_SIZE, min( NAVI_STORIES_MAX_BUBBLE_SIZE, (int) $value ) );
+}
+
+function navi_sanitize_story_border_style( $value ) {
+    return in_array( $value, array( 'solid', 'gradient' ), true ) ? $value : NAVI_STORIES_DEFAULT_BUBBLE_BORDER_STYLE;
+}
+
+function navi_sanitize_story_gradient_angle( $value ) {
+    return max( 0, min( 360, (int) $value ) );
 }
 
 function navi_stories_show_label() {
@@ -56,10 +74,9 @@ function navi_stories_border_width() {
 }
 
 /**
- * Couleur de la bordure de la bulle — pas de constante DEFAULT dédiée : le
- * CSS retombe nativement sur la couleur d'accent du thème
- * (`var(--navi-story-bubble-border-color, var(--navi-color-accent))`,
- * voir assets/css/stories.css) tant qu'aucune couleur n'est réglée ici.
+ * Couleur de bordure en mode "solid" — pas de constante DEFAULT dédiée :
+ * vide retombe sur la couleur d'accent du thème
+ * (voir navi_stories_bubble_border_css_value() ci-dessous).
  */
 function navi_stories_color_bubble_border() {
     return get_option( 'navi_stories_color_bubble_border', '' );
@@ -68,6 +85,72 @@ function navi_stories_color_bubble_border() {
 function navi_stories_bubble_size() {
     $configured = get_option( 'navi_stories_bubble_size', '' );
     return '' !== $configured ? (int) $configured : NAVI_STORIES_DEFAULT_BUBBLE_SIZE;
+}
+
+/**
+ * "solid" (couleur unie, navi_stories_color_bubble_border()) ou
+ * "gradient" (anneau en dégradé, réglage par défaut — voir
+ * NAVI_STORIES_DEFAULT_BUBBLE_BORDER_STYLE).
+ */
+function navi_stories_bubble_border_style() {
+    return get_option( 'navi_stories_bubble_border_style', NAVI_STORIES_DEFAULT_BUBBLE_BORDER_STYLE );
+}
+
+function navi_stories_bubble_gradient_angle() {
+    $configured = get_option( 'navi_stories_bubble_gradient_angle', '' );
+    return '' !== $configured ? (int) $configured : NAVI_STORIES_DEFAULT_GRADIENT_ANGLE;
+}
+
+function navi_stories_bubble_gradient_color_1() {
+    $configured = get_option( 'navi_stories_bubble_gradient_color_1', '' );
+    return $configured ? $configured : NAVI_STORIES_DEFAULT_GRADIENT_COLOR_1;
+}
+
+function navi_stories_bubble_gradient_color_2() {
+    $configured = get_option( 'navi_stories_bubble_gradient_color_2', '' );
+    return $configured ? $configured : NAVI_STORIES_DEFAULT_GRADIENT_COLOR_2;
+}
+
+function navi_stories_bubble_gradient_color_3() {
+    $configured = get_option( 'navi_stories_bubble_gradient_color_3', '' );
+    return $configured ? $configured : NAVI_STORIES_DEFAULT_GRADIENT_COLOR_3;
+}
+
+/**
+ * Valeur CSS finale de --navi-story-bubble-border-bg : une couleur unie
+ * (mode "solid", ou la couleur d'accent du thème si non réglée) ou une
+ * fonction linear-gradient() complète (mode "gradient") — une seule
+ * variable CSS couvre les deux cas, voir assets/css/stories.css (double
+ * fond padding-box/border-box, `border-color: transparent`).
+ */
+function navi_stories_bubble_border_css_value() {
+    if ( 'solid' === navi_stories_bubble_border_style() ) {
+        $color = navi_stories_color_bubble_border();
+        return $color ? $color : 'var(--navi-color-accent)';
+    }
+
+    return sprintf(
+        'linear-gradient(%ddeg, %s, %s, %s)',
+        navi_stories_bubble_gradient_angle(),
+        navi_stories_bubble_gradient_color_1(),
+        navi_stories_bubble_gradient_color_2(),
+        navi_stories_bubble_gradient_color_3()
+    );
+}
+
+/**
+ * Valeur par défaut équivalente (mode "gradient", constantes
+ * DEFAULT_GRADIENT_*) — sert uniquement à savoir si une surcharge doit
+ * être injectée (voir stories-frontend.php), pas affichée telle quelle.
+ */
+function navi_stories_bubble_border_default_css_value() {
+    return sprintf(
+        'linear-gradient(%ddeg, %s, %s, %s)',
+        NAVI_STORIES_DEFAULT_GRADIENT_ANGLE,
+        NAVI_STORIES_DEFAULT_GRADIENT_COLOR_1,
+        NAVI_STORIES_DEFAULT_GRADIENT_COLOR_2,
+        NAVI_STORIES_DEFAULT_GRADIENT_COLOR_3
+    );
 }
 
 function navi_stories_color_phone_bg() {

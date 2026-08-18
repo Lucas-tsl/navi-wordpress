@@ -19,6 +19,11 @@ function navi_stories_enregistrer_parametres() {
     register_setting( 'navi_stories_options_group', 'navi_stories_auto_display', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_border_width', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_story_border_width', 'default' => NAVI_STORIES_DEFAULT_BORDER_WIDTH ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_color_bubble_border', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_hex_color' ) );
+    register_setting( 'navi_stories_options_group', 'navi_stories_bubble_border_style', array( 'type' => 'string', 'sanitize_callback' => 'navi_sanitize_story_border_style', 'default' => NAVI_STORIES_DEFAULT_BUBBLE_BORDER_STYLE ) );
+    register_setting( 'navi_stories_options_group', 'navi_stories_bubble_gradient_angle', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_story_gradient_angle', 'default' => NAVI_STORIES_DEFAULT_GRADIENT_ANGLE ) );
+    register_setting( 'navi_stories_options_group', 'navi_stories_bubble_gradient_color_1', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_hex_color' ) );
+    register_setting( 'navi_stories_options_group', 'navi_stories_bubble_gradient_color_2', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_hex_color' ) );
+    register_setting( 'navi_stories_options_group', 'navi_stories_bubble_gradient_color_3', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_hex_color' ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_bubble_size', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_story_bubble_size', 'default' => NAVI_STORIES_DEFAULT_BUBBLE_SIZE ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_color_phone_bg', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_hex_color' ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_color_close_icon', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_hex_color' ) );
@@ -51,12 +56,17 @@ function navi_stories_page_reglages_html() {
     if ( ! navi_user_can_manage() ) {
         wp_die( esc_html__( "Vous n'avez pas les permissions nécessaires pour accéder à cette page.", 'navi' ) );
     }
-    $padding      = navi_stories_phone_padding();
-    $width        = navi_stories_phone_width();
-    $borderWidth  = navi_stories_border_width();
-    $bubbleBorder = navi_stories_color_bubble_border();
-    $bubbleSize   = navi_stories_bubble_size();
-    // Couleur par défaut réelle de la bordure de bulle quand aucune n'est
+    $padding        = navi_stories_phone_padding();
+    $width          = navi_stories_phone_width();
+    $borderWidth    = navi_stories_border_width();
+    $borderStyle    = navi_stories_bubble_border_style();
+    $bubbleBorder   = navi_stories_color_bubble_border();
+    $gradientAngle  = navi_stories_bubble_gradient_angle();
+    $gradientColor1 = navi_stories_bubble_gradient_color_1();
+    $gradientColor2 = navi_stories_bubble_gradient_color_2();
+    $gradientColor3 = navi_stories_bubble_gradient_color_3();
+    $bubbleSize     = navi_stories_bubble_size();
+    // Couleur par défaut réelle de la bordure unie quand aucune n'est
     // réglée : --navi-color-accent (assets/css/core.css), jamais réglable
     // depuis Navi > Apparence pour le moment — sert uniquement d'indication
     // dans le sélecteur de couleur (le CSS applique ce même repli).
@@ -113,10 +123,46 @@ function navi_stories_page_reglages_html() {
                                value="<?php echo esc_attr( $borderWidth ); ?>" style="width:100%;" />
 
                         <p style="margin-top:20px;">
-                            <label for="navi_stories_color_bubble_border"><?php esc_html_e( 'Couleur de la bordure', 'navi' ); ?></label>
+                            <label for="navi_bubble_border_style"><?php esc_html_e( 'Type de bordure', 'navi' ); ?></label>
                         </p>
-                        <input type="text" name="navi_stories_color_bubble_border" id="navi_stories_color_bubble_border" class="navi-color-picker" value="<?php echo esc_attr( $bubbleBorder ); ?>" data-default-color="<?php echo esc_attr( $bubbleBorderDefault ); ?>" />
-                        <p class="description"><?php esc_html_e( 'Vide = couleur d\'accent du bouton flottant.', 'navi' ); ?></p>
+                        <select id="navi_bubble_border_style" name="navi_stories_bubble_border_style">
+                            <option value="gradient" <?php selected( 'gradient', $borderStyle ); ?>><?php esc_html_e( 'Dégradé', 'navi' ); ?></option>
+                            <option value="solid" <?php selected( 'solid', $borderStyle ); ?>><?php esc_html_e( 'Couleur unie', 'navi' ); ?></option>
+                        </select>
+
+                        <div id="navi_bubble_border_solid_fields" <?php echo 'solid' === $borderStyle ? '' : 'style="display:none;"'; ?>>
+                            <p style="margin-top:20px;">
+                                <label for="navi_stories_color_bubble_border"><?php esc_html_e( 'Couleur de la bordure', 'navi' ); ?></label>
+                            </p>
+                            <input type="text" name="navi_stories_color_bubble_border" id="navi_stories_color_bubble_border" class="navi-color-picker" value="<?php echo esc_attr( $bubbleBorder ); ?>" data-default-color="<?php echo esc_attr( $bubbleBorderDefault ); ?>" />
+                            <p class="description"><?php esc_html_e( 'Vide = couleur d\'accent du bouton flottant.', 'navi' ); ?></p>
+                        </div>
+
+                        <div id="navi_bubble_border_gradient_fields" <?php echo 'gradient' === $borderStyle ? '' : 'style="display:none;"'; ?>>
+                            <p style="margin-top:20px;">
+                                <label for="navi_bubble_gradient_angle_range"><?php esc_html_e( 'Angle du dégradé', 'navi' ); ?></label>
+                                (<output id="navi_bubble_gradient_angle_output"><?php echo esc_html( $gradientAngle ); ?></output>°)
+                            </p>
+                            <input type="range" id="navi_bubble_gradient_angle_range" name="navi_stories_bubble_gradient_angle"
+                                   min="0" max="360" step="5"
+                                   value="<?php echo esc_attr( $gradientAngle ); ?>" style="width:100%;" />
+
+                            <p style="margin-top:16px; display:flex; gap:16px; flex-wrap:wrap;">
+                                <span>
+                                    <label for="navi_stories_bubble_gradient_color_1"><?php esc_html_e( 'Couleur 1', 'navi' ); ?></label><br />
+                                    <input type="text" name="navi_stories_bubble_gradient_color_1" id="navi_stories_bubble_gradient_color_1" class="navi-color-picker navi-gradient-color" value="<?php echo esc_attr( $gradientColor1 ); ?>" data-default-color="<?php echo esc_attr( NAVI_STORIES_DEFAULT_GRADIENT_COLOR_1 ); ?>" />
+                                </span>
+                                <span>
+                                    <label for="navi_stories_bubble_gradient_color_2"><?php esc_html_e( 'Couleur 2', 'navi' ); ?></label><br />
+                                    <input type="text" name="navi_stories_bubble_gradient_color_2" id="navi_stories_bubble_gradient_color_2" class="navi-color-picker navi-gradient-color" value="<?php echo esc_attr( $gradientColor2 ); ?>" data-default-color="<?php echo esc_attr( NAVI_STORIES_DEFAULT_GRADIENT_COLOR_2 ); ?>" />
+                                </span>
+                                <span>
+                                    <label for="navi_stories_bubble_gradient_color_3"><?php esc_html_e( 'Couleur 3', 'navi' ); ?></label><br />
+                                    <input type="text" name="navi_stories_bubble_gradient_color_3" id="navi_stories_bubble_gradient_color_3" class="navi-color-picker navi-gradient-color" value="<?php echo esc_attr( $gradientColor3 ); ?>" data-default-color="<?php echo esc_attr( NAVI_STORIES_DEFAULT_GRADIENT_COLOR_3 ); ?>" />
+                                </span>
+                            </p>
+                            <p class="description"><?php esc_html_e( 'Réglage par défaut : anneau dégradé sombre/clair/sombre à 45°.', 'navi' ); ?></p>
+                        </div>
 
                         <p style="margin-top:20px;">
                             <label for="navi_bubble_size_range"><?php esc_html_e( 'Taille de la bulle', 'navi' ); ?></label>
@@ -128,7 +174,7 @@ function navi_stories_page_reglages_html() {
                     </div>
 
                     <div style="flex:0 0 220px; display:flex; align-items:center; justify-content:center; min-height:180px; padding:20px; background:#f6f6f6; border-radius:4px;">
-                        <div id="naviPreviewBubble" style="border-radius:50%; background:#000; box-sizing:border-box; transition:width .1s ease, height .1s ease, border-color .1s ease, border-width .1s ease; width:<?php echo esc_attr( $bubbleSize ); ?>px; height:<?php echo esc_attr( $bubbleSize ); ?>px; border:<?php echo esc_attr( $borderWidth ); ?>px solid <?php echo esc_attr( $bubbleBorder ? $bubbleBorder : $bubbleBorderDefault ); ?>;"></div>
+                        <div id="naviPreviewBubble" style="border-radius:50%; box-sizing:border-box; transition:width .1s ease, height .1s ease, border-width .1s ease; width:<?php echo esc_attr( $bubbleSize ); ?>px; height:<?php echo esc_attr( $bubbleSize ); ?>px; border:<?php echo esc_attr( $borderWidth ); ?>px solid transparent; background:linear-gradient(#000,#000) padding-box, <?php echo esc_attr( navi_stories_bubble_border_css_value() ); ?> border-box;"></div>
                     </div>
                 </div>
             </div>
@@ -217,15 +263,41 @@ function navi_stories_page_reglages_html() {
             var borderOutput = document.getElementById('navi_bubble_border_output');
             var sizeRange = document.getElementById('navi_bubble_size_range');
             var sizeOutput = document.getElementById('navi_bubble_size_output');
+            var styleSelect = document.getElementById('navi_bubble_border_style');
+            var solidFields = document.getElementById('navi_bubble_border_solid_fields');
+            var gradientFields = document.getElementById('navi_bubble_border_gradient_fields');
             var colorInput = document.getElementById('navi_stories_color_bubble_border');
+            var angleRange = document.getElementById('navi_bubble_gradient_angle_range');
+            var angleOutput = document.getElementById('navi_bubble_gradient_angle_output');
+            var gradientColorInputs = document.querySelectorAll('.navi-gradient-color');
             var previewBubble = document.getElementById('naviPreviewBubble');
+
+            function currentBorderBg() {
+                if (styleSelect && 'solid' === styleSelect.value) {
+                    return colorInput && colorInput.value ? colorInput.value : '<?php echo esc_js( $bubbleBorderDefault ); ?>';
+                }
+                var stops = Array.prototype.map.call(gradientColorInputs, function (input) {
+                    return input.value || input.getAttribute('data-default-color');
+                });
+                var angle = angleRange ? angleRange.value : <?php echo (int) NAVI_STORIES_DEFAULT_GRADIENT_ANGLE; ?>;
+                return 'linear-gradient(' + angle + 'deg, ' + stops.join(', ') + ')';
+            }
 
             function updateBubblePreview() {
                 if (!previewBubble) return;
                 previewBubble.style.borderWidth = borderRange.value + 'px';
                 previewBubble.style.width = sizeRange.value + 'px';
                 previewBubble.style.height = sizeRange.value + 'px';
-                previewBubble.style.borderColor = colorInput.value || '<?php echo esc_js( $bubbleBorderDefault ); ?>';
+                previewBubble.style.background = 'linear-gradient(#000,#000) padding-box, ' + currentBorderBg() + ' border-box';
+            }
+
+            if (styleSelect && solidFields && gradientFields) {
+                styleSelect.addEventListener('change', function () {
+                    var isSolid = 'solid' === styleSelect.value;
+                    solidFields.style.display = isSolid ? '' : 'none';
+                    gradientFields.style.display = isSolid ? 'none' : '';
+                    updateBubblePreview();
+                });
             }
 
             if (borderRange && sizeRange && previewBubble) {
@@ -237,6 +309,12 @@ function navi_stories_page_reglages_html() {
                     sizeOutput.textContent = sizeRange.value;
                     updateBubblePreview();
                 });
+                if (angleRange) {
+                    angleRange.addEventListener('input', function () {
+                        angleOutput.textContent = angleRange.value;
+                        updateBubblePreview();
+                    });
+                }
                 // wp-color-picker remplace l'input par un widget iris ; son
                 // événement 'change' (natif, redéclenché par iris à chaque
                 // sélection) suffit à capter les mises à jour sans dépendre
@@ -245,6 +323,10 @@ function navi_stories_page_reglages_html() {
                     colorInput.addEventListener('change', updateBubblePreview);
                     jQuery(colorInput).on('irischange', updateBubblePreview);
                 }
+                gradientColorInputs.forEach(function (input) {
+                    input.addEventListener('change', updateBubblePreview);
+                    jQuery(input).on('irischange', updateBubblePreview);
+                });
             }
 
             var paddingRange = document.getElementById('navi_phone_padding_range');
