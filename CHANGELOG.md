@@ -50,11 +50,15 @@ Check**, plus deux corrections front trouvées pendant cette passe.
   desktop et le plein écran mobile — même à `controls=0`, le lecteur
   YouTube dessine toujours son propre bandeau titre/chaîne et son
   filigrane "Shorts" (confirmé par échantillonnage de pixels, pas un
-  artefact de notre CSS). Un essai de recadrage par zoom
-  (`transform: scale()`) a été tenté puis **abandonné** (rognait trop
-  l'image) : `assets/css/stories.css` reprend exactement les mêmes
-  paramètres d'iframe que Navi PrestaShop (aucun zoom, seules les zones
-  `.navi-story-guard-top/bottom` absorbent le tap sur ce bandeau).
+  artefact de notre CSS ; déjà documenté ainsi dans le commentaire de
+  `buildVideoUrl()` porté depuis Navi PrestaShop — limitation YouTube,
+  iframe cross-origin, aucun contournement possible en CSS/JS). Un essai
+  de recadrage par zoom (`transform: scale()`) a été tenté puis
+  **abandonné** (rognait trop l'image) : `assets/css/stories.css` a été
+  revérifié octet pour octet identique aux paramètres d'iframe de Navi
+  PrestaShop (aucun zoom, seules les zones
+  `.navi-story-guard-top/bottom` absorbent le tap sur ce bandeau) — code
+  désormais confirmé équivalent entre les deux plugins sur ce point.
 - Renforcé (défensif, pour un centrage fiable de l'icône engrenage sur
   tous les navigateurs/appareils) : `assets/css/core.css` remet à zéro
   `padding`/`margin`/`appearance` sur le bouton `.navi-fab-toggle` (un
@@ -78,6 +82,17 @@ Check**, plus deux corrections front trouvées pendant cette passe.
   le shortcode est utilisé, évitant un double affichage —
   `includes/modules/stories/public-display.php` factorise le rendu HTML
   entre le hook et le shortcode.
+- **Nouveau** : personnalisation de l'aspect des bulles (Navi > Stories,
+  onglet "Bulles" — la page est désormais scindée en deux onglets,
+  "Bulles" et "Mockup", le second reprenant les réglages déjà existants
+  du mockup de téléphone) : couleur de la bordure (`navi_stories_color_bubble_border`,
+  vide = couleur d'accent du bouton flottant) et taille de la bulle
+  (`navi_stories_bubble_size`, 40 à 120px, défaut 64px) — réglage de
+  l'épaisseur de bordure existant déplacé dans ce même onglet. Curseurs
+  `<input type="range">` avec aperçu en direct, même mécanisme que les
+  curseurs du mockup de téléphone. Nouvelles variables CSS
+  `--navi-story-bubble-border-color` et `--navi-story-bubble-size`
+  (`assets/css/stories.css`).
 - Reste à faire avant soumission effective (non automatisable) :
   validation de `readme.txt` via le validateur officiel une fois le dépôt
   SVN attribué.
