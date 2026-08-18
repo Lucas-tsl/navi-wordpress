@@ -46,19 +46,24 @@ Check**, plus deux corrections front trouvées pendant cette passe.
   **WooCommerce "Coming soon" activé sur l'instance de dev locale**
   (`woocommerce_coming_soon`), pas un bug du plugin ; désactivé sur
   l'environnement Docker pour fiabiliser les futurs tests.
-- Investigué : bandeau noir en haut et en bas de la vidéo dans le panneau
-  desktop et le plein écran mobile — même à `controls=0`, le lecteur
-  YouTube dessine toujours son propre bandeau titre/chaîne et son
-  filigrane "Shorts" (confirmé par échantillonnage de pixels, pas un
-  artefact de notre CSS ; déjà documenté ainsi dans le commentaire de
-  `buildVideoUrl()` porté depuis Navi PrestaShop — limitation YouTube,
-  iframe cross-origin, aucun contournement possible en CSS/JS). Un essai
-  de recadrage par zoom (`transform: scale()`) a été tenté puis
-  **abandonné** (rognait trop l'image) : `assets/css/stories.css` a été
-  revérifié octet pour octet identique aux paramètres d'iframe de Navi
-  PrestaShop (aucun zoom, seules les zones
-  `.navi-story-guard-top/bottom` absorbent le tap sur ce bandeau) — code
-  désormais confirmé équivalent entre les deux plugins sur ce point.
+- **Corrigé** (après plusieurs itérations) : bandeau noir en haut et en
+  bas de la vidéo dans le panneau desktop et le plein écran mobile —
+  même à `controls=0`, le lecteur YouTube dessine toujours son propre
+  bandeau titre/chaîne et son filigrane "Shorts" (confirmé par
+  échantillonnage de pixels, pas un artefact de notre CSS ; déjà
+  documenté ainsi dans le commentaire de `buildVideoUrl()` porté depuis
+  Navi PrestaShop — limitation YouTube, iframe cross-origin, aucun
+  contournement possible en CSS/JS). Les paramètres bruts de Navi
+  PrestaShop (aucun zoom) ont été revérifiés octet pour octet identiques
+  puis essayés tels quels, mais se sont révélés insuffisants en pratique
+  (PrestaShop y est exposé de façon identique, le bandeau y est
+  simplement moins visible selon la vidéo). La hauteur réelle du bandeau
+  varie avec la longueur du nom de la chaîne YouTube (testé avec un vrai
+  compte) : `assets/css/stories.css` applique finalement
+  `transform: scale(1.35)` sur l'iframe (desktop et plein écran mobile),
+  seuil qui couvre le cas testé avec un nom de chaîne long tout en restant
+  en dessous du tout premier essai à 1.32 jugé "trop zoomé" sur un test
+  avec un nom de chaîne plus court.
 - Renforcé (défensif, pour un centrage fiable de l'icône engrenage sur
   tous les navigateurs/appareils) : `assets/css/core.css` remet à zéro
   `padding`/`margin`/`appearance` sur le bouton `.navi-fab-toggle` (un
@@ -85,14 +90,24 @@ Check**, plus deux corrections front trouvées pendant cette passe.
 - **Nouveau** : personnalisation de l'aspect des bulles (Navi > Stories,
   onglet "Bulles" — la page est désormais scindée en deux onglets,
   "Bulles" et "Mockup", le second reprenant les réglages déjà existants
-  du mockup de téléphone) : couleur de la bordure (`navi_stories_color_bubble_border`,
-  vide = couleur d'accent du bouton flottant) et taille de la bulle
-  (`navi_stories_bubble_size`, 40 à 120px, défaut 64px) — réglage de
-  l'épaisseur de bordure existant déplacé dans ce même onglet. Curseurs
-  `<input type="range">` avec aperçu en direct, même mécanisme que les
-  curseurs du mockup de téléphone. Nouvelles variables CSS
-  `--navi-story-bubble-border-color` et `--navi-story-bubble-size`
-  (`assets/css/stories.css`).
+  du mockup de téléphone) : taille de la bulle (`navi_stories_bubble_size`,
+  40 à 120px, défaut 64px) et bordure — réglage de l'épaisseur existant
+  déplacé dans ce même onglet, plus un choix de **type de bordure**
+  ("Couleur unie" ou "Dégradé", **dégradé par défaut**) :
+  - "Couleur unie" : `navi_stories_color_bubble_border` (vide = couleur
+    d'accent du bouton flottant), comportement de la version précédente ;
+  - "Dégradé" (nouveau, réglage par défaut) : angle
+    (`navi_stories_bubble_gradient_angle`, 0-360°) + 3 couleurs
+    (`navi_stories_bubble_gradient_color_1/2/3`), défaut anneau
+    sombre/clair/sombre à 45° (`#101820`/`#ccc`/`#101820`) repris du motif
+    de référence lst-video-story. Implémenté en CSS via le motif "double
+    fond" (`background: linear-gradient(#000,#000) padding-box, ... border-box`
+    + `border-color: transparent`) plutôt que `border-image` (fiabilité du
+    `border-radius` inter-navigateurs) — nouvelle variable CSS unique
+    `--navi-story-bubble-border-bg` (couleur unie ou fonction
+    `linear-gradient()` complète selon le mode).
+  Curseurs `<input type="range">` avec aperçu en direct pour tous ces
+  réglages, même mécanisme que les curseurs du mockup de téléphone.
 - Reste à faire avant soumission effective (non automatisable) :
   validation de `readme.txt` via le validateur officiel une fois le dépôt
   SVN attribué.

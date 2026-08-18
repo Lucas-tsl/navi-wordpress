@@ -23,12 +23,11 @@
     --navi-story-phone-width: 200px;
     --navi-story-bubble-size: 64px;
 
-    /* Pas de valeur ici : volontairement absente tant qu'aucune couleur
-       n'est réglée dans Navi > Stories, pour que .navi-story-bubble-circle
-       retombe sur var(--navi-color-accent) via son propre fallback
-       (voir plus bas) — la bulle suit alors automatiquement la couleur
-       d'accent si celle-ci change (Navi > Apparence), sans double
-       réglage à synchroniser. */
+    /* Anneau dégradé sombre/clair/sombre à 45°, réglage par défaut de la
+       bordure de bulle (Navi > Stories > Bulles) — une couleur unie reste
+       possible en réglage, cette valeur est alors remplacée par une
+       surcharge inline (voir includes/modules/stories/stories-frontend.php). */
+    --navi-story-bubble-border-bg: linear-gradient(45deg, #101820, #ccc, #101820);
 }
 
 /* ============================================================
@@ -57,14 +56,21 @@
     font-family: inherit;
 }
 
+/* Bordure en dégradé (ou couleur unie, voir Navi > Stories > Bulles) via
+   le motif "double fond" plutôt que border-image : border transparente +
+   deux fonds superposés, l'un cadré sur le padding-box (remplissage
+   noir derrière l'aperçu), l'autre sur le border-box (dégradé ou couleur,
+   visible uniquement dans l'épaisseur de la bordure) — border-image ne
+   supporte pas border-radius de façon fiable inter-navigateurs, ce motif
+   oui. */
 .navi-story-bubble-circle {
     position: relative;
     width: var(--navi-story-bubble-size);
     height: var(--navi-story-bubble-size);
     border-radius: 50%;
     overflow: hidden;
-    border: var(--navi-story-border-width) solid var(--navi-story-bubble-border-color, var(--navi-color-accent));
-    background: #000;
+    border: var(--navi-story-border-width) solid transparent;
+    background: linear-gradient(#000, #000) padding-box, var(--navi-story-bubble-border-bg) border-box;
 }
 
 .navi-story-bubble-preview {
@@ -207,13 +213,26 @@
    large que le conteneur), centrée horizontalement et débordant sur les
    côtés — équivalent d'un `object-fit: cover` (non supporté nativement sur
    une iframe), `overflow: hidden` du parent masque le débordement latéral.
-   Mêmes paramètres que Navi PrestaShop (views/css/stories.css) : pas de
-   zoom supplémentaire (un essai de `scale()` pour masquer le bandeau
-   titre/chaîne YouTube coupait trop sur l'image) — le rognage repose
-   uniquement sur les zones `.navi-story-guard-top/bottom` ci-dessous, qui
-   absorbent le tap sur ce bandeau plutôt que de laisser l'iframe y
-   réagir, tout en laissant le centre de la vidéo cliquable pour
-   pause/lecture (`pointer-events: auto`). */
+   `scale(1.35)` en plus : même à `controls=0`, le lecteur YouTube dessine
+   toujours son propre bandeau titre/chaîne en haut et son filigrane
+   "Shorts" en bas (chrome du lecteur, pas du CSS à nous, ni du JS — aucun
+   moyen de l'atteindre depuis une iframe cross-origin, Same-Origin
+   Policy — confirmé par échantillonnage de pixels). Paramètres bruts de
+   Navi PrestaShop (aucun zoom) essayés en premier, mais insuffisants en
+   pratique : PrestaShop y est exposé de façon identique (même
+   construction d'URL d'embed, assets/js/stories.js), le bandeau y est
+   simplement moins visible selon la vidéo/le thème testés. La hauteur
+   réelle du bandeau titre varie avec la longueur du nom de la chaîne (nom
+   court sur une ligne vs. nom long qui passe sur deux) : `1.2` et `1.25`
+   laissaient un résidu visible sur une chaîne au nom long (testé avec un
+   vrai compte YouTube) ; `1.35` couvre ce cas tout en restant en dessous
+   du premier essai à 1.32 jugé "trop zoomé" (celui-ci recadrait aussi
+   sur un test avec un nom de chaîne plus court, d'où l'impression d'un
+   zoom excessif). Les zones `.navi-story-guard-top/bottom` ci-dessous
+   restent en filet de sécurité (absorbent le tap) si un résidu dépasse
+   malgré tout sur une vidéo donnée — ajuster cette valeur ici si besoin,
+   un seul endroit à changer (les deux iframes, desktop et plein écran
+   mobile, partagent le même réglage). */
 .navi-story-phone-screen iframe {
     position: absolute;
     top: 0;
@@ -221,7 +240,8 @@
     height: 100%;
     width: auto;
     aspect-ratio: 9 / 16;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(1.35);
+    transform-origin: center;
     border: 0;
     display: block;
     pointer-events: auto;
@@ -370,6 +390,10 @@
     background: var(--navi-story-overlay-bg);
 }
 
+/* scale(1.35) : même correctif que le panneau desktop
+   (.navi-story-phone-screen iframe plus haut) — pousse le bandeau
+   titre/chaîne et le filigrane "Shorts" du lecteur YouTube hors du cadre
+   visible. */
 .navi-story-fullscreen-slide iframe {
     position: absolute;
     top: 0;
@@ -378,7 +402,8 @@
     width: auto;
     aspect-ratio: 9 / 16;
     min-width: 100%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(1.35);
+    transform-origin: center;
     border: 0;
     display: block;
     pointer-events: auto;
