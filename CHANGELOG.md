@@ -1,5 +1,27 @@
 # Changelog
 
+## Non publié
+
+Chantier 7 : préparation à la soumission WordPress.org (pas de changement
+fonctionnel du plugin).
+
+- `readme.txt` au format strict WordPress.org (`=== Navi ===`, entêtes
+  requises, sections Description/Installation/FAQ/Screenshots/Changelog,
+  divulgation des services externes — Google Consent Mode V2, YouTube
+  no-cookie).
+- `.wordpress-org/assets/` : icônes 128×128/256×256 et bannière 772×250,
+  générées à partir du logo existant — exclu du zip du plugin
+  (`.distignore`), destiné au dossier `assets/` du dépôt **SVN**
+  WordPress.org (distinct du dossier `assets/` du plugin), voir README.md
+  section "Soumission WordPress.org".
+- `navi.php` : en-têtes `Requires at least`/`Requires PHP` ajoutés (déjà
+  présents dans `readme.txt`, dupliqués dans l'en-tête du plugin pour la
+  vérification de compatibilité avant installation).
+- Restent à faire avant soumission effective (non automatisable) : pseudo
+  réel du compte développeur dans `Contributors:`, captures d'écran
+  (`screenshot-1.png` à `screenshot-5.png`), validation de `readme.txt`
+  via le validateur officiel.
+
 ## 0.4.0
 
 Chantier 6 : gestion native des Stories (bulles vidéo produit) — mêmes

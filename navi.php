@@ -3,6 +3,8 @@
  * Plugin Name: Navi
  * Description: Hub d'engagement flottant pour WordPress/WooCommerce : consentement cookies (Google Consent Mode V2), ajout au panier automatique sur fiche produit, accessibilité (langue, taille du texte, contraste, curseur, soulignage des liens), pilotés depuis un bouton unique.
  * Version: 0.4.0
+ * Requires at least: 6.0
+ * Requires PHP: 7.4
  * Author: Troteseil Lucas
  * Author URI: https://github.com/Lucas-tsl
  * Text Domain: navi
