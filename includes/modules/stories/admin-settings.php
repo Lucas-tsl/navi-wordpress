@@ -16,6 +16,7 @@ function navi_stories_ajouter_menu() {
 add_action( 'admin_init', 'navi_stories_enregistrer_parametres' );
 function navi_stories_enregistrer_parametres() {
     register_setting( 'navi_stories_options_group', 'navi_stories_show_label', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
+    register_setting( 'navi_stories_options_group', 'navi_stories_auto_display', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_border_width', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_story_border_width', 'default' => NAVI_STORIES_DEFAULT_BORDER_WIDTH ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_color_phone_bg', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_hex_color' ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_color_close_icon', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_hex_color' ) );
@@ -56,6 +57,22 @@ function navi_stories_page_reglages_html() {
         <form method="post" action="options.php">
             <?php settings_fields( 'navi_stories_options_group' ); ?>
             <table class="form-table">
+                <tr valign="top">
+                    <th scope="row"><?php esc_html_e( 'Afficher automatiquement après la galerie produit', 'navi' ); ?></th>
+                    <td>
+                        <input type="hidden" name="navi_stories_auto_display" value="0" />
+                        <input type="checkbox" name="navi_stories_auto_display" value="1" <?php checked( navi_stories_auto_display() ); ?> />
+                        <p class="description">
+                            <?php
+                            printf(
+                                /* translators: %s: nom du shortcode entre crochets, ex. [navi_stories] */
+                                esc_html__( 'Décocher pour positionner les bulles vous-même via le shortcode %s (dans le contenu, un constructeur de page, ou un template de thème) plutôt qu\'automatiquement après les images du produit.', 'navi' ),
+                                '<code>[navi_stories]</code>'
+                            );
+                            ?>
+                        </p>
+                    </td>
+                </tr>
                 <tr valign="top">
                     <th scope="row"><?php esc_html_e( 'Afficher le titre de la bulle', 'navi' ); ?></th>
                     <td>

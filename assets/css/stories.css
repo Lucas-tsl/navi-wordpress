@@ -199,17 +199,13 @@
    large que le conteneur), centrée horizontalement et débordant sur les
    côtés — équivalent d'un `object-fit: cover` (non supporté nativement sur
    une iframe), `overflow: hidden` du parent masque le débordement latéral.
-   `scale(1.32)` en plus : même à `controls=0`, le lecteur YouTube dessine
-   toujours son propre bandeau titre/chaîne en haut et son filigrane
-   "Shorts" en bas (chrome du lecteur, pas du CSS à nous — confirmé par
-   échantillonnage de pixels, bandes ~9%/~7% de la hauteur) ; zoomer
-   l'iframe depuis son centre pousse ces deux bandes hors du cadre visible
-   tout en gardant la vidéo elle-même centrée et remplie. Interaction
-   autorisée (`pointer-events: auto`) : permet de mettre en pause d'un tap
-   et relancer la vidéo si elle est terminée (YouTube affiche un bouton de
-   reprise à la fin même avec `controls=0`). Les zones
-   `.navi-story-guard-top/bottom` (voir plus bas) restent en filet de
-   sécurité si un résidu de chrome dépasse encore sur une vidéo donnée. */
+   Mêmes paramètres que Navi PrestaShop (views/css/stories.css) : pas de
+   zoom supplémentaire (un essai de `scale()` pour masquer le bandeau
+   titre/chaîne YouTube coupait trop sur l'image) — le rognage repose
+   uniquement sur les zones `.navi-story-guard-top/bottom` ci-dessous, qui
+   absorbent le tap sur ce bandeau plutôt que de laisser l'iframe y
+   réagir, tout en laissant le centre de la vidéo cliquable pour
+   pause/lecture (`pointer-events: auto`). */
 .navi-story-phone-screen iframe {
     position: absolute;
     top: 0;
@@ -217,8 +213,7 @@
     height: 100%;
     width: auto;
     aspect-ratio: 9 / 16;
-    transform: translateX(-50%) scale(1.32);
-    transform-origin: center;
+    transform: translateX(-50%);
     border: 0;
     display: block;
     pointer-events: auto;
@@ -367,10 +362,6 @@
     background: var(--navi-story-overlay-bg);
 }
 
-/* scale(1.32) : même correctif que le panneau desktop
-   (.navi-story-phone-screen iframe ci-dessus) — pousse le bandeau
-   titre/chaîne et le filigrane "Shorts" du lecteur YouTube hors du cadre
-   visible. */
 .navi-story-fullscreen-slide iframe {
     position: absolute;
     top: 0;
@@ -379,8 +370,7 @@
     width: auto;
     aspect-ratio: 9 / 16;
     min-width: 100%;
-    transform: translateX(-50%) scale(1.32);
-    transform-origin: center;
+    transform: translateX(-50%);
     border: 0;
     display: block;
     pointer-events: auto;

@@ -39,6 +39,11 @@ soumise au [répertoire officiel WordPress.org](https://wordpress.org/plugins/).
   YouTube ou MP4 importé, onglet dédié sur la fiche produit WooCommerce,
   panneau desktop avec mockup de téléphone en CSS pur, plein écran mobile
   avec défilement type stories — voir Navi > Stories dans le Back Office).
+  Affichage par défaut après la galerie produit, ou via le shortcode
+  `[navi_stories]` (désactiver "Afficher automatiquement" dans Navi >
+  Stories pour ne positionner les bulles que via le shortcode) —
+  `[navi_stories]` seul utilise le produit de la page courante,
+  `[navi_stories id="123"]` cible un produit précis.
 - Suite de tests Playwright automatisée : pas encore mise en place (prochain
   chantier — vérification faite manuellement jusqu'ici contre un catalogue
   de démonstration, voir Développement ci-dessous).

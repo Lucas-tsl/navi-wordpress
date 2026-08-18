@@ -29,7 +29,9 @@ behind **a single floating button** (gear icon, corner of the screen):
 * **Stories** — up to 4 video bubbles per product (YouTube or an
   uploaded MP4), a dedicated tab on the WooCommerce product page, a
   desktop panel with a pure-CSS phone mockup (no external image), and a
-  mobile full-screen stories-style view.
+  mobile full-screen stories-style view. Displayed by default after the
+  product gallery, or wherever you like via the `[navi_stories]`
+  shortcode.
 
 Built from the ground up to welcome new modules without touching the
 core: each module registers itself and talks to the central button
@@ -93,6 +95,16 @@ A fallback chain of CSS selectors covers standard WooCommerce markup and
 the most common themes. If your theme has an unusual structure, a
 "custom CSS selector" setting per field (price, name, image) is
 available under Navi > Cart.
+
+= Can I control where the story bubbles are displayed? =
+
+By default they appear right after the product gallery. Use the
+`[navi_stories]` shortcode to place them anywhere else instead (post
+content, a page builder, or a theme template) — add
+`id="123"` to target a specific product, or leave it empty to use the
+current product page. To avoid showing the bubbles twice, turn off
+"Afficher automatiquement" under Navi > Stories if you use the shortcode
+exclusively.
 
 == Screenshots ==
 
