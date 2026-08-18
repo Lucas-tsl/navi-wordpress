@@ -1,4 +1,8 @@
-# Navi
+# Navi (Saito Navi)
+
+> En-tête `Plugin Name` du plugin : "Saito Navi" — "Navi" seul est trop
+> court pour WordPress.org (minimum 5 lettres latines). Slug/text-domain,
+> noms de fonctions/classes et dépôt GitHub restent `navi`.
 
 Plugin WordPress/WooCommerce qui regroupe, derrière **un seul bouton
 flottant** (icône engrenage, coin de l'écran), plusieurs modules
@@ -38,12 +42,11 @@ soumise au [répertoire officiel WordPress.org](https://wordpress.org/plugins/).
 - Suite de tests Playwright automatisée : pas encore mise en place (prochain
   chantier — vérification faite manuellement jusqu'ici contre un catalogue
   de démonstration, voir Développement ci-dessous).
-- Préparation à la soumission WordPress.org : `readme.txt` (`Contributors:
-  lucastsl`), bannière/icône (`.wordpress-org/assets/`) prêts. Reste à
-  faire avant soumission effective : capturer les 5 captures d'écran
-  listées dans `readme.txt` (à déposer dans le dossier SVN `assets/` du
-  plugin sur WordPress.org, nommées `screenshot-1.png` à
-  `screenshot-5.png` — voir Soumission WordPress.org ci-dessous).
+- Préparation à la soumission WordPress.org : `readme.txt`
+  (`Contributors: lucastsl`), bannière/icône et les 8 captures d'écran
+  (`.wordpress-org/assets/`) prêts. Reste à faire avant soumission
+  effective : passer `readme.txt` au validateur officiel une fois le
+  dépôt SVN attribué (voir Soumission WordPress.org ci-dessous).
 
 ## Architecture
 
@@ -196,6 +199,13 @@ docker exec navi_wp_cli wp core install --path=/var/www/html \
 docker exec navi_wp_cli wp plugin install woocommerce --activate --path=/var/www/html
 docker exec navi_wp_cli wp theme install storefront --activate --path=/var/www/html
 docker exec navi_wp_cli wp plugin install wcboost-variation-swatches --activate --path=/var/www/html
+
+# Important pour tester en visiteur non connecté (curl, Playwright sans
+# login) : l'installation WooCommerce active "Coming soon" par défaut sur
+# les pages boutique, qui contourne les templates produit (et donc les
+# hooks utilisés par Navi) pour les visiteurs déconnectés — invisible en
+# étant soi-même connecté en admin, d'où un faux négatif si non désactivé.
+docker exec navi_wp_cli wp option update woocommerce_coming_soon no --path=/var/www/html
 ```
 
 **Catalogue de démonstration** (utile pour tester le module Panier —
@@ -243,9 +253,11 @@ du zip (artefact + attaché à une Release GitHub).
 ## Soumission WordPress.org
 
 `readme.txt` (racine du dépôt, format strict WordPress.org) et
-`.wordpress-org/assets/` (bannière 772×250, icônes 128×128/256×256)
-sont prêts pour la soumission. **Important** : ce dossier `.wordpress-org/`
-n'est distribué ni dans le zip du plugin (exclu via `.distignore`) ni sur
+`.wordpress-org/assets/` (bannière 772×250, icônes 128×128/256×256,
+captures d'écran `screenshot-1.png` à `screenshot-8.png`, numérotées dans
+l'ordre de la section `== Screenshots ==` de `readme.txt`) sont prêts pour
+la soumission. **Important** : ce dossier `.wordpress-org/` n'est
+distribué ni dans le zip du plugin (exclu via `.distignore`) ni sur
 WordPress.org de la même façon que les fichiers du plugin — une fois le
 dépôt SVN attribué par l'équipe WordPress.org (après acceptation), son
 contenu doit être copié manuellement dans le dossier `assets/` du **SVN**
@@ -255,7 +267,6 @@ réel) :
 ```bash
 svn co https://plugins.svn.wordpress.org/navi navi-svn
 cp .wordpress-org/assets/*.png navi-svn/assets/
-cp screenshot-*.png navi-svn/assets/   # captures d'écran, à réaliser avant soumission
 svn add navi-svn/assets/*.png
 svn commit -m "Ajout bannière, icônes et captures d'écran"
 ```
@@ -266,7 +277,7 @@ la CI), puis `navi-svn/tags/0.4.0/` etc. à chaque version publiée.
 
 Avant la soumission effective (formulaire sur
 [wordpress.org/plugins/developers/add/](https://wordpress.org/plugins/developers/add/)) :
-capturer les captures d'écran, et passer `readme.txt` au
+passer `readme.txt` au
 [validateur officiel](https://wordpress.org/plugins/developers/readme-validator/).
 
 ## Licence

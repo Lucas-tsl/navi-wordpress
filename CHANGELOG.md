@@ -2,24 +2,53 @@
 
 ## Non publié
 
-Chantier 7 : préparation à la soumission WordPress.org (pas de changement
-fonctionnel du plugin).
+Chantier 7 : préparation à la soumission WordPress.org, y compris la
+correction de tous les points relevés par l'outil officiel **Plugin
+Check**, plus deux corrections front trouvées pendant cette passe.
 
-- `readme.txt` au format strict WordPress.org (`=== Navi ===`, entêtes
-  requises, sections Description/Installation/FAQ/Screenshots/Changelog,
-  divulgation des services externes — Google Consent Mode V2, YouTube
-  no-cookie).
-- `.wordpress-org/assets/` : icônes 128×128/256×256 et bannière 772×250,
-  générées à partir du logo existant — exclu du zip du plugin
-  (`.distignore`), destiné au dossier `assets/` du dépôt **SVN**
-  WordPress.org (distinct du dossier `assets/` du plugin), voir README.md
-  section "Soumission WordPress.org".
-- `navi.php` : en-têtes `Requires at least`/`Requires PHP` ajoutés (déjà
-  présents dans `readme.txt`, dupliqués dans l'en-tête du plugin pour la
-  vérification de compatibilité avant installation).
-- Reste à faire avant soumission effective (non automatisable) : captures
-  d'écran (`screenshot-1.png` à `screenshot-5.png`), validation de `readme.txt`
-  via le validateur officiel.
+- `readme.txt` au format strict WordPress.org, **rédigé en anglais**
+  (obligatoire depuis la politique WordPress.org de juillet 2025 —
+  `readme_description_non_official_language`), en-tête `=== Saito Navi
+  ===` (en-tête `Plugin Name` renommé : "Navi" seul est trop court,
+  minimum 5 lettres latines requis par WordPress.org), `Tested up to:
+  7.0`.
+- `.wordpress-org/assets/` : icônes 128×128/256×256, bannière 772×250
+  (générées à partir du logo existant), et 8 captures d'écran (Back
+  Office et front, `screenshot-1.png` à `screenshot-8.png`) — exclu du
+  zip du plugin (`.distignore`), destiné au dossier `assets/` du dépôt
+  **SVN** WordPress.org, voir README.md section "Soumission
+  WordPress.org".
+- `navi.php` : en-têtes `Requires at least`/`Requires PHP` ajoutés ;
+  suppression de l'appel à `load_plugin_textdomain()` (discouraged
+  depuis WP 4.6 pour les plugins hébergés sur WordPress.org).
+- `.distignore` : `scripts/` et `docker-compose.yml` désormais exclus du
+  zip distribué (`application_detected` — les scripts de développement
+  ne doivent pas être livrés avec le plugin).
+- `includes/modules/stories/data.php` : upload des prévisualisations MP4
+  réécrit avec `wp_handle_upload()` (redirigé vers `navi-stories/` via le
+  filtre `upload_dir`) à la place de `move_uploaded_file()` direct,
+  interdit par les règles WordPress.org (`Generic.PHP.ForbiddenFunctions`).
+  Comportement inchangé (toujours hors médiathèque, toujours dans le
+  dossier dédié).
+- **Corrigé** : le fond blanc du panneau desktop Stories (mockup de
+  téléphone) laissait apparaître un flash de carte claire autour du
+  mockup à l'ouverture — panneau rendu transparent pour ce module
+  uniquement (`assets/css/core.css`), même correctif que Navi
+  PrestaShop.
+- **Corrigé** : les libellés de l'onglet Stories (fiche produit) se
+  chevauchaient avec le champ du dessus — le CSS de WooCommerce
+  (`.woocommerce_options_panel label`) applique `float:left` et une
+  marge négative (`margin-left:-150px`) à tous les `<label>`, jamais
+  neutralisés par notre propre CSS (`includes/modules/stories/admin-product-tab.php`).
+- Validé : le hub d'engagement et les bulles Stories fonctionnaient
+  normalement en admin connecté, mais restaient invisibles pour un
+  visiteur non connecté testé en CLI — cause identifiée comme un réglage
+  **WooCommerce "Coming soon" activé sur l'instance de dev locale**
+  (`woocommerce_coming_soon`), pas un bug du plugin ; désactivé sur
+  l'environnement Docker pour fiabiliser les futurs tests.
+- Reste à faire avant soumission effective (non automatisable) :
+  validation de `readme.txt` via le validateur officiel une fois le dépôt
+  SVN attribué.
 
 ## 0.4.0
 

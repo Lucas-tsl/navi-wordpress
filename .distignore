@@ -16,3 +16,5 @@ phpcs.xml.dist
 eslint.config.js
 .stylelintrc.json
 README.md
+scripts/
+docker-compose.yml

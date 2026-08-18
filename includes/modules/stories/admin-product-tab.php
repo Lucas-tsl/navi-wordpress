@@ -49,9 +49,9 @@ function navi_stories_render_product_panel() {
                 .navi-story-admin-preview { position: relative; display: flex; align-items: center; justify-content: center; height: 140px; background: #222; }
                 .navi-story-admin-preview img { max-width: 100%; max-height: 100%; display: none; }
                 .navi-story-admin-placeholder { color: #999; font-size: 0.8125rem; }
-                .navi-story-admin-body { padding: 14px; }
-                .navi-story-admin-body label { font-weight: 600; font-size: 0.8125rem; display: block; margin-bottom: 4px; }
-                .navi-story-admin-body .form-field { margin-bottom: 12px; }
+                .navi-story-admin-body { padding: 14px; overflow: hidden; }
+                .navi-story-admin-body .form-field { float: none; width: auto; padding: 0; margin: 0 0 12px; clear: both; }
+                .navi-story-admin-body label { font-weight: 600; font-size: 0.8125rem; display: block; float: none; width: auto; margin: 0 0 4px; }
                 .navi-story-admin-body details { margin-top: 8px; }
                 .navi-story-admin-body summary { cursor: pointer; font-size: 0.8125rem; color: #666; margin-bottom: 8px; }
                 .navi-story-admin-file-info { font-size: 0.75rem; margin-top: 4px; }

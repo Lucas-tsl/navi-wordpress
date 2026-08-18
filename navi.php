@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Navi
- * Description: Hub d'engagement flottant pour WordPress/WooCommerce : consentement cookies (Google Consent Mode V2), ajout au panier automatique sur fiche produit, accessibilité (langue, taille du texte, contraste, curseur, soulignage des liens), pilotés depuis un bouton unique.
+ * Plugin Name: Saito Navi
+ * Description: Floating engagement hub for WordPress/WooCommerce: cookie consent (Google Consent Mode V2), sticky add-to-cart on the product page, accessibility (language, text size, contrast, cursor, underlined links), all driven from a single button.
  * Version: 0.4.0
  * Requires at least: 6.0
  * Requires PHP: 7.4
@@ -21,11 +21,10 @@ define( 'NAVI_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'NAVI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'NAVI_VERSION', '0.4.0' );
 
-// Chargement des traductions
-add_action( 'plugins_loaded', 'navi_charger_traductions' );
-function navi_charger_traductions() {
-    load_plugin_textdomain( 'navi', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-}
+// Pas d'appel à load_plugin_textdomain() : discouraged depuis WP 4.6 pour
+// les plugins hébergés sur WordPress.org, qui chargent automatiquement les
+// traductions du slug. N'affecte pas includes/core/i18n.php (interception
+// gettext indépendante, pas basée sur des fichiers .mo).
 
 // Les modules panier (sticky-cart) et stories dépendent de WooCommerce
 // (classes Product, hooks woocommerce_*) — le noyau et les modules cookies/
