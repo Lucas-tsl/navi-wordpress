@@ -1,5 +1,5 @@
 === Navi ===
-Contributors: TODO-pseudo-wordpress-org
+Contributors: lucastsl
 Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 6.9
