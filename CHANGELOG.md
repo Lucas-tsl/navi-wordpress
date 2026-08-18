@@ -46,6 +46,26 @@ Check**, plus deux corrections front trouvées pendant cette passe.
   **WooCommerce "Coming soon" activé sur l'instance de dev locale**
   (`woocommerce_coming_soon`), pas un bug du plugin ; désactivé sur
   l'environnement Docker pour fiabiliser les futurs tests.
+- **Corrigé** : bandeau noir en haut et en bas de la vidéo dans le
+  panneau desktop et le plein écran mobile — même à `controls=0`, le
+  lecteur YouTube dessine toujours son propre bandeau titre/chaîne et son
+  filigrane "Shorts" (confirmé par échantillonnage de pixels, pas un
+  artefact de notre CSS). L'iframe est maintenant zoomée
+  (`transform: scale(1.32)`) depuis son centre pour pousser ces deux
+  bandes hors du cadre visible, dans `assets/css/stories.css`.
+- Renforcé (défensif, pour un centrage fiable de l'icône engrenage sur
+  tous les navigateurs/appareils) : `assets/css/core.css` remet à zéro
+  `padding`/`margin`/`appearance` sur le bouton `.navi-fab-toggle` (un
+  `<button>` a un padding par défaut variable selon le navigateur,
+  particulièrement Safari/iOS, qui peut décaler un contenu centré par
+  flexbox) et pose `box-sizing: border-box` explicitement sur tout le
+  bouton flottant.
+- Onglet Stories (fiche produit) : rappel ajouté dans la section
+  "Prévisualisation personnalisée" expliquant qu'une vignette statique
+  s'affiche par défaut et qu'un MP4 importé donne une bulle animée en
+  boucle — comportement déjà présent, juste rendu plus visible dans
+  l'interface (aucune story sur le catalogue de test n'a de MP4 associé,
+  d'où l'absence d'aperçu animé constatée en local).
 - Reste à faire avant soumission effective (non automatisable) :
   validation de `readme.txt` via le validateur officiel une fois le dépôt
   SVN attribué.

@@ -101,6 +101,10 @@ function navi_stories_render_product_panel() {
                             <details>
                                 <summary><?php esc_html_e( 'Prévisualisation personnalisée (optionnel)', 'navi' ); ?></summary>
 
+                                <p class="description">
+                                    <?php esc_html_e( 'Sans vidéo de prévisualisation, la bulle affiche une image fixe (vignette YouTube). Pour une bulle animée (mini-vidéo en boucle, plus vivante), importez un court extrait MP4 ci-dessous.', 'navi' ); ?>
+                                </p>
+
                                 <div class="form-field">
                                     <label for="navi_story_preview_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( 'URL de la vidéo de prévisualisation (MP4)', 'navi' ); ?></label>
                                     <input type="text" style="width:100%;"
