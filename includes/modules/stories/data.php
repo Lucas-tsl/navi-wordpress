@@ -143,11 +143,12 @@ function navi_stories_ensure_upload_dir() {
  */
 function navi_stories_handle_uploaded_preview( $index, &$errors ) {
     $field = 'navi_story_preview_file_' . (int) $index;
+    // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- nonce vérifié par l'appelant (navi_stories_process_product_meta, admin-product-tab.php) avant navi_stories_save() ; UPLOAD_ERR_* est un entier fourni par PHP, pas une entrée utilisateur.
     if ( ! isset( $_FILES[ $field ] ) || UPLOAD_ERR_NO_FILE === $_FILES[ $field ]['error'] ) {
         return null;
     }
 
-    $file  = $_FILES[ $field ]; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- validé ci-dessous (extension/MIME/taille), pas affiché tel quel.
+    $file  = $_FILES[ $field ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce vérifié par l'appelant ; contenu validé ci-dessous (extension/MIME/taille), pas affiché tel quel.
     $error = navi_validate_mp4_upload( $file );
     if ( '' !== $error ) {
         $errors[] = sprintf( '#%d — %s', $index, $error );
@@ -177,6 +178,7 @@ function navi_stories_handle_uploaded_preview( $index, &$errors ) {
  */
 function navi_stories_save( $product_id ) {
     $product_id = (int) $product_id;
+    // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié par l'appelant (navi_stories_process_product_meta, admin-product-tab.php) avant navi_stories_save().
     if ( ! $product_id || ! isset( $_POST['navi_story_submitted'] ) ) {
         return;
     }
@@ -185,6 +187,7 @@ function navi_stories_save( $product_id ) {
     $slots  = array();
 
     for ( $index = 1; $index <= NAVI_STORY_LIMIT; $index++ ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce vérifié par l'appelant ; navi_extract_youtube_id() ne renvoie qu'un identifiant YouTube (regex, 11 caractères alphanumériques) ou une chaîne vide.
         $youtube = navi_extract_youtube_id(
             isset( $_POST[ 'navi_story_youtube_' . $index ] ) ? wp_unslash( $_POST[ 'navi_story_youtube_' . $index ] ) : ''
         );
@@ -193,13 +196,15 @@ function navi_stories_save( $product_id ) {
         }
 
         $uploaded_url = navi_stories_handle_uploaded_preview( $index, $errors );
-        $preview      = $uploaded_url
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié par l'appelant ; valeur passée à esc_url_raw() juste après.
+        $preview = $uploaded_url
             ? $uploaded_url
             : ( isset( $_POST[ 'navi_story_preview_' . $index ] ) ? esc_url_raw( wp_unslash( $_POST[ 'navi_story_preview_' . $index ] ) ) : '' );
         if ( '' === $preview ) {
             $preview = 'https://img.youtube.com/vi/' . $youtube . '/maxresdefault.jpg';
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié par l'appelant ; valeur passée à sanitize_text_field() juste avant stockage.
         $slots[ $index ] = array(
             'youtube' => sanitize_text_field( $youtube ),
             'preview' => esc_url_raw( $preview ),

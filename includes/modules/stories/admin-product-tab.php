@@ -62,6 +62,7 @@ function navi_stories_render_product_panel() {
                 <?php foreach ( $slots as $index => $slot ) : ?>
                     <div class="navi-story-admin-card" data-slot="<?php echo esc_attr( $index ); ?>">
                         <div class="navi-story-admin-card-header">
+                            <?php /* translators: %d: numéro de l'emplacement de story (1 à NAVI_STORY_LIMIT). */ ?>
                             <span class="navi-story-admin-card-title"><?php echo esc_html( sprintf( __( 'Story #%d', 'navi' ), $index ) ); ?></span>
                             <span class="navi-story-admin-badge<?php echo $slot['youtube'] ? ' is-filled' : ''; ?>" id="navi-story-badge-<?php echo esc_attr( $index ); ?>">
                                 <?php echo $slot['youtube'] ? esc_html__( 'Configurée', 'navi' ) : esc_html__( 'Vide', 'navi' ); ?>
