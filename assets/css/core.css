@@ -365,7 +365,7 @@
 }
 
 .navi-fab[data-detail="cookie-consent"] .navi-fab-detail > #navi-cookie-modal-overlay,
-.navi-fab[data-detail="sticky-cart"] .navi-fab-detail > #naviStickyVariationBar,
+.navi-fab[data-detail="sticky-cart"] .navi-fab-detail > #navi-sticky-bar,
 .navi-fab[data-detail="accessibility"] .navi-fab-detail > #navi-a11y-panel {
     display: flex;
 }
@@ -471,7 +471,7 @@ html.navi-mouse-user #navi-fab *:focus-visible {
    pas d'anneau de focus visible sur le conteneur lui-même, les vrais éléments
    interactifs à l'intérieur (boutons, cases à cocher) gardent le leur. */
 #navi-cookie-modal-overlay:focus,
-#naviStickyVariationBar:focus,
+#navi-sticky-bar:focus,
 #navi-a11y-panel:focus {
     outline: none;
 }

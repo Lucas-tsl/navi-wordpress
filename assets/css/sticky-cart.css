@@ -1,0 +1,521 @@
+/**
+ * Panneau "Ajout au panier", affiché comme contenu du même objet que le
+ * bouton engrenage (voir includes/core/frontend.php, assets/css/core.css) :
+ * ce fichier ne définit plus que le contenu interne, pas de position ni
+ * d'habillage propre.
+ */
+
+/* Sans ce reset, "width: 100%" + "padding" sur un bouton/texte du panneau
+   (ex. .navi-sticky-add-to-cart, .navi-sticky-out-of-stock) additionne le
+   padding à la largeur au lieu de l'inclure dedans, et déborde du panneau. */
+.navi-sticky-bar,
+.navi-sticky-bar *,
+.navi-sticky-bar *::before,
+.navi-sticky-bar *::after {
+    box-sizing: border-box;
+}
+
+/* Le panneau est un simple bloc de contenu affiché à l'intérieur du slot
+   partagé #navi-fab-detail (voir includes/core/frontend.php et
+   assets/css/core.css) : position, taille et habillage (fond, ombre,
+   bordure) sont portés par #navi-fab lui-même, qui EST l'objet visuel unique. */
+.navi-sticky-bar {
+    width: 100%;
+
+    /* max-height (pas height:100%) : #navi-fab grandit selon son propre
+       contenu (height: auto), donc un pourcentage ici ne se résoudrait
+       jamais et la zone de défilement plus bas ne saurait jamais quand
+       s'activer. */
+    max-height: calc(100vh - 140px);
+    min-height: 0;
+
+    /* display: flex est posé par assets/css/core.css (sélecteur par id, plus
+       spécifique) : ne pas le redéclarer ici, au risque d'entrer en conflit
+       d'ordre de cascade avec la règle qui masque ce panneau par défaut. */
+    flex-direction: column;
+}
+
+@media (max-width: 1440px) {
+    .navi-sticky-bar {
+        max-height: calc(100vh - 120px);
+    }
+}
+
+@media (max-width: 480px) {
+    .navi-sticky-bar {
+        max-height: calc(100vh - 110px);
+    }
+}
+
+.navi-sticky-panel-close {
+    position: absolute;
+    top: 8px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    border-radius: 0;
+    border: none;
+    background: rgba(0, 0, 0, 0.06);
+    color: #333;
+    font-size: 0.875rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.navi-sticky-panel-close:hover {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+/* Seule cette zone défile si le contenu dépasse : la croix, elle, reste
+   toujours en place et cliquable dans son intégralité. */
+.navi-sticky-panel-scroll {
+    flex: 1;
+    min-height: 0;
+
+    /* Les deux axes doivent être fixés ensemble : sans overflow-x explicite,
+       certains navigateurs activent aussi une barre horizontale dès que le
+       contenu déborde d'un pixel, même avec le retour à la ligne des boutons. */
+    overflow: hidden auto;
+
+    /* Marge droite plus large que les autres côtés : laisse de la place à la
+       barre de défilement, pour qu'elle n'arrive pas juste sous la croix de
+       fermeture (position: absolute, hors de cette zone qui défile). */
+    padding: 20px 20px 16px 16px;
+}
+
+/* ========================================
+   Grille (pas de flex imbriqué) : seule façon de placer les MÊMES éléments
+   (image, nom, sélecteur de variation, bouton) à deux endroits différents
+   selon la largeur d'écran, sans dupliquer le contenu ni le JS qui le
+   remplit.
+
+   Desktop/tablette : image à gauche (60px), nom + pastille de couleur +
+   liste déroulante de teinte empilés à droite dans la MÊME colonne (le
+   panneau panier a sa propre largeur, assets/css/core.css
+   [data-detail="sticky-cart"]). 60px plutôt que 72px : pour un produit
+   simple (un seul nom, sans variations à côté), une image plus haute que le
+   texte laissait un blanc disproportionné.
+
+   Mobile (<=480px, media query plus bas) : le sélecteur de variation
+   redescend en pleine largeur, entre la rangée image+nom et le bouton
+   d'ajout — la colonne y est trop étroite pour l'accueillir sans qu'il ne
+   retombe en colonne faute de place.
+   ======================================== */
+.navi-sticky-content {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    grid-template-areas:
+        "image name"
+        "image variations"
+        "cart cart";
+    gap: 8px 14px;
+    opacity: 0;
+    will-change: opacity, transform;
+}
+
+.navi-sticky-product-image {
+    grid-area: image;
+    width: 60px;
+    height: 60px;
+}
+
+.navi-sticky-product-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+.navi-sticky-product-info {
+    grid-area: name;
+
+    /* Centré (pas "start") : pour un produit simple, sans variations pour
+       occuper la colonne, un nom centré à côté de l'image évite qu'il ne
+       reste collé en haut avec du vide visible en dessous. */
+    align-self: center;
+
+    /* min-width: 0 : sans lui, cette cellule de grille refuserait de se
+       réduire sous la largeur naturelle du nom du produit, et pourrait
+       déborder du panneau. */
+    min-width: 0;
+}
+
+.navi-sticky-product-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--navi-color-ink);
+    font-family: inherit;
+}
+
+.navi-sticky-variation-options {
+    grid-area: variations;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+/* Conteneur de la pastille de couleur + liste déroulante de variation (voir
+   assets/js/sticky-cart.js, syncVariations). !important sur les propriétés
+   de mise en page : le thème/WooCommerce applique parfois ses propres
+   règles génériques à ce type de conteneur (display:block...) avec une
+   spécificité ou un ordre de chargement qui prend le pas sur les nôtres —
+   même raison que le !important déjà posé sur les cases à cocher,
+   assets/css/cookie-consent.css. */
+.navi-sticky-variation-buttons {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+/* Produit simple (sans variations, voir syncSimpleProduct, assets/js/sticky-cart.js
+   qui retire complètement .navi-sticky-variation-options du DOM) : la zone
+   "variations" de la grille disparaît entièrement, pas seulement son
+   contenu — sinon la ligne et le row-gap qui l'entourent laissaient un
+   blanc entre le nom et le bouton, même sans rien à y afficher. Spécificité
+   plus élevée que les règles ci-dessus (et la media query mobile plus bas) :
+   gagne sur les deux, pas besoin de la répéter par point de rupture. */
+.navi-sticky-bar.simple-product .navi-sticky-content {
+    grid-template-areas:
+        "image name"
+        "cart cart";
+}
+
+/* Le sélecteur de variation redescend en pleine largeur, entre la rangée
+   image+nom et le bouton d'ajout : la colonne à droite de l'image est ici
+   trop étroite pour l'accueillir sans qu'il ne retombe en colonne faute de
+   place (voir grid-template-areas plus haut pour la disposition
+   desktop/tablette). Cette règle doit rester déclarée APRÈS la règle de
+   base .navi-sticky-content ci-dessus : à spécificité égale, c'est l'ordre
+   dans le fichier qui décide, pas la media query elle-même. */
+@media (max-width: 480px) {
+    .navi-sticky-content {
+        grid-template-areas:
+            "image name"
+            "variations variations"
+            "cart cart";
+    }
+
+    .navi-sticky-variation-options {
+        align-self: start;
+    }
+}
+
+/* Sélecteur de teinte personnalisé (voir assets/js/sticky-cart.js,
+   syncVariations) : un déclencheur (pastille + nom + chevron) qui déplie une
+   liste de teintes juste en dessous, chacune avec sa propre pastille de
+   couleur — impossible avec un <select> natif, dont les navigateurs ignorent
+   le style des <option>. flex: 1 1 auto sur le déclencheur : occupe toute la
+   largeur disponible dans .navi-sticky-variation-buttons (voir plus haut). */
+.navi-sticky-shade-picker {
+    flex: 1 1 auto;
+    min-width: 0;
+    position: relative;
+}
+
+/* Cadre neutre fixe, volontairement PAS teinté à la couleur de la teinte
+   choisie (contrairement à l'option sélectionnée dans la liste ouverte,
+   plus bas) : la couleur ne doit apparaître que dans la liste dépliée, pas
+   sur le déclencheur à l'état fermé. */
+.navi-sticky-shade-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid rgba(var(--navi-color-ink-rgb), 0.18);
+    background: var(--navi-color-surface);
+    color: var(--navi-color-ink);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 0;
+}
+
+/* Pastille de couleur de la teinte affichée (déclencheur) ou listée (menu
+   déplié ci-dessous), lue depuis les vignettes WCBoost Variation Swatches de
+   la fiche produit si ce plugin est actif (voir getSwatchColor,
+   assets/js/sticky-cart.js) — vide sinon, voir .navi-sticky-shade-swatch--empty
+   plus bas. Carrée avec un simple filet 1px (pas un rond), teintée d'accent
+   plutôt que d'encre neutre. Taille fixe, ne rétrécit jamais. */
+.navi-sticky-shade-trigger-swatch,
+.navi-sticky-shade-option-swatch {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    border-radius: 0;
+    border: 1px solid rgba(var(--navi-color-accent-rgb), 0.45);
+}
+
+/* Aucune couleur trouvée pour la teinte (vignette de swatches absente ou non
+   reconnue) : pastille vide plutôt qu'un carré de couleur trompeur, filet
+   neutre (encre) plutôt qu'accent puisqu'il n'y a pas de couleur à
+   accompagner. */
+.navi-sticky-shade-swatch--empty {
+    background: transparent !important;
+    border-color: rgba(var(--navi-color-ink-rgb), 0.2);
+    border-style: dashed;
+}
+
+.navi-sticky-shade-trigger-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Chevron qui se retourne à l'ouverture (voir aria-expanded posé par
+   setShadePickerOpen, assets/js/sticky-cart.js) : seul signal nécessaire, pas
+   besoin d'animer autre chose sur le déclencheur lui-même. */
+.navi-sticky-shade-trigger-arrow {
+    flex: 0 0 auto;
+    transition: transform 0.2s ease;
+}
+
+.navi-sticky-shade-trigger[aria-expanded="true"] .navi-sticky-shade-trigger-arrow {
+    transform: rotate(180deg);
+}
+
+/* Volet EN LIGNE (pas en survol flottant) : .navi-sticky-panel-scroll, le
+   conteneur qui défile déjà tout le panneau, a overflow:hidden sur son axe
+   horizontal — un menu positionné en absolute risquerait d'y être rogné. En
+   flux normal, il repousse simplement le bouton d'ajout en dessous, sans
+   aucun risque de rognage ni de calcul de position.
+
+   Fermé par défaut (max-height:0 + opacity:0 + overflow:hidden), PAS
+   l'attribut "hidden" (voir assets/js/sticky-cart.js) : permet une
+   transition douce à l'ouverture, pilotée par la classe
+   .navi-sticky-shade-picker--open. Grille de 2 colonnes de "puces" teinte
+   (pastille + nom), plutôt qu'une liste verticale plate : plus visuel et
+   plus compact pour jusqu'à 10 teintes. */
+.navi-sticky-shade-listbox {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+
+    /* TOUT ce qui pourrait laisser un résidu visible à l'état fermé est à 0
+       ici (pas seulement max-height) et transitionné vers sa valeur réelle à
+       l'ouverture : un simple max-height:0 avec un border-width non nul
+       aurait pu, selon la file d'attente CSS, laisser 1 à 3px de bordure
+       perceptibles. Défensif plutôt que de se fier uniquement au
+       recouvrement par max-height + overflow:hidden. */
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-width: 0;
+    border-style: solid;
+    border-color: transparent;
+    background: var(--navi-color-surface);
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden auto;
+    pointer-events: none;
+    transition: max-height 0.25s ease, opacity 0.2s ease, border-color 0.2s ease,
+                border-width 0.25s ease, margin-top 0.25s ease, padding 0.25s ease;
+}
+
+.navi-sticky-shade-picker--open .navi-sticky-shade-listbox {
+    margin-top: 6px;
+    padding: 6px;
+    border-width: 1.5px;
+    border-color: rgba(var(--navi-color-ink-rgb), 0.18);
+
+    /* Assez pour ~5 lignes de 2 colonnes ; au-delà, le reste défile dans ce
+       volet plutôt que d'allonger démesurément tout le panneau panier. */
+    max-height: 280px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navi-sticky-shade-listbox {
+        transition: none;
+    }
+}
+
+.navi-sticky-shade-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    padding: 6px 8px;
+    border: 1px solid rgba(var(--navi-color-ink-rgb), 0.12);
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.navi-sticky-shade-option:hover,
+.navi-sticky-shade-option:focus {
+    background: rgba(var(--navi-color-ink-rgb), 0.05);
+    outline: none;
+}
+
+/* Repli seulement : assets/js/sticky-cart.js (updateShadeTrigger) teinte
+   directement fond/bordure avec la VRAIE couleur de la teinte choisie (style
+   inline, prioritaire), pour que la puce sélectionnée s'accorde à la couleur
+   réelle plutôt qu'à un accent générique. Cette règle ne s'applique que si
+   aucune couleur n'a été trouvée — fond + bordure teintés d'accent plutôt
+   qu'un cadre neutre. */
+.navi-sticky-shade-option--selected {
+    background: rgba(var(--navi-color-accent-rgb), 0.12);
+    border-color: rgba(var(--navi-color-accent-rgb), 0.5);
+}
+
+.navi-sticky-shade-option-label {
+    min-width: 0;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.navi-sticky-shade-trigger:focus-visible,
+.navi-sticky-shade-option:focus-visible {
+    outline: 2px solid var(--navi-color-accent);
+    outline-offset: -2px;
+}
+
+/* Zone bouton d'ajout + message de rupture : dernière zone de la grille,
+   toujours en pleine largeur (voir grid-template-areas plus haut). */
+.navi-sticky-availability {
+    grid-area: cart;
+}
+
+.navi-sticky-add-to-cart {
+    font-family: inherit;
+    width: 100%;
+    padding: 16px 20px;
+    background: var(--navi-color-ink);
+    color: var(--navi-color-surface);
+    border: 1px solid var(--navi-color-ink);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+}
+
+.navi-sticky-add-to-cart:hover:not(:disabled) {
+    background: var(--navi-color-surface);
+    color: var(--navi-color-ink);
+    box-shadow: 0 8px 18px rgba(var(--navi-color-ink-rgb), 0.2);
+}
+
+.navi-sticky-add-to-cart:disabled {
+    background: var(--navi-color-ink);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Remplace le bouton (masqué) quand le produit/la variation est en rupture.
+   Fond/texte teintés d'encre (comme le reste du panneau), pas un gris
+   neutre propre à cet état. */
+.navi-sticky-out-of-stock {
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(var(--navi-color-ink-rgb), 0.06);
+    color: var(--navi-color-ink-soft);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* État de chargement du bouton */
+.navi-sticky-add-to-cart.loading {
+    background: var(--navi-color-ink);
+    cursor: wait;
+    pointer-events: none;
+}
+
+.navi-sticky-add-to-cart .loading-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navi-sticky-add-to-cart .loading-text::after {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--navi-color-surface);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: navi-sticky-spin 0.8s linear infinite;
+}
+
+/* Confirmation brève après un ajout réussi : seul signal explicite si le
+   mini-panier n'est pas dans le champ de vision de l'utilisateur. */
+.navi-sticky-add-to-cart.added {
+    background: #2f6b45;
+    cursor: default;
+}
+
+@keyframes navi-sticky-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Pas de couleur propre ici : .navi-sticky-price est imbriqué DANS
+   .navi-sticky-add-to-cart (voir le template HTML, createStickyBar,
+   assets/js/sticky-cart.js), donc hérite naturellement sa couleur — surface
+   au repos, encre au survol (voir .navi-sticky-add-to-cart:hover ci-dessus). */
+.navi-sticky-price {
+    font-weight: 600;
+}
+
+/* ========================================
+   PRODUITS SIMPLES (sans variations)
+   ======================================== */
+.navi-sticky-bar.simple-product .navi-sticky-variation-options {
+    display: none !important;
+}
+
+/* Léger fondu du contenu à l'apparition (le grandissement de l'objet
+   partagé lui-même est géré par #navi-fab, assets/css/core.css). */
+.navi-sticky-bar.visible .navi-sticky-content {
+    animation: navi-sticky-content-fade 0.3s ease-out 0.08s both;
+}
+
+@keyframes navi-sticky-content-fade {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navi-sticky-bar.visible .navi-sticky-content {
+        animation: none;
+    }
+}
+
+/* Focus clavier visible, cohérent avec les panneaux cookies/accessibilité. */
+.navi-sticky-panel-close:focus-visible,
+.navi-sticky-add-to-cart:focus-visible {
+    outline: 2px solid var(--navi-color-accent);
+    outline-offset: 2px;
+}

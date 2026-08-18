@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Navi
  * Description: Hub d'engagement flottant pour WordPress/WooCommerce : consentement cookies (Google Consent Mode V2), ajout au panier automatique sur fiche produit, accessibilité (langue, taille du texte, contraste, curseur, soulignage des liens), pilotés depuis un bouton unique.
- * Version: 0.1.0
+ * Version: 0.2.0
  * Author: Troteseil Lucas
  * Author URI: https://github.com/Lucas-tsl
  * Text Domain: navi
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'NAVI_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'NAVI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'NAVI_VERSION', '0.1.0' );
+define( 'NAVI_VERSION', '0.2.0' );
 
 // Chargement des traductions
 add_action( 'plugins_loaded', 'navi_charger_traductions' );
@@ -35,3 +35,4 @@ require_once NAVI_PLUGIN_DIR . 'includes/core/frontend.php';
 // s'il est actif. Un futur module suit exactement ce même schéma (voir README).
 require_once NAVI_PLUGIN_DIR . 'includes/modules/cookie-consent/module.php';
 require_once NAVI_PLUGIN_DIR . 'includes/modules/accessibility/module.php';
+require_once NAVI_PLUGIN_DIR . 'includes/modules/sticky-cart/module.php';
