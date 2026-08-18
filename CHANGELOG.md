@@ -17,9 +17,8 @@ fonctionnel du plugin).
 - `navi.php` : en-têtes `Requires at least`/`Requires PHP` ajoutés (déjà
   présents dans `readme.txt`, dupliqués dans l'en-tête du plugin pour la
   vérification de compatibilité avant installation).
-- Restent à faire avant soumission effective (non automatisable) : pseudo
-  réel du compte développeur dans `Contributors:`, captures d'écran
-  (`screenshot-1.png` à `screenshot-5.png`), validation de `readme.txt`
+- Reste à faire avant soumission effective (non automatisable) : captures
+  d'écran (`screenshot-1.png` à `screenshot-5.png`), validation de `readme.txt`
   via le validateur officiel.
 
 ## 0.4.0

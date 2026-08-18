@@ -38,14 +38,12 @@ soumise au [répertoire officiel WordPress.org](https://wordpress.org/plugins/).
 - Suite de tests Playwright automatisée : pas encore mise en place (prochain
   chantier — vérification faite manuellement jusqu'ici contre un catalogue
   de démonstration, voir Développement ci-dessous).
-- Préparation à la soumission WordPress.org : `readme.txt` et
-  bannière/icône (`.wordpress-org/assets/`) prêts. Restent à faire avant
-  soumission effective : renseigner le vrai pseudo du compte développeur
-  (`Contributors:` dans `readme.txt`, actuellement un placeholder) et
-  capturer les 5 captures d'écran listées dans `readme.txt` (à déposer
-  dans le dossier SVN `assets/` du plugin sur WordPress.org, nommées
-  `screenshot-1.png` à `screenshot-5.png` — voir Soumission WordPress.org
-  ci-dessous).
+- Préparation à la soumission WordPress.org : `readme.txt` (`Contributors:
+  lucastsl`), bannière/icône (`.wordpress-org/assets/`) prêts. Reste à
+  faire avant soumission effective : capturer les 5 captures d'écran
+  listées dans `readme.txt` (à déposer dans le dossier SVN `assets/` du
+  plugin sur WordPress.org, nommées `screenshot-1.png` à
+  `screenshot-5.png` — voir Soumission WordPress.org ci-dessous).
 
 ## Architecture
 
@@ -268,8 +266,7 @@ la CI), puis `navi-svn/tags/0.4.0/` etc. à chaque version publiée.
 
 Avant la soumission effective (formulaire sur
 [wordpress.org/plugins/developers/add/](https://wordpress.org/plugins/developers/add/)) :
-renseigner le vrai pseudo du compte développeur dans `Contributors:`
-(`readme.txt`), capturer les captures d'écran, et passer `readme.txt` au
+capturer les captures d'écran, et passer `readme.txt` au
 [validateur officiel](https://wordpress.org/plugins/developers/readme-validator/).
 
 ## Licence
