@@ -12,7 +12,7 @@ function navi_a11y_get_languages() {
     if ( ! has_filter( 'wpml_active_languages' ) ) {
         return array();
     }
-    $languages = apply_filters( 'wpml_active_languages', null, array( 'skip_missing' => 0 ) );
+    $languages = apply_filters( 'wpml_active_languages', null, array( 'skip_missing' => 0 ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- hook de WPML, pas un hook déclaré par ce plugin.
     return is_array( $languages ) ? $languages : array();
 }
 

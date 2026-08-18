@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function navi_current_language() {
     if ( has_filter( 'wpml_current_language' ) ) {
-        $lang = apply_filters( 'wpml_current_language', null );
+        $lang = apply_filters( 'wpml_current_language', null ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- hook de WPML, pas un hook déclaré par ce plugin.
         if ( ! empty( $lang ) ) {
             return $lang;
         }

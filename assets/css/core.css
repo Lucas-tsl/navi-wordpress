@@ -27,7 +27,7 @@
     --navi-color-accent: #2563eb;
     --navi-color-accent-rgb: 37, 99, 235;
     --navi-color-accent-deep: #1e40af;
-    --navi-color-surface: #ffffff;
+    --navi-color-surface: #fff;
 }
 
 /* Lien d'évitement vers le FAB (includes/core/frontend.php) : invisible tant
@@ -187,7 +187,6 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-
     height: 100%;
     padding: 10px;
 }

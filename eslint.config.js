@@ -16,6 +16,7 @@ module.exports = [
         Event: "readonly",
         URLSearchParams: "readonly",
         MutationObserver: "readonly",
+        getComputedStyle: "readonly",
         naviCookieConfig: "readonly",
         naviStickyCartI18n: "readonly",
         naviHubConfig: "readonly",
