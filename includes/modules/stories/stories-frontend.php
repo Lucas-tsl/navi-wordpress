@@ -25,9 +25,10 @@ function navi_stories_enqueue_assets() {
         'navi-stories-js',
         'naviStoriesI18n',
         array(
-            'closeLabel' => __( 'Fermer', 'navi' ),
-            'prevLabel'  => __( 'Story précédente', 'navi' ),
-            'nextLabel'  => __( 'Story suivante', 'navi' ),
+            'closeLabel'  => __( 'Fermer', 'navi' ),
+            'prevLabel'   => __( 'Story précédente', 'navi' ),
+            'nextLabel'   => __( 'Story suivante', 'navi' ),
+            'replayLabel' => __( 'Relancer la vidéo', 'navi' ),
         )
     );
 

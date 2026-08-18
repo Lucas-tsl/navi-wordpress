@@ -21,16 +21,16 @@ const NAVI_STORIES_DEFAULT_BUBBLE_SIZE   = 64;
 const NAVI_STORIES_MIN_BUBBLE_SIZE       = 40;
 const NAVI_STORIES_MAX_BUBBLE_SIZE       = 120;
 
-// Zoom de la vidéo dans le mockup (en %, 100 = aucun zoom) : YouTube
-// dessine toujours son propre bandeau titre/chaîne et son filigrane
-// "Shorts" par-dessus la vidéo, même à controls=0 — impossible à
-// retirer en CSS/JS (iframe cross-origin). Zoomer l'iframe pousse ce
-// bandeau hors du cadre visible, au prix d'un léger recadrage ; la
-// hauteur réelle du bandeau varie avec la longueur du nom de la chaîne
-// YouTube, donc aucune valeur fixe ne convient à tout le monde — réglage
-// laissé au marchand plutôt qu'une constante décidée pour lui. 135%
-// (valeur par défaut) masque le bandeau sur les cas testés.
-const NAVI_STORIES_DEFAULT_VIDEO_ZOOM = 135;
+// Zoom de la vidéo dans le mockup (en %, 100 = aucun zoom). Solution
+// principale contre le bandeau titre/chaîne et le filigrane "Shorts" de
+// YouTube : le masque JS (assets/js/stories.js, attachVideoMask(), API
+// IFrame YouTube) qui couvre l'iframe précisément pendant les deux
+// fenêtres où ce chrome est visible (chargement, puis fin de vidéo) —
+// ce réglage de zoom n'est qu'un filet de secours pour les cas où cette
+// détection échouerait (API bloquée, réseau très lent). 100% par défaut
+// : pas de recadrage permanent, le masque suffit dans la grande majorité
+// des cas testés.
+const NAVI_STORIES_DEFAULT_VIDEO_ZOOM = 100;
 const NAVI_STORIES_MIN_VIDEO_ZOOM     = 100;
 const NAVI_STORIES_MAX_VIDEO_ZOOM     = 150;
 

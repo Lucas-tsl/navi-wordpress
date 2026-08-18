@@ -46,23 +46,28 @@ Check**, plus deux corrections front trouvées pendant cette passe.
   **WooCommerce "Coming soon" activé sur l'instance de dev locale**
   (`woocommerce_coming_soon`), pas un bug du plugin ; désactivé sur
   l'environnement Docker pour fiabiliser les futurs tests.
-- Bandeau noir en haut et en bas de la vidéo (panneau desktop et plein
-  écran mobile) : même à `controls=0`, le lecteur YouTube dessine
-  toujours son propre bandeau titre/chaîne et son filigrane "Shorts"
-  (chrome du lecteur dans une iframe cross-origin, aucun contournement
-  possible en CSS/JS — Same-Origin Policy). **Vérifié directement sur
-  l'instance PrestaShop réelle** (`localhost:8080`, produit 134, story
-  "Snack sain") : le même bandeau y est bel et bien visible, capture
-  d'écran à l'appui — ce n'est donc pas une régression WordPress mais une
-  limitation YouTube partagée à l'identique par les deux plugins, aucune
-  valeur de recadrage fixe ne convenant à toutes les vidéos (la hauteur
-  du bandeau varie avec la longueur du nom de la chaîne). **Nouveau
-  réglage** plutôt qu'une constante décidée à la place du marchand :
-  "Zoom de la vidéo" (Navi > Stories > Mockup, curseur 100-150 %, défaut
-  135 % — masque le bandeau sur les cas testés ; 100 % = paramètres bruts
-  de Navi PrestaShop, aucun recadrage mais bandeau visible), avec aperçu
-  en direct. Nouvelle variable CSS `--navi-story-video-zoom`
-  (`assets/css/stories.css`), option `navi_stories_video_zoom`.
+- **Corrigé pour de bon** : bandeau noir en haut et en bas de la vidéo
+  (panneau desktop et plein écran mobile) — même à `controls=0`, le
+  lecteur YouTube dessine son propre bandeau titre/chaîne et son
+  filigrane "Shorts" (chrome du lecteur dans une iframe cross-origin,
+  aucun contournement possible en CSS/JS ; vérifié aussi visible à
+  l'identique sur l'instance PrestaShop réelle). En y regardant sur la
+  durée complète d'une vidéo, ce bandeau ne s'affiche en réalité que
+  pendant le **chargement** et à la **fin** de la vidéo — jamais pendant
+  la lecture active. `assets/js/stories.js` exploite désormais l'API
+  IFrame officielle de YouTube (`enablejsapi=1`, déjà présent dans
+  l'URL) pour détecter précisément ces deux fenêtres
+  (`attachVideoMask()`) et les recouvrir d'un cache à notre propre
+  design (fond uni pendant le chargement, écran de relecture avec notre
+  propre bouton "rejouer" à la fin) plutôt que d'exposer le chrome
+  YouTube — **aucun recadrage permanent de la vidéo n'est donc plus
+  nécessaire**. Filet de sécurité à 9s si l'API ne se charge pas (réseau,
+  bloqueur de scripts) : le cache se lève de lui-même plutôt que de
+  cacher la vidéo indéfiniment. Le réglage "Zoom de la vidéo" (Navi >
+  Stories > Mockup, ajouté dans une itération précédente) reste
+  disponible mais repasse à 100 % par défaut (aucun recadrage) — il ne
+  sert plus que de filet de secours pour les cas où cette détection
+  échouerait.
 - Renforcé (défensif, pour un centrage fiable de l'icône engrenage sur
   tous les navigateurs/appareils) : `assets/css/core.css` remet à zéro
   `padding`/`margin`/`appearance` sur le bouton `.navi-fab-toggle` (un
