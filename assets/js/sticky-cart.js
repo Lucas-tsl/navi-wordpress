@@ -922,20 +922,20 @@
         // fermeture automatique liée au scroll (referme entièrement, pas
         // d'intérêt à rouvrir le menu tout seul).
         function setStickyBarVisible(visible, manual) {
-            if (!window.naviHub) {
+            if (!window.navi) {
                 $stickyBar.toggleClass('visible', visible);
                 return;
             }
             if (visible) {
-                window.naviHub.showDetail('sticky-cart', function () {
+                window.navi.showDetail('sticky-cart', function () {
                     $stickyBar.addClass('visible');
                 });
             } else if (manual) {
-                window.naviHub.backToMenu('sticky-cart', function () {
+                window.navi.backToMenu('sticky-cart', function () {
                     $stickyBar.removeClass('visible');
                 });
             } else {
-                window.naviHub.hideDetail('sticky-cart', function () {
+                window.navi.hideDetail('sticky-cart', function () {
                     $stickyBar.removeClass('visible');
                 });
             }

@@ -28,6 +28,12 @@
     --navi-color-accent-rgb: 37, 99, 235;
     --navi-color-accent-deep: #1e40af;
     --navi-color-surface: #fff;
+
+    /* Arrondis (Navi > Apparence) : boutons (bannière cookies, panier
+       sticky) et image produit (miniature du panier sticky) — mêmes
+       valeurs par défaut que Navi PrestaShop (DEFAULT_RADIUS_BUTTON/IMAGE). */
+    --navi-radius-button: 4px;
+    --navi-radius-image: 4px;
 }
 
 /* Lien d'évitement vers le FAB (includes/core/frontend.php) : invisible tant

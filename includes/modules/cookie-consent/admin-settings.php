@@ -19,6 +19,13 @@ function navi_cookie_enregistrer_parametres() {
     register_setting( 'navi_cookie_options_group', 'navi_cookie_texte_banniere', array( 'sanitize_callback' => 'sanitize_textarea_field' ) );
     register_setting( 'navi_cookie_options_group', 'navi_cookie_url_politique', array( 'sanitize_callback' => 'esc_url_raw' ) );
     register_setting( 'navi_cookie_options_group', 'navi_cookie_url_mentions', array( 'sanitize_callback' => 'esc_url_raw' ) );
+
+    // Visibilité par appareil (voir navi_render_visibility_fields, helpers.php) :
+    // enregistrée dans CE groupe (pas le groupe central navi_modules_group)
+    // puisque le formulaire qui les soumet (navi_cookie_page_reglages_html
+    // ci-dessous) utilise settings_fields('navi_cookie_options_group').
+    register_setting( 'navi_cookie_options_group', 'navi_show_desktop_cookie-consent', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
+    register_setting( 'navi_cookie_options_group', 'navi_show_mobile_cookie-consent', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
 }
 
 function navi_cookie_page_reglages_html() {
@@ -52,6 +59,7 @@ function navi_cookie_page_reglages_html() {
                 <tr valign="top"><th scope="row"><?php esc_html_e( 'Texte de la bannière', 'navi' ); ?></th><td><textarea name="navi_cookie_texte_banniere" rows="4" cols="60"><?php echo esc_textarea( get_option( 'navi_cookie_texte_banniere', $texte_defaut ) ); ?></textarea></td></tr>
                 <tr valign="top"><th scope="row"><?php esc_html_e( 'URL Politique de confidentialité', 'navi' ); ?></th><td><input type="text" name="navi_cookie_url_politique" value="<?php echo esc_attr( get_option( 'navi_cookie_url_politique' ) ); ?>" class="regular-text" /></td></tr>
                 <tr valign="top"><th scope="row"><?php esc_html_e( 'URL Mentions légales', 'navi' ); ?></th><td><input type="text" name="navi_cookie_url_mentions" value="<?php echo esc_attr( get_option( 'navi_cookie_url_mentions' ) ); ?>" class="regular-text" /></td></tr>
+                <?php navi_render_visibility_fields( 'cookie-consent' ); ?>
             </table>
             <?php submit_button(); ?>
         </form>

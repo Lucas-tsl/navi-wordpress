@@ -43,7 +43,7 @@
    police : la CNIL exige une prééminence équivalente entre les deux
    (recommandations 2020), voir la note dans public-display.php. */
 .navi-cookie-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.navi-cookie-btn { padding: 10px; font-size: 0.8125rem; font-weight: bold; cursor: pointer; border: 1.5px solid rgba(var(--navi-color-ink-rgb), 0.55); background: var(--navi-color-surface); color: var(--navi-color-ink); transition: all 0.2s; text-transform: uppercase; font-family: inherit; }
+.navi-cookie-btn { padding: 10px; font-size: 0.8125rem; font-weight: bold; cursor: pointer; border: 1.5px solid rgba(var(--navi-color-ink-rgb), 0.55); background: var(--navi-color-surface); color: var(--navi-color-ink); transition: all 0.2s; text-transform: uppercase; font-family: inherit; border-radius: var(--navi-radius-button, 4px); }
 .navi-cookie-btn-accepter { background: var(--navi-color-ink); color: var(--navi-color-surface); border-color: var(--navi-color-ink); }
 .navi-cookie-btn-accepter:hover { background: var(--navi-color-surface); color: var(--navi-color-ink); }
 .navi-cookie-btn-refuser:hover { background: rgba(var(--navi-color-ink-rgb), 0.06); }

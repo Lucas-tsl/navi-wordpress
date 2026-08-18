@@ -6,20 +6,68 @@ function navi_enqueue_core_assets() {
     navi_enqueue_style( 'navi-core-css', NAVI_PLUGIN_URL . 'assets/css/core.css', array(), NAVI_VERSION );
     navi_enqueue_script( 'navi-core-js', NAVI_PLUGIN_URL . 'assets/js/core.js', array(), NAVI_VERSION, true );
 
-    // Surcharge des couleurs de la DA, uniquement si ce site en a configuré
-    // (Navi > Couleurs) : sinon les valeurs par défaut de assets/css/core.css
-    // (:root) suffisent, pas besoin d'un style inline. wp_add_inline_style
-    // rattache ce <style> juste après navi-core-css, quel que soit l'ordre
-    // d'enqueue des autres feuilles du plugin.
-    $ink      = navi_color_ink();
-    $ink_soft = navi_color_ink_soft();
+    // Surcharge des couleurs/arrondis de la DA (Navi > Apparence), uniquement
+    // pour les propriétés qui s'écartent de la valeur par défaut de
+    // assets/css/core.css (:root) — pas besoin d'un style inline sinon.
+    // wp_add_inline_style rattache ce <style> juste après navi-core-css,
+    // quel que soit l'ordre d'enqueue des autres feuilles du plugin.
+    $ink          = navi_color_ink();
+    $ink_soft     = navi_color_ink_soft();
+    $radiusButton = navi_radius_button();
+    $radiusImage  = navi_radius_image();
+    $overrides    = array();
+
     if ( '#1a1a1a' !== $ink || '#6b6b6b' !== $ink_soft ) {
-        $ink_rgb = navi_hex_to_rgb( $ink );
-        $css     = ':root{--navi-color-ink:' . esc_html( $ink ) . ';--navi-color-ink-soft:' . esc_html( $ink_soft ) . ';';
+        $ink_rgb                    = navi_hex_to_rgb( $ink );
+        $overrides['--navi-color-ink']      = esc_html( $ink );
+        $overrides['--navi-color-ink-soft'] = esc_html( $ink_soft );
         if ( ! empty( $ink_rgb ) ) {
-            $css .= '--navi-color-ink-rgb:' . esc_html( $ink_rgb ) . ';';
+            $overrides['--navi-color-ink-rgb'] = esc_html( $ink_rgb );
+        }
+    }
+    if ( 4 !== $radiusButton ) {
+        $overrides['--navi-radius-button'] = $radiusButton . 'px';
+    }
+    if ( 4 !== $radiusImage ) {
+        $overrides['--navi-radius-image'] = $radiusImage . 'px';
+    }
+
+    $css = '';
+    if ( ! empty( $overrides ) ) {
+        $css .= ':root{';
+        foreach ( $overrides as $property => $value ) {
+            $css .= $property . ':' . $value . ';';
         }
         $css .= '}';
+    }
+
+    // Visibilité par appareil (un réglage par module, voir
+    // includes/modules/*/admin-settings.php et navi_render_visibility_fields()
+    // dans helpers.php) : même seuil que le reste du hub (480px, voir
+    // assets/css/core.css). display:none!important — un thème/plugin tiers
+    // peut appliquer ses propres règles avec une spécificité plus élevée
+    // sur des sélecteurs génériques comme .navi-fab-item.
+    $desktopHidden = array();
+    $mobileHidden  = array();
+    foreach ( Navi_Module_Registry::all() as $module_id => $module ) {
+        if ( empty( $module['visibility_selector'] ) ) {
+            continue;
+        }
+        if ( ! navi_show_desktop( $module_id ) ) {
+            $desktopHidden[] = $module['visibility_selector'];
+        }
+        if ( ! navi_show_mobile( $module_id ) ) {
+            $mobileHidden[] = $module['visibility_selector'];
+        }
+    }
+    if ( ! empty( $desktopHidden ) ) {
+        $css .= '@media (min-width:481px){' . implode( ',', $desktopHidden ) . '{display:none!important}}';
+    }
+    if ( ! empty( $mobileHidden ) ) {
+        $css .= '@media (max-width:480px){' . implode( ',', $mobileHidden ) . '{display:none!important}}';
+    }
+
+    if ( '' !== $css ) {
         wp_add_inline_style( 'navi-core-css', $css );
     }
 
@@ -58,7 +106,7 @@ function navi_enqueue_core_assets() {
 
     wp_localize_script(
         'navi-core-js',
-        'naviHubConfig',
+        'naviConfig',
         array(
             'items'      => $items,
             'isProduct'  => function_exists( 'is_product' ) && is_product(),

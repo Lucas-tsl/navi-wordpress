@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.0
+
+Chantier 5 : parité d'apparence avec Navi PrestaShop — tout ce qui est
+réglable côté PrestaShop doit avoir son équivalent côté WordPress.
+
+- Alignement de l'API JS sur Navi PrestaShop : `window.naviHub` →
+  `window.navi`, `naviHubConfig` → `naviConfig` (même nom des deux côtés).
+- Logo Navi (identique à la version PrestaShop) comme icône du menu admin,
+  à la place du dashicon générique.
+- **Arrondis** : réglages "Arrondi des boutons"/"Arrondi de l'image
+  produit" (Navi > Apparence, ex-"Couleurs du plugin"), variables CSS
+  `--navi-radius-button`/`--navi-radius-image` (défaut 4px, comme
+  `DEFAULT_RADIUS_BUTTON`/`DEFAULT_RADIUS_IMAGE` côté PrestaShop).
+- **Visibilité par appareil** : chaque module avec un affichage propre
+  (cookies, accessibilité, panier) gagne un réglage "Afficher sur
+  ordinateur"/"Afficher sur mobile" dans sa page de réglages —
+  mécanisme inspiré de `VISIBILITY_TOGGLES`/`getConfigStyleTag()` côté
+  PrestaShop. Nouveau : `includes/modules/accessibility/admin-settings.php`
+  (le module accessibilité n'avait encore aucune page de réglages).
+
 ## 0.2.0
 
 Chantier 2 : généralisation du panneau panier (`sticky-cart`), la partie la

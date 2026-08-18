@@ -54,6 +54,7 @@ Navi_Module_Registry::register(
         'fab_condition'   => '',
         'available'       => true,
         'settings_url'    => admin_url( 'admin.php?page=navi-cookie-consent' ),
+        'visibility_selector' => '#navi-cookie-banner, .navi-fab-item[data-item-id="cookie-consent"]',
     )
 );
 

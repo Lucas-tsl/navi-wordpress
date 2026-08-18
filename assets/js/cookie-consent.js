@@ -35,12 +35,12 @@ document.addEventListener("DOMContentLoaded", function() {
             modal.classList.add("navi-cookie-modal-overlay-open");
             document.addEventListener("keydown", handleModalKeydown);
         }
-        if (window.naviHub) {
+        if (window.navi) {
             // Le focus est déposé par le noyau (assets/js/core.js,
-            // naviHub.showDetail) sur #navi-cookie-modal-overlay lui-même
+            // navi.showDetail) sur #navi-cookie-modal-overlay lui-même
             // (tabindex="-1"), pour un comportement identique aux autres
             // panneaux (panier, accessibilité).
-            window.naviHub.showDetail("cookie-consent", apply);
+            window.navi.showDetail("cookie-consent", apply);
         } else {
             apply();
             modalBox.focus();
@@ -57,8 +57,8 @@ document.addEventListener("DOMContentLoaded", function() {
             document.removeEventListener("keydown", handleModalKeydown);
             if (lastFocusedElement) lastFocusedElement.focus();
         }
-        if (window.naviHub) {
-            window.naviHub.backToMenu("cookie-consent", apply);
+        if (window.navi) {
+            window.navi.backToMenu("cookie-consent", apply);
         } else {
             apply();
         }

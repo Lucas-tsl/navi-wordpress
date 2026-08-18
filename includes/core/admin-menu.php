@@ -2,7 +2,8 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Menu de premier niveau propre au plugin, entièrement indépendant : ne se
-// rattache à aucun autre plugin/menu du site.
+// rattache à aucun autre plugin/menu du site. Icône : même logo que Navi
+// PrestaShop (assets/img/logo-32.png), pas le dashicon générique d'origine.
 add_action( 'admin_menu', 'navi_add_admin_menu' );
 function navi_add_admin_menu() {
     add_menu_page(
@@ -11,7 +12,7 @@ function navi_add_admin_menu() {
         'manage_options',
         'navi-main',
         'navi_render_dashboard_page',
-        'dashicons-admin-generic',
+        NAVI_PLUGIN_URL . 'assets/img/logo-32.png',
         58
     );
 }
@@ -68,6 +69,29 @@ function navi_register_module_settings() {
         array(
             'type'              => 'string',
             'sanitize_callback' => 'sanitize_hex_color',
+        )
+    );
+
+    // Arrondis (boutons bannière cookies/panier sticky, image produit du
+    // panier sticky) : même logique de surcharge que les couleurs
+    // ci-dessus — voir navi_radius_button()/navi_radius_image() (helpers.php)
+    // et la surcharge injectée dans includes/core/frontend.php.
+    register_setting(
+        'navi_modules_group',
+        'navi_radius_button',
+        array(
+            'type'              => 'integer',
+            'sanitize_callback' => 'navi_sanitize_radius',
+            'default'           => 4,
+        )
+    );
+    register_setting(
+        'navi_modules_group',
+        'navi_radius_image',
+        array(
+            'type'              => 'integer',
+            'sanitize_callback' => 'navi_sanitize_radius',
+            'default'           => 4,
         )
     );
 }
@@ -149,8 +173,8 @@ function navi_render_dashboard_page() {
             </p>
             <p class="description"><?php esc_html_e( "À changer si un autre widget flottant (chat, WhatsApp...) occupe déjà le bas droite du site.", 'navi' ); ?></p>
 
-            <h2><?php esc_html_e( 'Couleurs du plugin', 'navi' ); ?></h2>
-            <p class="description"><?php esc_html_e( "Couleurs du bouton flottant et des panneaux (cookies, accessibilité) : à adapter à l'identité visuelle de ce site.", 'navi' ); ?></p>
+            <h2><?php esc_html_e( 'Apparence', 'navi' ); ?></h2>
+            <p class="description"><?php esc_html_e( "Couleurs du bouton flottant et des panneaux (cookies, accessibilité), arrondis des boutons et de l'image produit (panier sticky) : à adapter à l'identité visuelle de ce site.", 'navi' ); ?></p>
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row"><label for="navi_color_ink"><?php esc_html_e( 'Couleur principale', 'navi' ); ?></label></th>
@@ -159,6 +183,20 @@ function navi_render_dashboard_page() {
                 <tr valign="top">
                     <th scope="row"><label for="navi_color_ink_soft"><?php esc_html_e( 'Couleur secondaire', 'navi' ); ?></label></th>
                     <td><input type="text" name="navi_color_ink_soft" id="navi_color_ink_soft" class="navi-color-picker" value="<?php echo esc_attr( navi_color_ink_soft() ); ?>" data-default-color="#6b6b6b" /></td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="navi_radius_button"><?php esc_html_e( 'Arrondi des boutons (px)', 'navi' ); ?></label></th>
+                    <td>
+                        <input type="number" name="navi_radius_button" id="navi_radius_button" min="0" max="50" value="<?php echo esc_attr( navi_radius_button() ); ?>" class="small-text" /> px
+                        <p class="description"><?php esc_html_e( '0 = angles droits. Boutons concernés : bannière cookies, panier sticky.', 'navi' ); ?></p>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="navi_radius_image"><?php esc_html_e( "Arrondi de l'image produit (px)", 'navi' ); ?></label></th>
+                    <td>
+                        <input type="number" name="navi_radius_image" id="navi_radius_image" min="0" max="50" value="<?php echo esc_attr( navi_radius_image() ); ?>" class="small-text" /> px
+                        <p class="description"><?php esc_html_e( 'Miniature produit affichée dans le panier sticky.', 'navi' ); ?></p>
+                    </td>
                 </tr>
             </table>
 

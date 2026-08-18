@@ -78,9 +78,9 @@ contenu d'un module dans le slot partagé `#navi-fab-detail`, seul endroit où
 `#navi-fab` grandit jusqu'à l'état 3 :
 
 ```js
-window.naviHub.showDetail('mon-module', applyFn);   // affiche le module, fait grandir #navi-fab (état 3)
-window.naviHub.backToMenu('mon-module', applyFn);   // fermeture MANUELLE (croix) : revient au choix des icônes (état 2)
-window.naviHub.hideDetail('mon-module', applyFn);   // fermeture AUTOMATIQUE (ex. scroll) : referme entièrement (état 1)
+window.navi.showDetail('mon-module', applyFn);   // affiche le module, fait grandir #navi-fab (état 3)
+window.navi.backToMenu('mon-module', applyFn);   // fermeture MANUELLE (croix) : revient au choix des icônes (état 2)
+window.navi.hideDetail('mon-module', applyFn);   // fermeture AUTOMATIQUE (ex. scroll) : referme entièrement (état 1)
 // applyFn bascule la classe d'affichage propre au module (ex. .visible) ; à écouter aussi : 'navi:closed'
 // (le hub s'est refermé alors que ce module était actif, ex. clic en dehors) pour remettre à jour cette classe.
 ```
@@ -102,19 +102,31 @@ window.naviHub.hideDetail('mon-module', applyFn);   // fermeture AUTOMATIQUE (ex
    fichier) ; un panneau créé dynamiquement en JS doit s'y injecter
    directement.
 5. Dans le JS du module, écouter `document.addEventListener('navi:action', ...)`
-   pour afficher le panneau (`window.naviHub.showDetail('mon-module', applyFn)`),
+   pour afficher le panneau (`window.navi.showDetail('mon-module', applyFn)`),
    avec un bouton de fermeture qui appelle
-   `window.naviHub.backToMenu('mon-module', applyFn)`.
+   `window.navi.backToMenu('mon-module', applyFn)`.
 
-## Couleurs
+## Apparence
 
 Depuis le menu **Navi** (Back Office WordPress) : couleur principale et
-couleur secondaire, appliquées au bouton flottant et aux panneaux via des
-variables CSS (`--navi-color-ink`/`--navi-color-ink-soft`, voir
-`assets/css/core.css`). Une surcharge n'est injectée en `<style>` inline
-que si le site s'écarte des valeurs par défaut du plugin (voir
-`includes/core/frontend.php`) — sinon les valeurs par défaut (`:root`)
-suffisent.
+couleur secondaire, arrondi des boutons (bannière cookies, panier sticky)
+et de l'image produit (miniature du panier sticky) — variables CSS
+`--navi-color-ink`/`--navi-color-ink-soft`/`--navi-radius-button`/
+`--navi-radius-image` (voir `assets/css/core.css`). Une surcharge n'est
+injectée en `<style>` inline que pour les propriétés qui s'écartent des
+valeurs par défaut du plugin (voir `includes/core/frontend.php`) — sinon
+les valeurs par défaut (`:root`) suffisent.
+
+## Visibilité par appareil
+
+Chaque module ayant un affichage propre sur le site (cookies,
+accessibilité, panier) a son propre réglage "Afficher sur ordinateur" /
+"Afficher sur mobile" dans sa page de réglages (Navi > Cookies/
+Accessibilité/Panier). Mécanisme : `visibility_selector` déclaré par le
+module lors de son enregistrement (`Navi_Module_Registry::register()`),
+options `navi_show_desktop_<id>`/`navi_show_mobile_<id>`, règles
+`@media (max-width:480px)`/`(min-width:481px)` injectées par
+`includes/core/frontend.php` (même seuil de 480px que le reste du hub).
 
 ## Traduction du plugin (auto-suffisante, sans plugin supplémentaire)
 

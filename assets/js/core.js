@@ -16,7 +16,7 @@
         }
     }, true);
 
-    var config = window.naviHubConfig || { items: [], isProduct: false };
+    var config = window.naviConfig || { items: [], isProduct: false };
     var fab = document.getElementById('navi-fab');
     var toggle = document.getElementById('navi-fab-toggle');
     var menu = document.getElementById('navi-fab-menu');
@@ -75,6 +75,10 @@
             btn.type = 'button';
             btn.className = 'navi-fab-item';
             btn.style.setProperty('--navi-index', String(index));
+            // Consommé par la visibilité par appareil (Navi > réglages de
+            // chaque module, includes/core/frontend.php) : cible l'icône du
+            // menu d'un module précis sans dépendre de son ordre d'affichage.
+            btn.setAttribute('data-item-id', item.id);
             btn.setAttribute('role', 'menuitem');
             btn.setAttribute('title', item.label);
             btn.setAttribute('aria-label', item.label);
@@ -114,7 +118,7 @@
                     return;
                 }
                 // Le module concerné écoute cet événement pour afficher son
-                // propre contenu dans le slot détail (naviHub.showDetail), sans
+                // propre contenu dans le slot détail (navi.showDetail), sans
                 // que le noyau ait besoin de connaître ce contenu.
                 document.dispatchEvent(new CustomEvent('navi:action', { detail: item }));
             });
@@ -218,7 +222,7 @@
         }
     }
 
-    window.naviHub = {
+    window.navi = {
         // Affiche le contenu du module `id` (état 3). À utiliser aussi bien
         // pour une ouverture manuelle (icône cliquée) qu'automatique (ex. le
         // panier qui apparaît au scroll sur une fiche produit).

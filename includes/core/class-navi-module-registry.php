@@ -32,6 +32,13 @@ class Navi_Module_Registry {
             'fab_condition'   => '',
             // false = module déclaré mais pas encore développé ("bientôt disponible").
             'available'       => true,
+            // Sélecteur(s) CSS ciblant ce que le module affiche sur le site
+            // (bannière, icône du menu du FAB...) — utilisé par la
+            // visibilité par appareil (options navi_show_desktop_<id>/
+            // navi_show_mobile_<id>, voir includes/core/frontend.php).
+            // Chaîne vide = pas de réglage de visibilité par appareil pour
+            // ce module (ex. un futur module sans rien à masquer par écran).
+            'visibility_selector' => '',
         );
 
         self::$modules[ $id ] = wp_parse_args( $args, $defaults );

@@ -62,3 +62,61 @@ function navi_color_ink_soft() {
     $configured = get_option( 'navi_color_ink_soft', '' );
     return ! empty( $configured ) ? $configured : '#6b6b6b';
 }
+
+// Entier positif borné (0-50px) : un arrondi négatif n'a pas de sens, une
+// valeur absurdement grande casserait la mise en page des petits boutons.
+function navi_sanitize_radius( $value ) {
+    $value = (int) $value;
+    return max( 0, min( 50, $value ) );
+}
+
+// Arrondi des boutons (bannière cookies, panier sticky) — doit rester
+// synchronisé avec --navi-radius-button dans assets/css/core.css.
+function navi_radius_button() {
+    $configured = get_option( 'navi_radius_button', '' );
+    return '' !== $configured ? (int) $configured : 4;
+}
+
+// Arrondi de l'image produit (miniature du panier sticky) — doit rester
+// synchronisé avec --navi-radius-image dans assets/css/core.css.
+function navi_radius_image() {
+    $configured = get_option( 'navi_radius_image', '' );
+    return '' !== $configured ? (int) $configured : 4;
+}
+
+// Visibilité par appareil (un module donné, voir 'visibility_selector' dans
+// Navi_Module_Registry) : options navi_show_desktop_<id>/navi_show_mobile_<id>,
+// visibles par défaut (get_option avec default 1) tant que le marchand ne
+// les a pas explicitement désactivées.
+function navi_show_desktop( $module_id ) {
+    return (bool) get_option( 'navi_show_desktop_' . $module_id, 1 );
+}
+
+function navi_show_mobile( $module_id ) {
+    return (bool) get_option( 'navi_show_mobile_' . $module_id, 1 );
+}
+
+// Deux cases à cocher "Afficher sur ordinateur"/"Afficher sur mobile" pour
+// un module donné — même bloc de balisage réutilisé par chaque
+// admin-settings.php de module concerné (cookie-consent, accessibility,
+// sticky-cart), pour ne pas dupliquer ce HTML trois fois.
+function navi_render_visibility_fields( $module_id ) {
+    $desktop_name = 'navi_show_desktop_' . $module_id;
+    $mobile_name  = 'navi_show_mobile_' . $module_id;
+    ?>
+    <tr valign="top">
+        <th scope="row"><?php esc_html_e( 'Afficher sur ordinateur', 'navi' ); ?></th>
+        <td>
+            <input type="hidden" name="<?php echo esc_attr( $desktop_name ); ?>" value="0" />
+            <input type="checkbox" name="<?php echo esc_attr( $desktop_name ); ?>" id="<?php echo esc_attr( $desktop_name ); ?>" value="1" <?php checked( navi_show_desktop( $module_id ) ); ?> />
+        </td>
+    </tr>
+    <tr valign="top">
+        <th scope="row"><?php esc_html_e( 'Afficher sur mobile', 'navi' ); ?></th>
+        <td>
+            <input type="hidden" name="<?php echo esc_attr( $mobile_name ); ?>" value="0" />
+            <input type="checkbox" name="<?php echo esc_attr( $mobile_name ); ?>" id="<?php echo esc_attr( $mobile_name ); ?>" value="1" <?php checked( navi_show_mobile( $module_id ) ); ?> />
+        </td>
+    </tr>
+    <?php
+}

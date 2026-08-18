@@ -19,7 +19,7 @@ module.exports = [
         getComputedStyle: "readonly",
         naviCookieConfig: "readonly",
         naviStickyCartI18n: "readonly",
-        naviHubConfig: "readonly",
+        naviConfig: "readonly",
         console: "readonly",
         setTimeout: "readonly",
         clearTimeout: "readonly",
