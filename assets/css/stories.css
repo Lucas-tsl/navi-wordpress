@@ -21,6 +21,14 @@
     --navi-story-overlay-bg: #000;
     --navi-story-phone-padding: 10px;
     --navi-story-phone-width: 200px;
+    --navi-story-bubble-size: 64px;
+
+    /* Pas de valeur ici : volontairement absente tant qu'aucune couleur
+       n'est réglée dans Navi > Stories, pour que .navi-story-bubble-circle
+       retombe sur var(--navi-color-accent) via son propre fallback
+       (voir plus bas) — la bulle suit alors automatiquement la couleur
+       d'accent si celle-ci change (Navi > Apparence), sans double
+       réglage à synchroniser. */
 }
 
 /* ============================================================
@@ -51,11 +59,11 @@
 
 .navi-story-bubble-circle {
     position: relative;
-    width: 64px;
-    height: 64px;
+    width: var(--navi-story-bubble-size);
+    height: var(--navi-story-bubble-size);
     border-radius: 50%;
     overflow: hidden;
-    border: var(--navi-story-border-width) solid var(--navi-color-accent);
+    border: var(--navi-story-border-width) solid var(--navi-story-bubble-border-color, var(--navi-color-accent));
     background: #000;
 }
 
@@ -94,7 +102,7 @@
     font-size: 0.75rem;
     line-height: 1.25;
     color: var(--navi-color-ink);
-    max-width: 76px;
+    max-width: calc(var(--navi-story-bubble-size) + 12px);
     text-align: center;
     white-space: normal;
     overflow-wrap: break-word;

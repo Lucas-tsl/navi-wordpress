@@ -17,6 +17,9 @@ const NAVI_STORIES_DEFAULT_PHONE_WIDTH   = 200;
 const NAVI_STORIES_MIN_PHONE_WIDTH       = 150;
 const NAVI_STORIES_MAX_PHONE_WIDTH       = 280;
 const NAVI_STORIES_MAX_PHONE_PADDING     = 20;
+const NAVI_STORIES_DEFAULT_BUBBLE_SIZE   = 64;
+const NAVI_STORIES_MIN_BUBBLE_SIZE       = 40;
+const NAVI_STORIES_MAX_BUBBLE_SIZE       = 120;
 
 function navi_sanitize_story_border_width( $value ) {
     return max( 0, min( 20, (int) $value ) );
@@ -28,6 +31,10 @@ function navi_sanitize_story_phone_padding( $value ) {
 
 function navi_sanitize_story_phone_width( $value ) {
     return max( NAVI_STORIES_MIN_PHONE_WIDTH, min( NAVI_STORIES_MAX_PHONE_WIDTH, (int) $value ) );
+}
+
+function navi_sanitize_story_bubble_size( $value ) {
+    return max( NAVI_STORIES_MIN_BUBBLE_SIZE, min( NAVI_STORIES_MAX_BUBBLE_SIZE, (int) $value ) );
 }
 
 function navi_stories_show_label() {
@@ -46,6 +53,21 @@ function navi_stories_auto_display() {
 function navi_stories_border_width() {
     $configured = get_option( 'navi_stories_border_width', '' );
     return '' !== $configured ? (int) $configured : NAVI_STORIES_DEFAULT_BORDER_WIDTH;
+}
+
+/**
+ * Couleur de la bordure de la bulle — pas de constante DEFAULT dédiée : le
+ * CSS retombe nativement sur la couleur d'accent du thème
+ * (`var(--navi-story-bubble-border-color, var(--navi-color-accent))`,
+ * voir assets/css/stories.css) tant qu'aucune couleur n'est réglée ici.
+ */
+function navi_stories_color_bubble_border() {
+    return get_option( 'navi_stories_color_bubble_border', '' );
+}
+
+function navi_stories_bubble_size() {
+    $configured = get_option( 'navi_stories_bubble_size', '' );
+    return '' !== $configured ? (int) $configured : NAVI_STORIES_DEFAULT_BUBBLE_SIZE;
 }
 
 function navi_stories_color_phone_bg() {

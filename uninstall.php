@@ -29,6 +29,8 @@ $navi_options = array(
     'navi_stories_auto_display',
     'navi_stories_show_label',
     'navi_stories_border_width',
+    'navi_stories_color_bubble_border',
+    'navi_stories_bubble_size',
     'navi_stories_color_phone_bg',
     'navi_stories_color_close_icon',
     'navi_stories_color_close_bg',

@@ -35,17 +35,25 @@ function navi_stories_enqueue_assets() {
     // qui s'écartent de la valeur par défaut de assets/css/stories.css
     // (:root) — même mécanisme que la surcharge de couleurs/arrondis du
     // noyau (includes/core/frontend.php).
-    $border      = navi_stories_border_width();
-    $phoneBg     = navi_stories_color_phone_bg();
-    $closeIcon   = navi_stories_color_close_icon();
-    $closeBg     = navi_stories_color_close_bg();
-    $overlay     = navi_stories_color_overlay();
-    $padding     = navi_stories_phone_padding();
-    $width       = navi_stories_phone_width();
-    $overrides   = array();
+    $border       = navi_stories_border_width();
+    $bubbleBorder = navi_stories_color_bubble_border();
+    $bubbleSize   = navi_stories_bubble_size();
+    $phoneBg      = navi_stories_color_phone_bg();
+    $closeIcon    = navi_stories_color_close_icon();
+    $closeBg      = navi_stories_color_close_bg();
+    $overlay      = navi_stories_color_overlay();
+    $padding      = navi_stories_phone_padding();
+    $width        = navi_stories_phone_width();
+    $overrides    = array();
 
     if ( NAVI_STORIES_DEFAULT_BORDER_WIDTH !== $border ) {
         $overrides['--navi-story-border-width'] = $border . 'px';
+    }
+    if ( '' !== $bubbleBorder ) {
+        $overrides['--navi-story-bubble-border-color'] = esc_html( $bubbleBorder );
+    }
+    if ( NAVI_STORIES_DEFAULT_BUBBLE_SIZE !== $bubbleSize ) {
+        $overrides['--navi-story-bubble-size'] = $bubbleSize . 'px';
     }
     if ( NAVI_STORIES_DEFAULT_PHONE_BG !== $phoneBg ) {
         $overrides['--navi-story-phone-bg'] = esc_html( $phoneBg );

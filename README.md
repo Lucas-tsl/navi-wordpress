@@ -43,7 +43,10 @@ soumise au [répertoire officiel WordPress.org](https://wordpress.org/plugins/).
   `[navi_stories]` (désactiver "Afficher automatiquement" dans Navi >
   Stories pour ne positionner les bulles que via le shortcode) —
   `[navi_stories]` seul utilise le produit de la page courante,
-  `[navi_stories id="123"]` cible un produit précis.
+  `[navi_stories id="123"]` cible un produit précis. Réglages répartis en
+  deux onglets (Navi > Stories) : "Bulles" (bordure — épaisseur/couleur —
+  et taille de la bulle, avec aperçu en direct) et "Mockup" (couleurs et
+  dimensions du panneau desktop, déjà existant).
 - Suite de tests Playwright automatisée : pas encore mise en place (prochain
   chantier — vérification faite manuellement jusqu'ici contre un catalogue
   de démonstration, voir Développement ci-dessous).
