@@ -2,12 +2,13 @@
 /**
  * Plugin Name: Navi
  * Description: Hub d'engagement flottant pour WordPress/WooCommerce : consentement cookies (Google Consent Mode V2), ajout au panier automatique sur fiche produit, accessibilité (langue, taille du texte, contraste, curseur, soulignage des liens), pilotés depuis un bouton unique.
- * Version: 0.3.0
+ * Version: 0.4.0
  * Author: Troteseil Lucas
  * Author URI: https://github.com/Lucas-tsl
  * Text Domain: navi
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Requires Plugins: woocommerce
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,12 +17,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'NAVI_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'NAVI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'NAVI_VERSION', '0.3.0' );
+define( 'NAVI_VERSION', '0.4.0' );
 
 // Chargement des traductions
 add_action( 'plugins_loaded', 'navi_charger_traductions' );
 function navi_charger_traductions() {
     load_plugin_textdomain( 'navi', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+
+// Les modules panier (sticky-cart) et stories dépendent de WooCommerce
+// (classes Product, hooks woocommerce_*) — le noyau et les modules cookies/
+// accessibilité restent utilisables sans, mais on avertit clairement plutôt
+// que de laisser échouer silencieusement les deux autres. L'en-tête
+// "Requires Plugins" ci-dessus empêche déjà l'activation sans WooCommerce
+// sur WordPress 6.5+, cette notice couvre le cas où WooCommerce serait
+// désactivé APRÈS coup.
+add_action( 'admin_notices', 'navi_notice_woocommerce_manquant' );
+function navi_notice_woocommerce_manquant() {
+    if ( class_exists( 'WooCommerce' ) ) {
+        return;
+    }
+    ?>
+    <div class="notice notice-warning">
+        <p><?php esc_html_e( 'Navi : WooCommerce est inactif. Les modules "Panier automatique" et "Stories" ne fonctionneront pas tant que WooCommerce ne sera pas réactivé.', 'navi' ); ?></p>
+    </div>
+    <?php
 }
 
 // Noyau : registre de modules, helpers, menu admin, bouton flottant (FAB)
@@ -36,3 +56,4 @@ require_once NAVI_PLUGIN_DIR . 'includes/core/frontend.php';
 require_once NAVI_PLUGIN_DIR . 'includes/modules/cookie-consent/module.php';
 require_once NAVI_PLUGIN_DIR . 'includes/modules/accessibility/module.php';
 require_once NAVI_PLUGIN_DIR . 'includes/modules/sticky-cart/module.php';
+require_once NAVI_PLUGIN_DIR . 'includes/modules/stories/module.php';

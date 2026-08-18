@@ -1,0 +1,39 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+require_once __DIR__ . '/data.php';
+require_once __DIR__ . '/appearance.php';
+
+Navi_Module_Registry::register(
+    'stories',
+    array(
+        'label'           => __( 'Stories', 'navi' ),
+        'short_label'     => __( 'Stories', 'navi' ),
+        'icon'            => '▶️',
+        'icon_svg'        => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>',
+        'description'     => __( 'Bulles vidéo "stories" sur la fiche produit, jusqu\'à 4 par produit (YouTube ou vidéo MP4 importée).', 'navi' ),
+        'option_name'     => 'navi_module_active_stories',
+        'default_active'  => true,
+        // Pas d'icône dans le menu du FAB : les bulles s'affichent déjà sur
+        // la fiche produit elle-même (voir public-display.php), pas besoin
+        // d'un point d'entrée supplémentaire dans le menu — même logique
+        // que le panier sticky avant l'ajout de son icône de réouverture
+        // (ici, rouvrir une story fermée n'a pas de sens, contrairement au
+        // panier qu'on peut vouloir rouvrir après une fermeture manuelle).
+        'fab_action'      => '',
+        'fab_condition'   => '',
+        'available'       => true,
+        'settings_url'    => admin_url( 'admin.php?page=navi-stories' ),
+        'visibility_selector' => '.navi-story-row',
+    )
+);
+
+if ( Navi_Module_Registry::is_active( 'stories' ) ) {
+    require_once __DIR__ . '/admin-product-tab.php';
+    require_once __DIR__ . '/admin-settings.php';
+
+    if ( ! is_admin() ) {
+        require_once __DIR__ . '/public-display.php';
+        require_once __DIR__ . '/stories-frontend.php';
+    }
+}

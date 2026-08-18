@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.4.0
+
+Chantier 6 : gestion native des Stories (bulles vidéo produit) — mêmes
+fonctionnalités et même apparence que Navi PrestaShop, aucune dépendance à
+`lst-video-story` ni à Advanced Custom Fields.
+
+- Nouveau module **Stories** : jusqu'à 4 bulles vidéo par produit
+  (YouTube ou MP4 importé), onglet dédié sur la fiche produit WooCommerce
+  (`woocommerce_product_data_tabs`/`_panels`) avec aperçu vignette YouTube
+  en direct, badge Vide/Configurée par emplacement, avertissement de
+  taille de fichier avant envoi.
+- Sauvegarde protégée par nonce dédié (`navi_story_nonce`) et
+  `current_user_can('edit_product', ...)`, upload MP4 validé (extension,
+  MIME, taille max 20 Mo) et stocké hors du dossier du plugin
+  (`wp_upload_dir()['basedir'] . '/navi-stories/'`, conforme aux
+  recommandations WordPress.org).
+- Rendu front (`woocommerce_product_thumbnails`) : bulles affichées après
+  la galerie produit, panneau desktop avec mockup de téléphone en CSS pur
+  (aucun asset image), plein écran mobile type stories (défilement
+  snap, swipe pour fermer, piège à focus), lecteur YouTube nocookie —
+  moteur porté quasi verbatim depuis Navi PrestaShop.
+- Réglages **Navi > Stories** : afficher le titre de la bulle, épaisseur
+  de bordure, 4 couleurs (fond du mockup, icône/fond du bouton de
+  fermeture, fond plein écran), curseurs padding/largeur du mockup avec
+  aperçu en direct — mêmes variables CSS `--navi-story-*` et mêmes
+  valeurs par défaut que la version PrestaShop.
+- Stockage en `postmeta` (`_navi_stories`) plutôt qu'une table dédiée,
+  plus idiomatique côté WordPress (pas de gestion d'installation/
+  désinstallation de table, profite du cache objet natif).
+- Deux bugs trouvés et corrigés pendant la vérification en conditions
+  réelles :
+  - un commentaire PHP contenant littéralement `*/` au milieu d'une
+    phrase (`includes/modules/stories/appearance.php`) fermait
+    prématurément le bloc de commentaire, provoquant une erreur de
+    syntaxe ;
+  - `global $product` n'est pas fiable à l'étape `wp_enqueue_scripts`
+    (peut être une chaîne plutôt qu'un `WC_Product` selon le thème) —
+    `includes/modules/stories/stories-frontend.php` utilise désormais
+    `get_the_ID()` à ce stade.
+
 ## 0.3.0
 
 Chantier 5 : parité d'apparence avec Navi PrestaShop — tout ce qui est
