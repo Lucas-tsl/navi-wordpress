@@ -46,24 +46,22 @@ Check**, plus deux corrections front trouvées pendant cette passe.
   **WooCommerce "Coming soon" activé sur l'instance de dev locale**
   (`woocommerce_coming_soon`), pas un bug du plugin ; désactivé sur
   l'environnement Docker pour fiabiliser les futurs tests.
-- **Corrigé** (après plusieurs itérations) : bandeau noir en haut et en
-  bas de la vidéo dans le panneau desktop et le plein écran mobile —
-  même à `controls=0`, le lecteur YouTube dessine toujours son propre
-  bandeau titre/chaîne et son filigrane "Shorts" (confirmé par
-  échantillonnage de pixels, pas un artefact de notre CSS ; déjà
-  documenté ainsi dans le commentaire de `buildVideoUrl()` porté depuis
-  Navi PrestaShop — limitation YouTube, iframe cross-origin, aucun
-  contournement possible en CSS/JS). Les paramètres bruts de Navi
-  PrestaShop (aucun zoom) ont été revérifiés octet pour octet identiques
-  puis essayés tels quels, mais se sont révélés insuffisants en pratique
-  (PrestaShop y est exposé de façon identique, le bandeau y est
-  simplement moins visible selon la vidéo). La hauteur réelle du bandeau
-  varie avec la longueur du nom de la chaîne YouTube (testé avec un vrai
-  compte) : `assets/css/stories.css` applique finalement
-  `transform: scale(1.35)` sur l'iframe (desktop et plein écran mobile),
-  seuil qui couvre le cas testé avec un nom de chaîne long tout en restant
-  en dessous du tout premier essai à 1.32 jugé "trop zoomé" sur un test
-  avec un nom de chaîne plus court.
+- Bandeau noir en haut et en bas de la vidéo (panneau desktop et plein
+  écran mobile) : même à `controls=0`, le lecteur YouTube dessine
+  toujours son propre bandeau titre/chaîne et son filigrane "Shorts"
+  (chrome du lecteur dans une iframe cross-origin, aucun contournement
+  possible en CSS/JS — Same-Origin Policy). Plusieurs essais de recadrage
+  par zoom (`scale()` de 1.2 à 1.35) ont été tentés puis **tous
+  abandonnés** : la hauteur réelle du bandeau varie avec la longueur du
+  nom de la chaîne YouTube, donc aucune valeur fixe ne le masque sans
+  rogner excessivement l'image sur les vidéos qui en ont le moins besoin.
+  **Vérifié directement sur l'instance PrestaShop réelle**
+  (`localhost:8080`, produit 134, story "Snack sain") : le même bandeau y
+  est bel et bien visible, capture d'écran à l'appui — ce n'est donc pas
+  une régression WordPress mais une limitation YouTube partagée à
+  l'identique par les deux plugins. `assets/css/stories.css` revient
+  définitivement aux paramètres bruts de Navi PrestaShop (aucun zoom),
+  qui étaient donc corrects depuis le début.
 - Renforcé (défensif, pour un centrage fiable de l'icône engrenage sur
   tous les navigateurs/appareils) : `assets/css/core.css` remet à zéro
   `padding`/`margin`/`appearance` sur le bouton `.navi-fab-toggle` (un
