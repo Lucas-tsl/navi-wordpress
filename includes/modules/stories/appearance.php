@@ -21,6 +21,19 @@ const NAVI_STORIES_DEFAULT_BUBBLE_SIZE   = 64;
 const NAVI_STORIES_MIN_BUBBLE_SIZE       = 40;
 const NAVI_STORIES_MAX_BUBBLE_SIZE       = 120;
 
+// Zoom de la vidéo dans le mockup (en %, 100 = aucun zoom) : YouTube
+// dessine toujours son propre bandeau titre/chaîne et son filigrane
+// "Shorts" par-dessus la vidéo, même à controls=0 — impossible à
+// retirer en CSS/JS (iframe cross-origin). Zoomer l'iframe pousse ce
+// bandeau hors du cadre visible, au prix d'un léger recadrage ; la
+// hauteur réelle du bandeau varie avec la longueur du nom de la chaîne
+// YouTube, donc aucune valeur fixe ne convient à tout le monde — réglage
+// laissé au marchand plutôt qu'une constante décidée pour lui. 135%
+// (valeur par défaut) masque le bandeau sur les cas testés.
+const NAVI_STORIES_DEFAULT_VIDEO_ZOOM = 135;
+const NAVI_STORIES_MIN_VIDEO_ZOOM     = 100;
+const NAVI_STORIES_MAX_VIDEO_ZOOM     = 150;
+
 // Bordure de bulle en dégradé par défaut (repris tel quel du motif de
 // référence lst-video-story : anneau "métallique" sombre/clair/sombre à
 // 45°) plutôt qu'une couleur unie — "gradient" reste le réglage par
@@ -53,6 +66,10 @@ function navi_sanitize_story_border_style( $value ) {
 
 function navi_sanitize_story_gradient_angle( $value ) {
     return max( 0, min( 360, (int) $value ) );
+}
+
+function navi_sanitize_story_video_zoom( $value ) {
+    return max( NAVI_STORIES_MIN_VIDEO_ZOOM, min( NAVI_STORIES_MAX_VIDEO_ZOOM, (int) $value ) );
 }
 
 function navi_stories_show_label() {
@@ -181,4 +198,13 @@ function navi_stories_phone_padding() {
 function navi_stories_phone_width() {
     $configured = get_option( 'navi_stories_phone_width', '' );
     return '' !== $configured ? (int) $configured : NAVI_STORIES_DEFAULT_PHONE_WIDTH;
+}
+
+/**
+ * Zoom vidéo en %, 100-150 (voir NAVI_STORIES_DEFAULT_VIDEO_ZOOM
+ * ci-dessus pour le pourquoi de ce réglage).
+ */
+function navi_stories_video_zoom() {
+    $configured = get_option( 'navi_stories_video_zoom', '' );
+    return '' !== $configured ? (int) $configured : NAVI_STORIES_DEFAULT_VIDEO_ZOOM;
 }

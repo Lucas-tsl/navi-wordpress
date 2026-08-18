@@ -22,6 +22,7 @@
     --navi-story-phone-padding: 10px;
     --navi-story-phone-width: 200px;
     --navi-story-bubble-size: 64px;
+    --navi-story-video-zoom: 1.35;
 
     /* Anneau dégradé sombre/clair/sombre à 45°, réglage par défaut de la
        bordure de bulle (Navi > Stories > Bulles) — une couleur unie reste
@@ -213,22 +214,20 @@
    large que le conteneur), centrée horizontalement et débordant sur les
    côtés — équivalent d'un `object-fit: cover` (non supporté nativement sur
    une iframe), `overflow: hidden` du parent masque le débordement latéral.
-   Mêmes paramètres que Navi PrestaShop (views/css/stories.css), aucun
-   zoom : le bandeau titre/chaîne YouTube (haut) et le filigrane "Shorts"
-   (bas) restent visibles quelques secondes à l'ouverture — vérifié
-   directement sur l'instance PrestaShop réelle (localhost:8080,
-   id_product=134, story "Snack sain") : le même bandeau y est bel et
-   bien visible, capture à l'appui — ce n'est donc pas une régression
-   WordPress mais une limitation YouTube partagée par les deux plugins
-   (chrome du lecteur dans une iframe cross-origin, Same-Origin Policy,
-   aucun contournement possible en CSS/JS). Plusieurs essais de recadrage
-   par zoom (`scale(1.2)` à `1.35`) ont été tentés puis abandonnés : la
-   hauteur réelle du bandeau varie selon la longueur du nom de la chaîne,
-   donc aucune valeur fixe ne masque le bandeau sans rogner excessivement
-   l'image sur les vidéos qui en ont le moins besoin. Les zones
-   `.navi-story-guard-top/bottom` ci-dessous absorbent le tap sur ce
-   bandeau plutôt que de laisser l'iframe y réagir, tout en laissant le
-   centre de la vidéo cliquable pour pause/lecture (`pointer-events: auto`). */
+   `scale(var(--navi-story-video-zoom))` en plus : même à `controls=0`,
+   le lecteur YouTube dessine toujours son propre bandeau titre/chaîne en
+   haut et son filigrane "Shorts" en bas (chrome du lecteur dans une
+   iframe cross-origin, Same-Origin Policy — aucun contournement possible
+   en CSS/JS, vérifié aussi sur l'instance PrestaShop réelle, qui y est
+   soumise à l'identique). La hauteur réelle du bandeau varie avec la
+   longueur du nom de la chaîne YouTube, donc aucune valeur fixe ne
+   convient à toutes les vidéos sans rogner l'image plus que nécessaire
+   pour certaines — réglable dans Navi > Stories > Mockup ("Zoom de la
+   vidéo", 100 à 150 %, 100 = aucun zoom) plutôt qu'une constante décidée
+   à la place du marchand. Les zones `.navi-story-guard-top/bottom`
+   ci-dessous absorbent le tap sur ce bandeau plutôt que de laisser
+   l'iframe y réagir, tout en laissant le centre de la vidéo cliquable
+   pour pause/lecture (`pointer-events: auto`). */
 .navi-story-phone-screen iframe {
     position: absolute;
     top: 0;
@@ -236,7 +235,8 @@
     height: 100%;
     width: auto;
     aspect-ratio: 9 / 16;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(var(--navi-story-video-zoom));
+    transform-origin: center;
     border: 0;
     display: block;
     pointer-events: auto;
@@ -385,6 +385,8 @@
     background: var(--navi-story-overlay-bg);
 }
 
+/* scale(var(--navi-story-video-zoom)) : même correctif que le panneau
+   desktop (.navi-story-phone-screen iframe plus haut). */
 .navi-story-fullscreen-slide iframe {
     position: absolute;
     top: 0;
@@ -393,7 +395,8 @@
     width: auto;
     aspect-ratio: 9 / 16;
     min-width: 100%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(var(--navi-story-video-zoom));
+    transform-origin: center;
     border: 0;
     display: block;
     pointer-events: auto;

@@ -31,6 +31,7 @@ function navi_stories_enregistrer_parametres() {
     register_setting( 'navi_stories_options_group', 'navi_stories_color_overlay', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_hex_color' ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_phone_padding', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_story_phone_padding', 'default' => NAVI_STORIES_DEFAULT_PHONE_PADDING ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_phone_width', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_story_phone_width', 'default' => NAVI_STORIES_DEFAULT_PHONE_WIDTH ) );
+    register_setting( 'navi_stories_options_group', 'navi_stories_video_zoom', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_story_video_zoom', 'default' => NAVI_STORIES_DEFAULT_VIDEO_ZOOM ) );
 
     // Visibilité par appareil (voir navi_render_visibility_fields, helpers.php).
     register_setting( 'navi_stories_options_group', 'navi_show_desktop_stories', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
@@ -58,6 +59,7 @@ function navi_stories_page_reglages_html() {
     }
     $padding        = navi_stories_phone_padding();
     $width          = navi_stories_phone_width();
+    $videoZoom      = navi_stories_video_zoom();
     $borderWidth    = navi_stories_border_width();
     $borderStyle    = navi_stories_bubble_border_style();
     $bubbleBorder   = navi_stories_color_bubble_border();
@@ -218,12 +220,25 @@ function navi_stories_page_reglages_html() {
                         <input type="range" id="navi_phone_width_range" name="navi_stories_phone_width"
                                min="<?php echo esc_attr( NAVI_STORIES_MIN_PHONE_WIDTH ); ?>" max="<?php echo esc_attr( NAVI_STORIES_MAX_PHONE_WIDTH ); ?>" step="10"
                                value="<?php echo esc_attr( $width ); ?>" style="width:100%;" />
+
+                        <p style="margin-top:20px;">
+                            <label for="navi_video_zoom_range"><?php esc_html_e( 'Zoom de la vidéo', 'navi' ); ?></label>
+                            (<output id="navi_video_zoom_output"><?php echo esc_html( $videoZoom ); ?></output> %)
+                        </p>
+                        <input type="range" id="navi_video_zoom_range" name="navi_stories_video_zoom"
+                               min="<?php echo esc_attr( NAVI_STORIES_MIN_VIDEO_ZOOM ); ?>" max="<?php echo esc_attr( NAVI_STORIES_MAX_VIDEO_ZOOM ); ?>" step="1"
+                               value="<?php echo esc_attr( $videoZoom ); ?>" style="width:100%;" />
+                        <p class="description">
+                            <?php esc_html_e( 'YouTube affiche toujours son propre bandeau titre/chaîne et son filigrane "Shorts" par-dessus la vidéo, même avec les contrôles masqués — impossible à retirer autrement (limitation de la plateforme). Zoomer la vidéo pousse ce bandeau hors du cadre visible, au prix d\'un léger recadrage sur les côtés. 100 % = aucun zoom, aucun recadrage (mais bandeau visible). La hauteur du bandeau dépend de la longueur du nom de la chaîne : ajustez selon vos vidéos.', 'navi' ); ?>
+                        </p>
                     </div>
 
                     <div style="flex:0 0 220px; display:flex; align-items:center; justify-content:center; min-height:260px; padding:20px; background:#f6f6f6; border-radius:4px;">
                         <div id="naviPreviewPhone" style="position:relative; aspect-ratio:9/18.5; background:#111; border-radius:34px; box-sizing:border-box; box-shadow:0 10px 30px rgba(0,0,0,.25); transition:width .1s ease, padding .1s ease; width:<?php echo esc_attr( $width ); ?>px; padding:<?php echo esc_attr( $padding ); ?>px;">
                             <div style="width:100%; height:100%; border-radius:24px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#000;">
-                                <span style="color:#fff; font-size:.8125rem; font-family:sans-serif; opacity:.6;"><?php esc_html_e( 'Vidéo', 'navi' ); ?></span>
+                                <div id="naviPreviewVideo" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; transition:transform .1s ease; transform:scale(<?php echo esc_attr( $videoZoom / 100 ); ?>);">
+                                    <span style="color:#fff; font-size:.8125rem; font-family:sans-serif; opacity:.6;"><?php esc_html_e( 'Vidéo', 'navi' ); ?></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -334,6 +349,9 @@ function navi_stories_page_reglages_html() {
             var paddingOutput = document.getElementById('navi_phone_padding_output');
             var widthOutput = document.getElementById('navi_phone_width_output');
             var previewPhone = document.getElementById('naviPreviewPhone');
+            var zoomRange = document.getElementById('navi_video_zoom_range');
+            var zoomOutput = document.getElementById('navi_video_zoom_output');
+            var previewVideo = document.getElementById('naviPreviewVideo');
             if (!paddingRange || !widthRange || !previewPhone) return;
 
             paddingRange.addEventListener('input', function () {
@@ -344,6 +362,12 @@ function navi_stories_page_reglages_html() {
                 widthOutput.textContent = widthRange.value;
                 previewPhone.style.width = widthRange.value + 'px';
             });
+            if (zoomRange && previewVideo) {
+                zoomRange.addEventListener('input', function () {
+                    zoomOutput.textContent = zoomRange.value;
+                    previewVideo.style.transform = 'scale(' + (zoomRange.value / 100) + ')';
+                });
+            }
         })();
     </script>
     <?php
