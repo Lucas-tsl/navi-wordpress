@@ -187,28 +187,25 @@ function navi_stories_save( $product_id ) {
     $slots  = array();
 
     for ( $index = 1; $index <= NAVI_STORY_LIMIT; $index++ ) {
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce vérifié par l'appelant ; navi_extract_youtube_id() ne renvoie qu'un identifiant YouTube (regex, 11 caractères alphanumériques) ou une chaîne vide.
         $youtube = navi_extract_youtube_id(
-            isset( $_POST[ 'navi_story_youtube_' . $index ] ) ? wp_unslash( $_POST[ 'navi_story_youtube_' . $index ] ) : ''
+            isset( $_POST[ 'navi_story_youtube_' . $index ] ) ? wp_unslash( $_POST[ 'navi_story_youtube_' . $index ] ) : '' // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce vérifié par l'appelant ; navi_extract_youtube_id() ne renvoie qu'un identifiant YouTube (regex, 11 caractères alphanumériques) ou une chaîne vide.
         );
         if ( '' === $youtube ) {
             continue; // Emplacement vide : pas de story à cet index.
         }
 
         $uploaded_url = navi_stories_handle_uploaded_preview( $index, $errors );
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié par l'appelant ; valeur passée à esc_url_raw() juste après.
         $preview = $uploaded_url
             ? $uploaded_url
-            : ( isset( $_POST[ 'navi_story_preview_' . $index ] ) ? esc_url_raw( wp_unslash( $_POST[ 'navi_story_preview_' . $index ] ) ) : '' );
+            : ( isset( $_POST[ 'navi_story_preview_' . $index ] ) ? esc_url_raw( wp_unslash( $_POST[ 'navi_story_preview_' . $index ] ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié par l'appelant ; valeur passée à esc_url_raw().
         if ( '' === $preview ) {
             $preview = 'https://img.youtube.com/vi/' . $youtube . '/maxresdefault.jpg';
         }
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié par l'appelant ; valeur passée à sanitize_text_field() juste avant stockage.
         $slots[ $index ] = array(
             'youtube' => sanitize_text_field( $youtube ),
             'preview' => esc_url_raw( $preview ),
-            'label'   => isset( $_POST[ 'navi_story_label_' . $index ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'navi_story_label_' . $index ] ) ) : '',
+            'label'   => isset( $_POST[ 'navi_story_label_' . $index ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'navi_story_label_' . $index ] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié par l'appelant ; valeur passée à sanitize_text_field().
         );
     }
 
