@@ -34,6 +34,15 @@ function navi_stories_show_label() {
     return (bool) get_option( 'navi_stories_show_label', 1 );
 }
 
+/**
+ * Affichage automatique après la galerie produit (voir
+ * public-display.php) — désactivable pour les sites qui ne veulent
+ * positionner les bulles que via le shortcode [navi_stories].
+ */
+function navi_stories_auto_display() {
+    return (bool) get_option( 'navi_stories_auto_display', 1 );
+}
+
 function navi_stories_border_width() {
     $configured = get_option( 'navi_stories_border_width', '' );
     return '' !== $configured ? (int) $configured : NAVI_STORIES_DEFAULT_BORDER_WIDTH;

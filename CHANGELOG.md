@@ -46,13 +46,15 @@ Check**, plus deux corrections front trouvées pendant cette passe.
   **WooCommerce "Coming soon" activé sur l'instance de dev locale**
   (`woocommerce_coming_soon`), pas un bug du plugin ; désactivé sur
   l'environnement Docker pour fiabiliser les futurs tests.
-- **Corrigé** : bandeau noir en haut et en bas de la vidéo dans le
-  panneau desktop et le plein écran mobile — même à `controls=0`, le
-  lecteur YouTube dessine toujours son propre bandeau titre/chaîne et son
+- Investigué : bandeau noir en haut et en bas de la vidéo dans le panneau
+  desktop et le plein écran mobile — même à `controls=0`, le lecteur
+  YouTube dessine toujours son propre bandeau titre/chaîne et son
   filigrane "Shorts" (confirmé par échantillonnage de pixels, pas un
-  artefact de notre CSS). L'iframe est maintenant zoomée
-  (`transform: scale(1.32)`) depuis son centre pour pousser ces deux
-  bandes hors du cadre visible, dans `assets/css/stories.css`.
+  artefact de notre CSS). Un essai de recadrage par zoom
+  (`transform: scale()`) a été tenté puis **abandonné** (rognait trop
+  l'image) : `assets/css/stories.css` reprend exactement les mêmes
+  paramètres d'iframe que Navi PrestaShop (aucun zoom, seules les zones
+  `.navi-story-guard-top/bottom` absorbent le tap sur ce bandeau).
 - Renforcé (défensif, pour un centrage fiable de l'icône engrenage sur
   tous les navigateurs/appareils) : `assets/css/core.css` remet à zéro
   `padding`/`margin`/`appearance` sur le bouton `.navi-fab-toggle` (un
@@ -66,6 +68,16 @@ Check**, plus deux corrections front trouvées pendant cette passe.
   boucle — comportement déjà présent, juste rendu plus visible dans
   l'interface (aucune story sur le catalogue de test n'a de MP4 associé,
   d'où l'absence d'aperçu animé constatée en local).
+- **Nouveau** : shortcode `[navi_stories]` pour positionner les bulles
+  vidéo manuellement (contenu, constructeur de page, template de thème),
+  en plus de l'affichage automatique existant après la galerie produit.
+  `[navi_stories]` seul utilise le produit de la page courante,
+  `[navi_stories id="123"]` cible un produit précis. Nouveau réglage
+  "Afficher automatiquement après la galerie produit" (Navi > Stories,
+  activé par défaut) pour désactiver l'affichage automatique quand seul
+  le shortcode est utilisé, évitant un double affichage —
+  `includes/modules/stories/public-display.php` factorise le rendu HTML
+  entre le hook et le shortcode.
 - Reste à faire avant soumission effective (non automatisable) :
   validation de `readme.txt` via le validateur officiel une fois le dépôt
   SVN attribué.
