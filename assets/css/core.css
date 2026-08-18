@@ -59,6 +59,16 @@
     top: 12px;
 }
 
+/* border-box explicite sur tout le sous-arbre : un thème qui ne pose pas
+   déjà un reset global `box-sizing: border-box` ferait compter bordures/
+   padding en plus des largeurs/hauteurs fixes ci-dessous (comportement
+   par défaut du navigateur), décalant légèrement le centrage du contenu
+   selon les thèmes/appareils. */
+.navi-fab,
+.navi-fab * {
+    box-sizing: border-box;
+}
+
 /* Navi - Bouton flottant (FAB), unifié en un seul objet qui grandit à
    travers 3 états (voir assets/js/core.js pour la machine à états) :
    1. fermé   : petit cercle avec l'engrenage
@@ -159,11 +169,18 @@
 /* ============================================================
    État 1 : bouton fermé (engrenage)
    ============================================================ */
+
+/* padding/margin/appearance remis à zéro explicitement : un <button> a un
+   padding par défaut variable selon le navigateur (particulièrement
+   Safari/iOS), qui sinon décale l'icône centrée par flexbox de quelques
+   pixels — invisible sur certains appareils, visible sur d'autres. */
 .navi-fab-toggle {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
+    margin: 0;
+    padding: 0;
     border: none;
     background: transparent;
     color: var(--navi-color-ink);
@@ -172,6 +189,7 @@
     align-items: center;
     justify-content: center;
     opacity: 1;
+    appearance: none;
     transition: opacity 0.15s ease;
 }
 
