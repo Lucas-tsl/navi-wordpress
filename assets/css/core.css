@@ -140,6 +140,12 @@
 .navi-fab[data-state="detail"][data-detail="accessibility"] { width: 320px; }
 .navi-fab[data-state="detail"][data-detail="sticky-cart"] { width: 480px; }
 
+/* Le mockup de téléphone (largeur configurable, voir --navi-story-phone-width,
+   assets/css/stories.css) reste centré et plafonné dans ce panneau quelle
+   que soit sa taille réglée en admin — 340px accueille confortablement la
+   largeur par défaut (200px) et la plage réglable jusqu'à 280px. */
+.navi-fab[data-state="detail"][data-detail="stories"] { width: 340px; }
+
 /* ============================================================
    État 1 : bouton fermé (engrenage)
    ============================================================ */
@@ -372,7 +378,8 @@
 
 .navi-fab[data-detail="cookie-consent"] .navi-fab-detail > #navi-cookie-modal-overlay,
 .navi-fab[data-detail="sticky-cart"] .navi-fab-detail > #navi-sticky-bar,
-.navi-fab[data-detail="accessibility"] .navi-fab-detail > #navi-a11y-panel {
+.navi-fab[data-detail="accessibility"] .navi-fab-detail > #navi-a11y-panel,
+.navi-fab[data-detail="stories"] .navi-fab-detail > #navi-story-panel {
     display: flex;
 }
 
@@ -403,6 +410,7 @@
     .navi-fab[data-state="detail"][data-detail="cookie-consent"] { width: 340px; }
     .navi-fab[data-state="detail"][data-detail="accessibility"] { width: 270px; }
     .navi-fab[data-state="detail"][data-detail="sticky-cart"] { width: 400px; }
+    .navi-fab[data-state="detail"][data-detail="stories"] { width: 270px; }
 
     .navi-fab-item-ring {
         width: 38px;

@@ -31,6 +31,10 @@ soumise au [répertoire officiel WordPress.org](https://wordpress.org/plugins/).
   lecture de couleur via WCBoost Variation Swatches si présent, réglage de
   sélecteurs CSS personnalisés pour les thèmes non reconnus par la chaîne
   de secours intégrée — voir Navi > Panier dans le Back Office).
+- Module **Stories** : fonctionnel (jusqu'à 4 bulles vidéo par produit,
+  YouTube ou MP4 importé, onglet dédié sur la fiche produit WooCommerce,
+  panneau desktop avec mockup de téléphone en CSS pur, plein écran mobile
+  avec défilement type stories — voir Navi > Stories dans le Back Office).
 - Suite de tests Playwright automatisée : pas encore mise en place (prochain
   chantier — vérification faite manuellement jusqu'ici contre un catalogue
   de démonstration, voir Développement ci-dessous).
