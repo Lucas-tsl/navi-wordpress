@@ -108,16 +108,26 @@ exclusively.
 
 == Screenshots ==
 
-1. Navi dashboard (Back Office): module activation, floating button
-   position, appearance (colors, corner radius).
-2. Navi menu in the Back Office, with the plugin icon.
-3. The Navi floating button and its module menu (front-end).
-4. Sticky add-to-cart panel on a variable product page, swatch selector.
-5. Cookie preferences (GDPR, Google Consent Mode V2) on the visitor side.
-6. Stories tab on the WooCommerce product page (Back Office).
-7. Stories module settings, with a live preview of the phone mockup.
-8. Story video bubble and desktop panel (phone mockup) on the product
-   page.
+1. Navi > Navi, General tab: floating button position, plugin language,
+   appearance (colors, corner radius).
+2. Cookie consent tab: banner settings, with concrete Google Tag Manager /
+   Consent Mode V2 setup instructions.
+3. Accessibility tab: module activation and per-device visibility.
+4. Sticky add-to-cart tab: module activation and custom CSS selectors for
+   themes not covered by the built-in fallback.
+5. Stories tab, Bubbles: display options and a live bubble appearance
+   preview.
+6. Stories tab, Mockup: phone mockup colors with a live preview.
+7. Stories tab on the WooCommerce product edit page: up to 4 configurable
+   video stories.
+8. Sticky add-to-cart panel on a variable product page, swatch selector
+   (front-end).
+9. Accessibility panel: text size, contrast, cursor, underlined links
+   (front-end).
+10. Cookie preferences modal (GDPR, Google Consent Mode V2) on the visitor
+    side.
+11. Story video bubble and desktop panel (phone mockup) on the product
+    page.
 
 == Changelog ==
 
