@@ -46,11 +46,8 @@ soumise au [répertoire officiel WordPress.org](https://wordpress.org/plugins/).
   `[navi_stories id="123"]` cible un produit précis. Réglages répartis en
   deux onglets (Navi > Stories) : "Bulles" (bordure — unie ou dégradée —
   et taille de la bulle, avec aperçu en direct) et "Mockup" (couleurs,
-  dimensions du panneau desktop, et "Zoom de la vidéo" en filet de
-  secours — le bandeau titre/chaîne YouTube, visible uniquement au
-  chargement et à la fin d'une vidéo, jamais pendant la lecture, est
-  masqué automatiquement via l'API IFrame YouTube plutôt que par
-  recadrage, voir Architecture ci-dessous).
+  dimensions du panneau desktop, et "Zoom de la vidéo" en cas de bandeau
+  titre/chaîne YouTube gênant).
 - Suite de tests Playwright automatisée : pas encore mise en place (prochain
   chantier — vérification faite manuellement jusqu'ici contre un catalogue
   de démonstration, voir Développement ci-dessous).

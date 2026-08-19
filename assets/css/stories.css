@@ -214,26 +214,26 @@
    large que le conteneur), centrée horizontalement et débordant sur les
    côtés — équivalent d'un `object-fit: cover` (non supporté nativement sur
    une iframe), `overflow: hidden` du parent masque le débordement latéral.
-   `scale(var(--navi-story-video-zoom))`, à 100% (aucun zoom) par défaut :
-   le bandeau titre/chaîne YouTube et le filigrane "Shorts" (chrome du
-   lecteur dans une iframe cross-origin, aucun contournement possible en
-   CSS/JS — vérifié aussi sur l'instance PrestaShop réelle, qui y est
-   soumise à l'identique) ne sont en réalité visibles que pendant le
-   chargement puis à la fin de la vidéo, jamais pendant la lecture active
-   — masqués précisément sur ces deux fenêtres par `attachVideoMask()`
-   (assets/js/stories.js, API IFrame YouTube), solution retenue plutôt
-   qu'un recadrage permanent qui aurait rogné l'image pendant toute sa
-   durée. Ce zoom ne reste qu'un filet de secours réglable dans Navi >
-   Stories > Mockup pour les cas où cette détection échouerait. Les zones
-   `.navi-story-guard-top/bottom` ci-dessous absorbent le tap sur ce
-   bandeau plutôt que de laisser l'iframe y réagir, tout en laissant le
-   centre de la vidéo cliquable pour pause/lecture (`pointer-events: auto`). */
+   `max-width: none` est le correctif réel des bandes noires en haut/bas
+   observées avec certains thèmes (dont Storefront) : leur CSS pose une
+   règle globale `embed, iframe, object, video { max-width: 100% }` qui
+   plafonne la LARGEUR volontairement surdimensionnée ci-dessus (calculée
+   depuis `aspect-ratio` pour déborder horizontalement, jamais depuis
+   `max-width`), ce qui déforme le rendu et laisse apparaître le fond noir
+   du conteneur — pas le bandeau titre/chaîne YouTube (chrome du lecteur,
+   visible ponctuellement au chargement/à la fin de la vidéo, mais jamais
+   sous cette forme de bandes franches ; accepté tel quel, non traité ici).
+   Les zones `.navi-story-guard-top/bottom` ci-dessous absorbent le tap
+   sur ce bandeau plutôt que de laisser l'iframe y réagir, tout en
+   laissant le centre de la vidéo cliquable pour pause/lecture
+   (`pointer-events: auto`). */
 .navi-story-phone-screen iframe {
     position: absolute;
     top: 0;
     left: 50%;
     height: 100%;
     width: auto;
+    max-width: none;
     aspect-ratio: 9 / 16;
     transform: translateX(-50%) scale(var(--navi-story-video-zoom));
     transform-origin: center;
@@ -259,55 +259,6 @@
 .navi-story-guard-bottom {
     bottom: 0;
     height: 10%;
-}
-
-/* Masque anti-chrome YouTube (voir assets/js/stories.js,
-   attachVideoMask()) : YouTube affiche son propre bandeau titre/chaîne
-   et son filigrane "Shorts" par-dessus le lecteur pendant les premières
-   secondes de chargement, puis à nouveau une fois la vidéo terminée
-   (chrome invisible seulement pendant la lecture active) — masque
-   l'iframe précisément le temps de ces deux fenêtres plutôt que de
-   recadrer la vidéo en permanence (essayé, abandonné : voir plus haut).
-   Fond = --navi-story-phone-bg pour se fondre avec le mockup. */
-.navi-story-video-mask {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--navi-story-phone-bg);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.navi-story-video-mask.is-visible {
-    opacity: 1;
-}
-
-.navi-story-video-mask.is-ended {
-    pointer-events: auto;
-}
-
-.navi-story-video-mask-replay {
-    display: none;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    font-size: 1.5rem;
-    line-height: 1;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-}
-
-.navi-story-video-mask.is-ended .navi-story-video-mask-replay {
-    display: flex;
 }
 
 @keyframes navi-story-fade {
@@ -434,14 +385,19 @@
     background: var(--navi-story-overlay-bg);
 }
 
-/* scale(var(--navi-story-video-zoom)) : même correctif que le panneau
-   desktop (.navi-story-phone-screen iframe plus haut). */
+/* max-width: none et scale(var(--navi-story-video-zoom)) : mêmes
+   correctifs que le panneau desktop (.navi-story-phone-screen iframe
+   plus haut) — sans `max-width: none`, `min-width: 100%` ci-dessous et
+   la règle globale `max-width: 100%` de certains thèmes s'annulent en
+   pinçant la largeur à exactement 100%, quelle que soit la hauteur
+   voulue. */
 .navi-story-fullscreen-slide iframe {
     position: absolute;
     top: 0;
     left: 50%;
     height: 100%;
     width: auto;
+    max-width: none;
     aspect-ratio: 9 / 16;
     min-width: 100%;
     transform: translateX(-50%) scale(var(--navi-story-video-zoom));
