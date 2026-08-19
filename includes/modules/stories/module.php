@@ -37,6 +37,11 @@ if ( is_admin() ) {
 }
 
 if ( Navi_Module_Registry::is_active( 'stories' ) ) {
+    // Bloc Gutenberg (block.php) : requis dans les deux contextes, pas
+    // seulement is_admin() — l'aperçu dans l'éditeur passe par un appel REST
+    // (bloc-renderer), qui n'est PAS considéré comme admin par WordPress.
+    require_once __DIR__ . '/block.php';
+
     if ( is_admin() ) {
         require_once __DIR__ . '/admin-product-tab.php';
     } else {

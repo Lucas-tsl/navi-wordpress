@@ -157,6 +157,7 @@ function navi_render_dashboard_page() {
         </h2>
 
         <div class="navi-admin-tab-panel" data-tab-panel="general">
+            <?php navi_render_welcome_card(); ?>
             <form method="post" action="options.php">
                 <?php settings_fields( 'navi_modules_group' ); ?>
                 <?php navi_render_hash_preserving_referer_field(); ?>

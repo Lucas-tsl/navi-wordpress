@@ -4,7 +4,7 @@ Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
@@ -96,6 +96,19 @@ the most common themes. If your theme has an unusual structure, a
 "custom CSS selector" setting per field (price, name, image) is
 available under Navi > Cart.
 
+= Does the sticky add-to-cart work with block themes (Site Editor)? =
+
+Yes: WooCommerce's default block-based Single Product template still
+renders the classic variations form under the hood, which the sticky
+cart already detects. The one exception is WooCommerce's own
+experimental "Add to Cart + Options (Beta)" block (fully JavaScript-
+driven, no classic form) — not supported while it remains in beta.
+
+= Can I place the story bubbles as a block instead of a shortcode? =
+
+Yes: the "Navi Stories" block does the same thing as `[navi_stories]`,
+with a "Product ID" field in the block settings.
+
 = Can I control where the story bubbles are displayed? =
 
 By default they appear right after the product gallery. Use the
@@ -131,6 +144,14 @@ exclusively.
 
 == Changelog ==
 
+= 0.6.0 =
+* "Navi Stories" block (Gutenberg), alongside the `[navi_stories]`
+  shortcode.
+* Onboarding: one-time redirect to Navi > Navi after activation, "First
+  steps" card on the General tab.
+* Verified compatibility with WooCommerce's default block-based Single
+  Product template (see FAQ).
+
 = 0.5.0 =
 * Shortcode `[navi_stories]`, configurable bubble appearance (solid or
   gradient border, size), WordPress.org submission readiness.
@@ -155,5 +176,5 @@ exclusively.
 
 == Upgrade Notice ==
 
-= 0.5.0 =
+= 0.6.0 =
 No action required on upgrade.

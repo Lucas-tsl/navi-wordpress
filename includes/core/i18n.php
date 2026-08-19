@@ -150,6 +150,15 @@ function navi_dictionary_en() {
         'Langue du plugin' => 'Plugin language',
         "Par défaut, Navi suit la langue détectée automatiquement (WPML si actif, sinon la langue du site). Choisissez une langue ici pour l'imposer, quelle que soit cette détection." => "By default, Navi follows the automatically detected language (WPML if active, otherwise the site's language). Choose a language here to force it, regardless of this detection.",
 
+        // Onboarding (Navi > Navi, onglet Général) — voir includes/core/onboarding.php.
+        'Premiers pas avec Navi' => 'First steps with Navi',
+        'Activez les modules dont vous avez besoin depuis leur propre onglet ci-dessus.' => 'Enable the modules you need from their own tab above.',
+        'Adaptez les couleurs et les arrondis à votre identité visuelle dans la carte "Apparence" ci-dessous.' => 'Adjust colors and corner radius to your brand in the "Appearance" card below.',
+        "Vérifiez la position du bouton flottant si un autre widget occupe déjà ce coin de l'écran." => 'Check the floating button position if another widget already occupies that corner of the screen.',
+
+        // Bloc Gutenberg Stories — voir includes/modules/stories/block.php.
+        'Bulles vidéo "stories" pour un produit WooCommerce.' => 'Video "stories" bubbles for a WooCommerce product.',
+
         // Panier automatique (sticky-cart).
         'Ajout au panier' => 'Add to cart',
         'Panneau produit (image, variation, ajout au panier) ancré au bouton, qui suit l\'utilisateur sur les fiches produit.' => 'Product panel (image, variation, add to cart) anchored to the button, following the user across product pages.',

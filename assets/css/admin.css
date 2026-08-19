@@ -289,3 +289,48 @@
     background: var(--navi-admin-canvas);
     border-radius: var(--navi-admin-radius-sm);
 }
+
+/* ============================================================
+   Carte "Premiers pas" (onglet Général) — voir navi_render_welcome_card()
+   (includes/core/onboarding.php).
+   ============================================================ */
+.navi-admin-welcome {
+    position: relative;
+    background: var(--navi-admin-accent-soft);
+    border-color: transparent;
+}
+
+.navi-admin-welcome ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.navi-admin-welcome li {
+    margin: 0 0 6px;
+    font-size: 0.9375rem;
+}
+
+.navi-admin-welcome li:last-child {
+    margin-bottom: 0;
+}
+
+.navi-admin-welcome-dismiss {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--navi-admin-ink-soft);
+    text-decoration: none;
+    font-size: 0.75rem;
+}
+
+.navi-admin-welcome-dismiss:hover,
+.navi-admin-welcome-dismiss:focus {
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--navi-admin-ink);
+}

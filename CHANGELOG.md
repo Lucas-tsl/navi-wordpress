@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.6.0
+
+- Bloc Gutenberg "Navi Stories" (`navi/stories`), équivalent visuel du
+  shortcode `[navi_stories]` (réglage "Product ID" dans l'inspecteur,
+  aperçu en direct via ServerSideRender) — bloc dynamique, rendu toujours
+  délégué à `navi_stories_shortcode()`, jamais dupliqué.
+- Onboarding : redirection unique vers Navi > Navi après l'activation
+  (jamais lors d'une activation groupée), carte "Premiers pas" sur
+  l'onglet Général tant qu'elle n'est pas masquée.
+- Compatibilité WooCommerce Blocks vérifiée empiriquement (thème FSE,
+  Single Product en blocs) : le formulaire de variations classique
+  persiste sous les blocs, la détection existante fonctionne sans
+  changement. Seul le bloc expérimental "Add to Cart + Options (Beta)"
+  de WooCommerce (entièrement piloté en JS, sans formulaire classique)
+  n'est pas pris en charge — documenté dans le FAQ (readme.txt).
+
 ## 0.5.0
 
 - Préparation à la soumission WordPress.org : `readme.txt` en anglais,
