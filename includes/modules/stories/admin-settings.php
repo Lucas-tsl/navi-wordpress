@@ -229,7 +229,7 @@ function navi_stories_page_reglages_html() {
                                min="<?php echo esc_attr( NAVI_STORIES_MIN_VIDEO_ZOOM ); ?>" max="<?php echo esc_attr( NAVI_STORIES_MAX_VIDEO_ZOOM ); ?>" step="1"
                                value="<?php echo esc_attr( $videoZoom ); ?>" style="width:100%;" />
                         <p class="description">
-                            <?php esc_html_e( 'Le bandeau titre/chaîne YouTube et le filigrane "Shorts" sont déjà masqués automatiquement pendant le chargement et à la fin de la vidéo (remplacés par un écran de rappel/relecture). Ce réglage n\'est qu\'un filet de secours : augmentez-le uniquement si ce bandeau reste visible malgré tout sur certaines vidéos (connexion très lente, bloqueur de scripts). 100 % = aucun recadrage.', 'navi' ); ?>
+                            <?php esc_html_e( 'YouTube affiche parfois son propre bandeau titre/chaîne et son filigrane "Shorts" par-dessus la vidéo (surtout au chargement et à la fin), sans moyen de le retirer autrement. Zoomer la vidéo le pousse hors du cadre visible, au prix d\'un léger recadrage sur les côtés. 100 % = aucun recadrage.', 'navi' ); ?>
                         </p>
                     </div>
 
