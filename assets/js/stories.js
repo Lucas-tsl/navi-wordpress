@@ -370,10 +370,16 @@
             // focus se retrouve piégé dans le document (cross-origin) de la
             // vidéo YouTube, hors de portée de handleFullscreenKeydown
             // ci-dessous — aucun moyen d'en ressortir au clavier.
+            // story.label vient de data-label (attribut, jamais interprété comme
+            // HTML) : title posé via setAttribute plutôt que concaténé dans le
+            // gabarit HTML ci-dessous, qui casserait sinon hors de l'attribut
+            // sur un libellé contenant un guillemet (ex. injection d'un
+            // gestionnaire d'événement comme onload).
             slide.innerHTML =
-                '<iframe src="" title="' + story.label + '" tabindex="-1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture"></iframe>' +
+                '<iframe src="" tabindex="-1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture"></iframe>' +
                 '<div class="navi-story-fullscreen-guard-top" aria-hidden="true"></div>' +
                 '<div class="navi-story-fullscreen-guard-bottom" aria-hidden="true"></div>';
+            slide.querySelector('iframe').setAttribute('title', story.label);
             fullscreenTrack.appendChild(slide);
             if (story.videoId === videoId) {
                 activeSlide = slide;

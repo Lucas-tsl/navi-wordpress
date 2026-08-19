@@ -9,8 +9,9 @@ $navi_options = array(
     'navi_module_active_accessibility',
     'navi_module_active_sticky-cart',
     'navi_module_active_stories',
-    // Position du bouton flottant
+    // Position du bouton flottant, langue forcée du plugin
     'navi_fab_position',
+    'navi_language',
     // Apparence (Navi > Apparence)
     'navi_color_ink',
     'navi_color_ink_soft',

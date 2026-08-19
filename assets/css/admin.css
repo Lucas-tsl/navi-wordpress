@@ -208,8 +208,12 @@
 /* ============================================================
    Onglets (Navi > Stories) : pastilles plutôt que l'onglet
    nav-tab-wrapper natif (bordures anguleuses façon fichier papier).
+   Sélecteur "h2.nav-tab-wrapper" (pas juste ".nav-tab-wrapper") pour
+   égaler la spécificité de la règle core WP ".wrap h2.nav-tab-wrapper"
+   (load-styles.php) qui sinon regagne padding-top/bottom malgré notre
+   "padding: 4px" ci-dessous.
    ============================================================ */
-.navi-admin .nav-tab-wrapper {
+.navi-admin h2.nav-tab-wrapper {
     border-bottom: none;
     display: flex;
     gap: 4px;
@@ -270,6 +274,19 @@
 .navi-admin .button {
     border-radius: var(--navi-admin-radius-sm);
     box-shadow: none;
+}
+
+/* wp-color-picker (.wp-color-result) : bouton "Select Color" natif avec sa
+   propre bordure bleue WordPress (#2271b1) codée en dur — détonne dans une
+   carte blanche épurée, remplacée par la même bordure neutre que les
+   autres champs, accentuée seulement au survol/focus. */
+.navi-admin .wp-color-result {
+    border-color: var(--navi-admin-border);
+}
+
+.navi-admin .wp-color-result:hover,
+.navi-admin .wp-color-result:focus {
+    border-color: var(--navi-admin-accent);
 }
 
 /* ============================================================
