@@ -28,14 +28,15 @@ function navi_a11y_page_reglages_html() {
         wp_die( esc_html__( "Vous n'avez pas les permissions nécessaires pour accéder à cette page.", 'navi' ) );
     }
     ?>
-    <div class="wrap">
-        <h1><?php esc_html_e( 'Réglages Accessibilité', 'navi' ); ?></h1>
-        <p class="description"><?php esc_html_e( 'Langue, taille du texte, contraste et curseur restent toujours actifs pour les visiteurs — seule leur visibilité par appareil se règle ici.', 'navi' ); ?></p>
+    <div class="wrap navi-admin">
+        <?php navi_admin_page_header( __( 'Accessibilité', 'navi' ), __( 'Langue, taille du texte, contraste et curseur restent toujours actifs pour les visiteurs — seule leur visibilité par appareil se règle ici.', 'navi' ) ); ?>
         <form method="post" action="options.php">
             <?php settings_fields( 'navi_a11y_options_group' ); ?>
-            <table class="form-table">
-                <?php navi_render_visibility_fields( 'accessibility' ); ?>
-            </table>
+            <div class="navi-admin-card">
+                <table class="form-table">
+                    <?php navi_render_visibility_fields( 'accessibility' ); ?>
+                </table>
+            </div>
             <?php submit_button(); ?>
         </form>
     </div>

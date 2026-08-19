@@ -1,0 +1,341 @@
+/**
+ * Design system du Back Office Navi (Navi > ...) : reskin des pages
+ * settings_fields()/form-table standard de WordPress plutôt qu'un
+ * remplacement — la structure form/options.php reste 100% native, seul
+ * l'habillage change. Chargé uniquement sur les pages Navi (voir
+ * navi_enqueue_admin_assets, includes/core/admin-menu.php).
+ *
+ * Palette propre au plugin (indépendante de Navi > Couleurs, qui ne
+ * personnalise que le rendu FRONT du site marchand) : identité visuelle
+ * Navi cohérente d'un site à l'autre dans le BO.
+ */
+:root {
+    --navi-admin-ink: #14161a;
+    --navi-admin-ink-soft: #6b7280;
+    --navi-admin-accent: #2563eb;
+    --navi-admin-accent-deep: #1e40af;
+    --navi-admin-accent-soft: #eff4ff;
+    --navi-admin-surface: #fff;
+    --navi-admin-canvas: #f4f5f7;
+    --navi-admin-border: #e5e7eb;
+    --navi-admin-radius: 12px;
+    --navi-admin-radius-sm: 8px;
+    --navi-admin-shadow: 0 1px 2px rgba(20, 22, 26, 0.04), 0 8px 24px rgba(20, 22, 26, 0.04);
+}
+
+.navi-admin {
+    max-width: 960px;
+    margin: 20px 0 0;
+    color: var(--navi-admin-ink);
+}
+
+.navi-admin * {
+    box-sizing: border-box;
+}
+
+/* ============================================================
+   En-tête (logo + titre), voir navi_admin_page_header() (helpers.php).
+   ============================================================ */
+.navi-admin-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 24px;
+}
+
+.navi-admin-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.navi-admin-header h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--navi-admin-ink);
+}
+
+.navi-admin-header p {
+    margin: 2px 0 0;
+    font-size: 0.875rem;
+    color: var(--navi-admin-ink-soft);
+}
+
+/* ============================================================
+   Cartes : conteneur générique pour chaque section de réglages,
+   remplace visuellement les blocs form-table/h2 nus de l'admin standard.
+   ============================================================ */
+.navi-admin-card {
+    background: var(--navi-admin-surface);
+    border: 1px solid var(--navi-admin-border);
+    border-radius: var(--navi-admin-radius);
+    box-shadow: var(--navi-admin-shadow);
+    padding: 24px;
+    margin: 0 0 20px;
+}
+
+.navi-admin-card > h2:first-child {
+    margin-top: 0;
+}
+
+.navi-admin h2 {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--navi-admin-ink);
+}
+
+.navi-admin > p.description,
+.navi-admin-card > p.description {
+    color: var(--navi-admin-ink-soft);
+    font-size: 0.875rem;
+}
+
+/* ============================================================
+   form-table : espacement resserré, libellés en gris doux plutôt qu'en
+   gras noir — moins "formulaire administratif", plus proche d'un panneau
+   de réglages d'app moderne.
+   ============================================================ */
+.navi-admin .form-table {
+    margin: 0;
+}
+
+.navi-admin .form-table th {
+    width: 260px;
+    padding: 14px 16px 14px 0;
+    font-weight: 500;
+    color: var(--navi-admin-ink);
+}
+
+.navi-admin .form-table td {
+    padding: 10px 0;
+}
+
+.navi-admin .form-table tr:not(:last-child) th,
+.navi-admin .form-table tr:not(:last-child) td {
+    border-bottom: 1px solid var(--navi-admin-canvas);
+}
+
+.navi-admin .description {
+    color: var(--navi-admin-ink-soft);
+}
+
+/* ============================================================
+   Champs texte/nombre/textarea/select.
+   ============================================================ */
+.navi-admin input[type="text"],
+.navi-admin input[type="number"],
+.navi-admin input[type="url"],
+.navi-admin textarea,
+.navi-admin select {
+    border: 1px solid var(--navi-admin-border);
+    border-radius: var(--navi-admin-radius-sm);
+    padding: 7px 10px;
+    box-shadow: none;
+}
+
+.navi-admin input[type="text"]:focus,
+.navi-admin input[type="number"]:focus,
+.navi-admin input[type="url"]:focus,
+.navi-admin textarea:focus,
+.navi-admin select:focus {
+    border-color: var(--navi-admin-accent);
+    box-shadow: 0 0 0 1px var(--navi-admin-accent);
+}
+
+/* ============================================================
+   Cases à cocher -> interrupteurs : appearance:none + pseudo-élément
+   pour le curseur, aucun changement de markup nécessaire (toujours de
+   vraies <input type="checkbox">, submit_button()/settings_fields()
+   fonctionnent à l'identique).
+   ============================================================ */
+.navi-admin input[type="checkbox"] {
+    appearance: none;
+    position: relative;
+    width: 38px;
+    height: 22px;
+    border-radius: 999px;
+    background: #d7dade;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    vertical-align: middle;
+    flex-shrink: 0;
+    transition: background-color 0.15s ease;
+}
+
+.navi-admin input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: transform 0.15s ease;
+}
+
+.navi-admin input[type="checkbox"]:checked {
+    background: var(--navi-admin-accent);
+}
+
+.navi-admin input[type="checkbox"]:checked::before {
+    transform: translateX(16px);
+}
+
+.navi-admin input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--navi-admin-accent);
+    outline-offset: 2px;
+}
+
+.navi-admin input[type="checkbox"]:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* ============================================================
+   Curseurs (range) : réglages d'aspect Stories.
+   ============================================================ */
+.navi-admin input[type="range"] {
+    accent-color: var(--navi-admin-accent);
+}
+
+/* ============================================================
+   Onglets (Navi > Stories) : pastilles plutôt que l'onglet
+   nav-tab-wrapper natif (bordures anguleuses façon fichier papier).
+   ============================================================ */
+.navi-admin .nav-tab-wrapper {
+    border-bottom: none;
+    display: flex;
+    gap: 4px;
+    background: var(--navi-admin-canvas);
+    padding: 4px;
+    border-radius: 999px;
+    width: fit-content;
+    margin: 0 0 20px;
+}
+
+.navi-admin .nav-tab {
+    border: none;
+    background: transparent;
+    border-radius: 999px;
+    padding: 7px 18px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--navi-admin-ink-soft);
+    margin: 0;
+    float: none;
+}
+
+.navi-admin .nav-tab:hover,
+.navi-admin .nav-tab:focus {
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--navi-admin-ink);
+}
+
+.navi-admin .nav-tab-active,
+.navi-admin .nav-tab-active:hover,
+.navi-admin .nav-tab-active:focus {
+    background: var(--navi-admin-surface);
+    color: var(--navi-admin-ink);
+    box-shadow: 0 1px 2px rgba(20, 22, 26, 0.08);
+}
+
+/* ============================================================
+   Boutons.
+   ============================================================ */
+.navi-admin .button-primary {
+    background: var(--navi-admin-accent);
+    border-color: var(--navi-admin-accent);
+    border-radius: var(--navi-admin-radius-sm);
+    box-shadow: none;
+    text-shadow: none;
+    font-weight: 500;
+    padding: 4px 16px;
+    height: auto;
+    line-height: 2;
+}
+
+.navi-admin .button-primary:hover,
+.navi-admin .button-primary:focus {
+    background: var(--navi-admin-accent-deep);
+    border-color: var(--navi-admin-accent-deep);
+}
+
+.navi-admin .button {
+    border-radius: var(--navi-admin-radius-sm);
+    box-shadow: none;
+}
+
+/* ============================================================
+   Liste des modules (tableau de bord, Navi > Navi) : grille de cartes
+   plutôt que le tableau widefat/striped natif.
+   ============================================================ */
+.navi-admin-modules {
+    display: grid;
+    gap: 12px;
+}
+
+.navi-admin-module {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border: 1px solid var(--navi-admin-border);
+    border-radius: var(--navi-admin-radius-sm);
+    background: var(--navi-admin-surface);
+}
+
+.navi-admin-module-icon {
+    font-size: 1.375rem;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: var(--navi-admin-accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navi-admin-module-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.navi-admin-module-body strong {
+    font-size: 0.9375rem;
+    color: var(--navi-admin-ink);
+}
+
+.navi-admin-module-body p {
+    margin: 2px 0 0;
+    font-size: 0.8125rem;
+    color: var(--navi-admin-ink-soft);
+}
+
+.navi-admin-module-body em {
+    font-size: 0.75rem;
+    color: var(--navi-admin-accent-deep);
+    font-style: normal;
+    font-weight: 500;
+}
+
+.navi-admin-module-settings {
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+}
+
+/* ============================================================
+   Aperçus live (Navi > Stories) : conteneur neutre, cohérent avec la
+   palette (remplace le fond gris brut #f6f6f6 en inline style).
+   ============================================================ */
+.navi-admin-preview {
+    background: var(--navi-admin-canvas);
+    border-radius: var(--navi-admin-radius-sm);
+}
