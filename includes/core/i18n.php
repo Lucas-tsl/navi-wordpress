@@ -214,7 +214,7 @@ function navi_dictionary_en() {
         'Langue, taille du texte, contraste et curseur restent toujours actifs pour les visiteurs — seule leur visibilité par appareil se règle ici.' => 'Language, text size, contrast and cursor always stay active for visitors — only their visibility per device is configured here.',
 
         // Onglet Stories de la fiche produit (admin-product-tab.php).
-        'Jusqu\'à 4 stories par produit. Chaque story affiche une bulle vidéo cliquable sur la fiche produit. Collez une URL ou un identifiant YouTube pour un aperçu immédiat, ou importez une vidéo MP4 (max. %d Mo).' => 'Up to 4 stories per product. Each story shows a clickable video bubble on the product page. Paste a YouTube URL or ID for an instant preview, or upload an MP4 video (max. %d MB).',
+        'Jusqu\'à 4 stories par produit. Chaque story affiche une bulle vidéo cliquable sur la fiche produit. Collez une URL ou un identifiant YouTube pour un aperçu immédiat, ou choisissez une vidéo MP4 depuis la médiathèque.' => 'Up to 4 stories per product. Each story shows a clickable video bubble on the product page. Paste a YouTube URL or ID for an instant preview, or choose an MP4 video from the media library.',
         'Story #%d' => 'Story #%d',
         'Configurée' => 'Configured',
         'Vide' => 'Empty',
@@ -225,16 +225,10 @@ function navi_dictionary_en() {
         'Sans vidéo de prévisualisation, la bulle affiche une image fixe (vignette YouTube). Pour une bulle animée (mini-vidéo en boucle, plus vivante), importez un court extrait MP4 ci-dessous.' => 'Without a preview video, the bubble shows a still image (YouTube thumbnail). For an animated bubble (looping mini video, more lively), upload a short MP4 clip below.',
         'URL de la vidéo de prévisualisation (MP4)' => 'Preview video URL (MP4)',
         'Laisser vide pour utiliser la vignette YouTube par défaut.' => 'Leave empty to use the default YouTube thumbnail.',
-        '...ou importer un fichier MP4' => '...or upload an MP4 file',
-        'dépasse la taille maximale autorisée' => 'exceeds the maximum allowed size',
-
-        // Validation des uploads MP4 (data.php).
-        'Erreur lors du transfert du fichier.' => 'Error while uploading the file.',
-        'Le fichier dépasse la taille maximale autorisée (%d Mo).' => 'The file exceeds the maximum allowed size (%d MB).',
+        '...ou choisir depuis la médiathèque' => '...or choose from the media library',
+        'Choisir une vidéo' => 'Choose a video',
+        'Utiliser cette vidéo' => 'Use this video',
         'Seuls les fichiers .mp4 sont acceptés.' => 'Only .mp4 files are accepted.',
-        'Le fichier ne semble pas être une vidéo MP4 valide.' => 'The file does not appear to be a valid MP4 video.',
-        "Échec de l'enregistrement du fichier." => 'Failed to save the file.',
-        'Stories Navi : certains fichiers ont été ignorés.' => 'Navi Stories: some files were ignored.',
 
         // Panneau frontend Stories (stories.js, localisé via stories-frontend.php).
         'Story précédente' => 'Previous story',

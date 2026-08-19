@@ -78,10 +78,11 @@ notice is shown in the Back Office if WooCommerce is missing or inactive.
 
 = Where are uploaded MP4 story videos stored? =
 
-In the standard WordPress uploads folder
-(`wp-content/uploads/navi-stories/`), never inside the plugin folder —
-the latter can be overwritten on every plugin update, unlike the uploads
-folder.
+Story preview videos are picked or uploaded through the standard
+WordPress Media Library (the same picker used everywhere else in the
+admin), so they're stored like any other media file, never inside the
+plugin folder — the latter can be overwritten on every plugin update,
+unlike the uploads folder.
 
 = Does the Accessibility module's language switcher work without WPML? =
 

@@ -10,8 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * jusqu'à NAVI_STORY_LIMIT entrées), plutôt que 12 clés séparées.
  */
 
-const NAVI_STORY_LIMIT      = 4;
-const NAVI_STORY_MAX_BYTES  = 20971520; // 20 Mo, même plafond que côté PrestaShop.
+const NAVI_STORY_LIMIT = 4;
 
 /**
  * Stories du produit, toujours NAVI_STORY_LIMIT entrées (index 1 à 4, les
@@ -94,108 +93,16 @@ function navi_youtube_thumbnail_url( $youtube_id ) {
 }
 
 /**
- * Validation centralisée (extension + MIME + taille) — même logique que
- * NaviStoryManager::validateMp4Upload() côté PrestaShop. Retourne un
- * message d'erreur, ou '' si le fichier est accepté.
- */
-function navi_validate_mp4_upload( array $file ) {
-    if ( ! isset( $file['error'] ) || UPLOAD_ERR_OK !== $file['error'] ) {
-        return __( 'Erreur lors du transfert du fichier.', 'saito-navi' );
-    }
-
-    if ( $file['size'] > NAVI_STORY_MAX_BYTES ) {
-        return sprintf(
-            /* translators: %d: taille maximale en Mo */
-            __( 'Le fichier dépasse la taille maximale autorisée (%d Mo).', 'saito-navi' ),
-            NAVI_STORY_MAX_BYTES / 1048576
-        );
-    }
-
-    $extension = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
-    if ( 'mp4' !== $extension ) {
-        return __( 'Seuls les fichiers .mp4 sont acceptés.', 'saito-navi' );
-    }
-
-    if ( function_exists( 'finfo_open' ) ) {
-        $finfo = finfo_open( FILEINFO_MIME_TYPE );
-        $mime  = finfo_file( $finfo, $file['tmp_name'] );
-        finfo_close( $finfo );
-        if ( 'video/mp4' !== $mime ) {
-            return __( 'Le fichier ne semble pas être une vidéo MP4 valide.', 'saito-navi' );
-        }
-    }
-
-    return '';
-}
-
-/**
- * Dossier d'upload des prévisualisations MP4 — wp_upload_dir(), PAS un
- * sous-dossier du plugin (voir la note du plan : écrire des fichiers
- * uploadés par l'utilisateur dans le dossier du plugin est déconseillé par
- * les revues WordPress.org, dossier parfois non inscriptible selon
- * l'hébergeur, écrasé à chaque mise à jour du plugin).
+ * Dossier historique des prévisualisations MP4 uploadées avant l'ajout du
+ * sélecteur médiathèque (wp.media) — celui-ci passe désormais par le flux
+ * d'upload standard de WordPress (dossier daté de la médiathèque, vraie
+ * entrée wp_insert_attachment()), donc plus rien n'écrit ici. Conservé
+ * uniquement pour que navi_stories_uninstall_cleanup() efface les fichiers
+ * restants des installations antérieures à ce changement.
  */
 function navi_stories_upload_dir() {
     $upload_dir = wp_upload_dir();
     return trailingslashit( $upload_dir['basedir'] ) . 'navi-stories/';
-}
-
-/**
- * Redirige wp_handle_upload() vers notre sous-dossier dédié
- * (wp-content/uploads/navi-stories/) plutôt que le dossier daté standard
- * de la médiathèque — wp_handle_upload() seul ne crée jamais d'entrée
- * médiathèque (c'est wp_insert_attachment() qui le ferait, jamais appelé
- * ici) : ce filtre ne fait que choisir où le fichier validé est déplacé.
- */
-function navi_stories_upload_dir_filter( $dirs ) {
-    $dirs['subdir'] = '/navi-stories';
-    $dirs['path']   = $dirs['basedir'] . $dirs['subdir'];
-    $dirs['url']    = $dirs['baseurl'] . $dirs['subdir'];
-    return $dirs;
-}
-
-/**
- * Déplace un upload validé vers le dossier dédié via l'API WordPress
- * (wp_handle_upload(), jamais move_uploaded_file() directement — requis
- * par les revues WordPress.org) et retourne son URL publique, ou null si
- * aucun fichier valide n'a été soumis pour cet index (absence de fichier
- * n'est pas une erreur : l'admin peut avoir laissé ce champ vide
- * volontairement).
- */
-function navi_stories_handle_uploaded_preview( $index, &$errors ) {
-    $field = 'navi_story_preview_file_' . (int) $index;
-    // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- nonce vérifié par l'appelant (navi_stories_process_product_meta, admin-product-tab.php) avant navi_stories_save() ; UPLOAD_ERR_* est un entier fourni par PHP, pas une entrée utilisateur.
-    if ( ! isset( $_FILES[ $field ] ) || UPLOAD_ERR_NO_FILE === $_FILES[ $field ]['error'] ) {
-        return null;
-    }
-
-    $file  = $_FILES[ $field ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- nonce vérifié par l'appelant ; contenu validé ci-dessous (extension/MIME/taille), pas affiché tel quel.
-    $error = navi_validate_mp4_upload( $file );
-    if ( '' !== $error ) {
-        $errors[] = sprintf( '#%d — %s', $index, $error );
-        return null;
-    }
-
-    if ( ! function_exists( 'wp_handle_upload' ) ) {
-        require_once ABSPATH . 'wp-admin/includes/file.php';
-    }
-
-    add_filter( 'upload_dir', 'navi_stories_upload_dir_filter' );
-    $moved = wp_handle_upload(
-        $file,
-        array(
-            'test_form' => false,
-            'mimes'     => array( 'mp4' => 'video/mp4' ),
-        )
-    );
-    remove_filter( 'upload_dir', 'navi_stories_upload_dir_filter' );
-
-    if ( ! isset( $moved['url'] ) || isset( $moved['error'] ) ) {
-        $errors[] = sprintf( '#%d — %s', $index, __( "Échec de l'enregistrement du fichier.", 'saito-navi' ) );
-        return null;
-    }
-
-    return $moved['url'];
 }
 
 /**
@@ -210,8 +117,7 @@ function navi_stories_save( $product_id ) {
         return;
     }
 
-    $errors = array();
-    $slots  = array();
+    $slots = array();
 
     for ( $index = 1; $index <= NAVI_STORY_LIMIT; $index++ ) {
         $youtube = navi_extract_youtube_id(
@@ -221,10 +127,9 @@ function navi_stories_save( $product_id ) {
             continue; // Emplacement vide : pas de story à cet index.
         }
 
-        $uploaded_url = navi_stories_handle_uploaded_preview( $index, $errors );
-        $preview = $uploaded_url
-            ? $uploaded_url
-            : ( isset( $_POST[ 'navi_story_preview_' . $index ] ) ? esc_url_raw( wp_unslash( $_POST[ 'navi_story_preview_' . $index ] ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié par l'appelant ; valeur passée à esc_url_raw().
+        // URL soit saisie à la main, soit déposée par le sélecteur médiathèque
+        // (voir admin-product-tab.php) qui remplit ce même champ en JS.
+        $preview = isset( $_POST[ 'navi_story_preview_' . $index ] ) ? esc_url_raw( wp_unslash( $_POST[ 'navi_story_preview_' . $index ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié par l'appelant ; valeur passée à esc_url_raw().
         if ( '' === $preview ) {
             $preview = navi_youtube_thumbnail_url( $youtube );
         }
@@ -240,18 +145,6 @@ function navi_stories_save( $product_id ) {
         delete_post_meta( $product_id, '_navi_stories' );
     } else {
         update_post_meta( $product_id, '_navi_stories', $slots );
-    }
-
-    if ( ! empty( $errors ) ) {
-        // WooCommerce affiche ces notices admin au rechargement de la page
-        // produit (WC_Admin_Notices utilise aussi cette fonction en
-        // interne) — cohérent avec le reste de l'admin WooCommerce.
-        if ( function_exists( 'wc_add_notice' ) ) {
-            wc_add_notice(
-                __( 'Stories Navi : certains fichiers ont été ignorés.', 'saito-navi' ) . ' ' . implode( ' ', $errors ),
-                'error'
-            );
-        }
     }
 }
 
