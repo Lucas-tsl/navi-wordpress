@@ -63,7 +63,13 @@ de fichier `.mo` à compiler. Ajouter une langue : dupliquer
 ```bash
 composer install && npm install
 vendor/bin/phpcs && npm run lint
+vendor/bin/phpunit
 ```
+
+Tests unitaires (`tests/`) : fonctions pures de validation/sanitisation
+(extraction d'ID YouTube, validation MP4, couleurs, rayons, réglages
+Stories...) chargées directement via un bootstrap minimal — pas la suite
+WordPress complète (`wp-phpunit`), disproportionnée pour ce plugin.
 
 ### Docker local
 
