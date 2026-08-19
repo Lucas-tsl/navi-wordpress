@@ -25,14 +25,10 @@
         return window.matchMedia('(max-width: 480px)').matches;
     }
 
-    // Ajoute aux paramètres youtube-nocookie standard ceux qui masquent le
-    // plus possible l'habillage natif YouTube. `controls=0` ne suffit pas
-    // seul sur l'UI Shorts (titre/chaîne en haut, filigrane "Shorts" en bas
-    // restent visibles, YouTube ne permet pas de les retirer via l'URL
-    // d'embed ni depuis aucun CSS/JS — iframe cross-origin, Same-Origin
-    // Policy du navigateur) : ils disparaissent d'eux-mêmes après quelques
-    // secondes. `loop`/`playlist` volontairement absents : fait apparaître
-    // des flèches de navigation, pire que l'écran de fin qu'ils évitaient.
+    // controls=0 ne suffit pas à masquer tout l'habillage YouTube (bandeau
+    // titre/chaîne, filigrane "Shorts") — accepté tel quel, voir
+    // assets/css/stories.css. loop/playlist volontairement absents : fait
+    // apparaître des flèches de navigation, pire que l'écran de fin.
     function buildVideoUrl(videoId) {
         var origin = encodeURIComponent(window.location.origin || '');
 
@@ -42,7 +38,6 @@
             + '&controls=0&disablekb=1&fs=0&iv_load_policy=3'
             + '&origin=' + origin;
     }
-
 
     // ============================================================
     // Mode desktop/laptop/tablette — panneau ancré au bouton flottant,

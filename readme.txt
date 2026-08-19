@@ -4,7 +4,7 @@ Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.4.0
+Stable tag: 0.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
@@ -121,6 +121,10 @@ exclusively.
 
 == Changelog ==
 
+= 0.5.0 =
+* Shortcode `[navi_stories]`, configurable bubble appearance (solid or
+  gradient border, size), WordPress.org submission readiness.
+
 = 0.4.0 =
 * New Stories module: product video bubbles (YouTube/MP4), desktop
   panel, mobile full-screen view, appearance settings under Navi >
@@ -141,6 +145,5 @@ exclusively.
 
 == Upgrade Notice ==
 
-= 0.4.0 =
-Adds the Stories module (product video bubbles) — no action required on
-upgrade.
+= 0.5.0 =
+No action required on upgrade.

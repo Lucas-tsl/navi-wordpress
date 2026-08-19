@@ -122,11 +122,6 @@ function navi_stories_upload_dir() {
     return trailingslashit( $upload_dir['basedir'] ) . 'navi-stories/';
 }
 
-function navi_stories_upload_url() {
-    $upload_dir = wp_upload_dir();
-    return trailingslashit( $upload_dir['baseurl'] ) . 'navi-stories/';
-}
-
 /**
  * Redirige wp_handle_upload() vers notre sous-dossier dédié
  * (wp-content/uploads/navi-stories/) plutôt que le dossier daté standard
