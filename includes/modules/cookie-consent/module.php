@@ -8,7 +8,7 @@ define( 'NAVI_COOKIE_CONSENT_VERSION', '1' );
 
 // Texte de bannière par défaut, partagé entre l'écran de réglages et l'affichage public
 function navi_cookie_texte_par_defaut() {
-    return __( "Nous utilisons des cookies pour assurer le bon fonctionnement du site, analyser notre trafic et personnaliser nos publicités. Vous pouvez choisir vos préférences ci-dessous.", 'navi' );
+    return __( "Nous utilisons des cookies pour assurer le bon fonctionnement du site, analyser notre trafic et personnaliser nos publicités. Vous pouvez choisir vos préférences ci-dessous.", 'saito-navi' );
 }
 
 // Pas de logo imposé par le plugin : à défaut d'une URL explicite dans
@@ -43,11 +43,11 @@ function navi_cookie_logo_url() {
 Navi_Module_Registry::register(
     'cookie-consent',
     array(
-        'label'           => __( 'Consentement cookies', 'navi' ),
-        'short_label'     => __( 'Cookies', 'navi' ),
+        'label'           => __( 'Consentement cookies', 'saito-navi' ),
+        'short_label'     => __( 'Cookies', 'saito-navi' ),
         'icon'            => '🍪',
         'icon_svg'        => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="8.5" cy="10.5" r="1" fill="currentColor" stroke="none"></circle><circle cx="15" cy="9" r="1" fill="currentColor" stroke="none"></circle><circle cx="15.5" cy="15" r="1" fill="currentColor" stroke="none"></circle><circle cx="9" cy="15.5" r="1" fill="currentColor" stroke="none"></circle></svg>',
-        'description'     => __( 'Bannière RGPD et Google Consent Mode V2, connectée au DataLayer GTM.', 'navi' ),
+        'description'     => __( 'Bannière RGPD et Google Consent Mode V2, connectée au DataLayer GTM.', 'saito-navi' ),
         'option_name'     => 'navi_module_active_cookie-consent',
         'default_active'  => true,
         'fab_action'      => 'open-cookie-modal',
@@ -80,7 +80,7 @@ if ( Navi_Module_Registry::is_active( 'cookie-consent' ) ) {
             'naviCookieConfig',
             array(
                 'consentVersion' => NAVI_COOKIE_CONSENT_VERSION,
-                'savedText'      => __( 'Préférences enregistrées', 'navi' ),
+                'savedText'      => __( 'Préférences enregistrées', 'saito-navi' ),
             )
         );
     }

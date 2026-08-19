@@ -4,8 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 add_action( 'admin_menu', 'navi_add_admin_menu' );
 function navi_add_admin_menu() {
     add_menu_page(
-        __( 'Navi', 'navi' ),
-        __( 'Navi', 'navi' ),
+        __( 'Navi', 'saito-navi' ),
+        __( 'Navi', 'saito-navi' ),
         'manage_options',
         'navi-main',
         'navi_render_dashboard_page',
@@ -142,15 +142,15 @@ function navi_enqueue_admin_assets( $hook_suffix ) {
  */
 function navi_render_dashboard_page() {
     if ( ! navi_user_can_manage() ) {
-        wp_die( esc_html__( "Vous n'avez pas les permissions nécessaires pour accéder à cette page.", 'navi' ) );
+        wp_die( esc_html__( "Vous n'avez pas les permissions nécessaires pour accéder à cette page.", 'saito-navi' ) );
     }
     $modules = Navi_Module_Registry::all();
     ?>
     <div class="wrap navi-admin">
-        <?php navi_admin_page_header( __( 'Navi', 'navi' ) ); ?>
+        <?php navi_admin_page_header( __( 'Navi', 'saito-navi' ) ); ?>
 
         <h2 class="nav-tab-wrapper" id="navi-main-tabs">
-            <a href="#general" class="nav-tab nav-tab-active" data-tab="general"><?php esc_html_e( 'Général', 'navi' ); ?></a>
+            <a href="#general" class="nav-tab nav-tab-active" data-tab="general"><?php esc_html_e( 'Général', 'saito-navi' ); ?></a>
             <?php foreach ( $modules as $id => $module ) : ?>
                 <a href="#<?php echo esc_attr( $id ); ?>" class="nav-tab" data-tab="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( ! empty( $module['short_label'] ) ? $module['short_label'] : $module['label'] ); ?></a>
             <?php endforeach; ?>
@@ -162,22 +162,22 @@ function navi_render_dashboard_page() {
                 <?php navi_render_hash_preserving_referer_field(); ?>
 
                 <div class="navi-admin-card">
-                    <h2><?php esc_html_e( 'Position du bouton flottant', 'navi' ); ?></h2>
+                    <h2><?php esc_html_e( 'Position du bouton flottant', 'saito-navi' ); ?></h2>
                     <p>
-                        <label for="navi_fab_position"><?php esc_html_e( "Coin de l'écran", 'navi' ); ?></label><br />
+                        <label for="navi_fab_position"><?php esc_html_e( "Coin de l'écran", 'saito-navi' ); ?></label><br />
                         <select name="navi_fab_position" id="navi_fab_position">
-                            <option value="right" <?php selected( 'right', get_option( 'navi_fab_position', 'right' ) ); ?>><?php esc_html_e( 'Bas droite (par défaut)', 'navi' ); ?></option>
-                            <option value="left" <?php selected( 'left', get_option( 'navi_fab_position', 'right' ) ); ?>><?php esc_html_e( 'Bas gauche', 'navi' ); ?></option>
+                            <option value="right" <?php selected( 'right', get_option( 'navi_fab_position', 'right' ) ); ?>><?php esc_html_e( 'Bas droite (par défaut)', 'saito-navi' ); ?></option>
+                            <option value="left" <?php selected( 'left', get_option( 'navi_fab_position', 'right' ) ); ?>><?php esc_html_e( 'Bas gauche', 'saito-navi' ); ?></option>
                         </select>
                     </p>
-                    <p class="description"><?php esc_html_e( "À changer si un autre widget flottant (chat, WhatsApp...) occupe déjà le bas droite du site.", 'navi' ); ?></p>
+                    <p class="description"><?php esc_html_e( "À changer si un autre widget flottant (chat, WhatsApp...) occupe déjà le bas droite du site.", 'saito-navi' ); ?></p>
                 </div>
 
                 <div class="navi-admin-card">
-                    <h2><?php esc_html_e( 'Langue du plugin', 'navi' ); ?></h2>
-                    <p class="description"><?php esc_html_e( "Par défaut, Navi suit la langue détectée automatiquement (WPML si actif, sinon la langue du site). Choisissez une langue ici pour l'imposer, quelle que soit cette détection.", 'navi' ); ?></p>
+                    <h2><?php esc_html_e( 'Langue du plugin', 'saito-navi' ); ?></h2>
+                    <p class="description"><?php esc_html_e( "Par défaut, Navi suit la langue détectée automatiquement (WPML si actif, sinon la langue du site). Choisissez une langue ici pour l'imposer, quelle que soit cette détection.", 'saito-navi' ); ?></p>
                     <p>
-                        <label for="navi_language"><?php esc_html_e( 'Langue', 'navi' ); ?></label><br />
+                        <label for="navi_language"><?php esc_html_e( 'Langue', 'saito-navi' ); ?></label><br />
                         <select name="navi_language" id="navi_language">
                             <?php foreach ( navi_available_languages() as $code => $label ) : ?>
                                 <option value="<?php echo esc_attr( $code ); ?>" <?php selected( $code, navi_current_language_override() ); ?>><?php echo esc_html( $label ); ?></option>
@@ -187,29 +187,29 @@ function navi_render_dashboard_page() {
                 </div>
 
                 <div class="navi-admin-card">
-                    <h2><?php esc_html_e( 'Apparence', 'navi' ); ?></h2>
-                    <p class="description"><?php esc_html_e( "Couleurs du bouton flottant et des panneaux (cookies, accessibilité), arrondis des boutons et de l'image produit (panier sticky) : à adapter à l'identité visuelle de ce site.", 'navi' ); ?></p>
+                    <h2><?php esc_html_e( 'Apparence', 'saito-navi' ); ?></h2>
+                    <p class="description"><?php esc_html_e( "Couleurs du bouton flottant et des panneaux (cookies, accessibilité), arrondis des boutons et de l'image produit (panier sticky) : à adapter à l'identité visuelle de ce site.", 'saito-navi' ); ?></p>
                     <table class="form-table">
                         <tr valign="top">
-                            <th scope="row"><label for="navi_color_ink"><?php esc_html_e( 'Couleur principale', 'navi' ); ?></label></th>
+                            <th scope="row"><label for="navi_color_ink"><?php esc_html_e( 'Couleur principale', 'saito-navi' ); ?></label></th>
                             <td><input type="text" name="navi_color_ink" id="navi_color_ink" class="navi-color-picker" value="<?php echo esc_attr( navi_color_ink() ); ?>" data-default-color="#1a1a1a" /></td>
                         </tr>
                         <tr valign="top">
-                            <th scope="row"><label for="navi_color_ink_soft"><?php esc_html_e( 'Couleur secondaire', 'navi' ); ?></label></th>
+                            <th scope="row"><label for="navi_color_ink_soft"><?php esc_html_e( 'Couleur secondaire', 'saito-navi' ); ?></label></th>
                             <td><input type="text" name="navi_color_ink_soft" id="navi_color_ink_soft" class="navi-color-picker" value="<?php echo esc_attr( navi_color_ink_soft() ); ?>" data-default-color="#6b6b6b" /></td>
                         </tr>
                         <tr valign="top">
-                            <th scope="row"><label for="navi_radius_button"><?php esc_html_e( 'Arrondi des boutons (px)', 'navi' ); ?></label></th>
+                            <th scope="row"><label for="navi_radius_button"><?php esc_html_e( 'Arrondi des boutons (px)', 'saito-navi' ); ?></label></th>
                             <td>
                                 <input type="number" name="navi_radius_button" id="navi_radius_button" min="0" max="50" value="<?php echo esc_attr( navi_radius_button() ); ?>" class="small-text" /> px
-                                <p class="description"><?php esc_html_e( '0 = angles droits. Boutons concernés : bannière cookies, panier sticky.', 'navi' ); ?></p>
+                                <p class="description"><?php esc_html_e( '0 = angles droits. Boutons concernés : bannière cookies, panier sticky.', 'saito-navi' ); ?></p>
                             </td>
                         </tr>
                         <tr valign="top">
-                            <th scope="row"><label for="navi_radius_image"><?php esc_html_e( "Arrondi de l'image produit (px)", 'navi' ); ?></label></th>
+                            <th scope="row"><label for="navi_radius_image"><?php esc_html_e( "Arrondi de l'image produit (px)", 'saito-navi' ); ?></label></th>
                             <td>
                                 <input type="number" name="navi_radius_image" id="navi_radius_image" min="0" max="50" value="<?php echo esc_attr( navi_radius_image() ); ?>" class="small-text" /> px
-                                <p class="description"><?php esc_html_e( 'Miniature produit affichée dans le panier sticky.', 'navi' ); ?></p>
+                                <p class="description"><?php esc_html_e( 'Miniature produit affichée dans le panier sticky.', 'saito-navi' ); ?></p>
                             </td>
                         </tr>
                     </table>
@@ -224,7 +224,7 @@ function navi_render_dashboard_page() {
                 <?php if ( ! empty( $module['settings_panel_callback'] ) && is_callable( $module['settings_panel_callback'] ) ) : ?>
                     <?php call_user_func( $module['settings_panel_callback'] ); ?>
                 <?php else : ?>
-                    <p class="description"><?php esc_html_e( 'Bientôt disponible.', 'navi' ); ?></p>
+                    <p class="description"><?php esc_html_e( 'Bientôt disponible.', 'saito-navi' ); ?></p>
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>

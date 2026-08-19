@@ -22,7 +22,7 @@ function navi_a11y_render_settings_panel() {
         <?php settings_fields( 'navi_a11y_options_group' ); ?>
         <?php navi_render_hash_preserving_referer_field(); ?>
         <div class="navi-admin-card">
-            <p class="description"><?php esc_html_e( 'Langue, taille du texte, contraste et curseur restent toujours actifs pour les visiteurs — seule leur visibilité par appareil se règle ici.', 'navi' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Langue, taille du texte, contraste et curseur restent toujours actifs pour les visiteurs — seule leur visibilité par appareil se règle ici.', 'saito-navi' ); ?></p>
             <table class="form-table">
                 <?php navi_render_module_active_field( 'accessibility' ); ?>
                 <?php navi_render_visibility_fields( 'accessibility' ); ?>

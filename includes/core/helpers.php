@@ -144,7 +144,7 @@ function navi_render_module_active_field( $module_id ) {
     }
     ?>
     <tr valign="top">
-        <th scope="row"><?php esc_html_e( 'Activer ce module', 'navi' ); ?></th>
+        <th scope="row"><?php esc_html_e( 'Activer ce module', 'saito-navi' ); ?></th>
         <td>
             <input type="hidden" name="<?php echo esc_attr( $module['option_name'] ); ?>" value="0" />
             <input
@@ -168,14 +168,14 @@ function navi_render_visibility_fields( $module_id ) {
     $mobile_name  = 'navi_show_mobile_' . $module_id;
     ?>
     <tr valign="top">
-        <th scope="row"><?php esc_html_e( 'Afficher sur ordinateur', 'navi' ); ?></th>
+        <th scope="row"><?php esc_html_e( 'Afficher sur ordinateur', 'saito-navi' ); ?></th>
         <td>
             <input type="hidden" name="<?php echo esc_attr( $desktop_name ); ?>" value="0" />
             <input type="checkbox" name="<?php echo esc_attr( $desktop_name ); ?>" id="<?php echo esc_attr( $desktop_name ); ?>" value="1" <?php checked( navi_show_desktop( $module_id ) ); ?> />
         </td>
     </tr>
     <tr valign="top">
-        <th scope="row"><?php esc_html_e( 'Afficher sur mobile', 'navi' ); ?></th>
+        <th scope="row"><?php esc_html_e( 'Afficher sur mobile', 'saito-navi' ); ?></th>
         <td>
             <input type="hidden" name="<?php echo esc_attr( $mobile_name ); ?>" value="0" />
             <input type="checkbox" name="<?php echo esc_attr( $mobile_name ); ?>" id="<?php echo esc_attr( $mobile_name ); ?>" value="1" <?php checked( navi_show_mobile( $module_id ) ); ?> />

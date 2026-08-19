@@ -4,11 +4,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 Navi_Module_Registry::register(
     'accessibility',
     array(
-        'label'           => __( 'Accessibilité', 'navi' ),
-        'short_label'     => __( 'Accessibilité', 'navi' ),
+        'label'           => __( 'Accessibilité', 'saito-navi' ),
+        'short_label'     => __( 'Accessibilité', 'saito-navi' ),
         'icon'            => '♿',
         'icon_svg'        => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="1.5" fill="currentColor" stroke="none"></circle><path d="M11 6v6h5"></path><path d="M9 12l4 2 3 6"></path><circle cx="9" cy="16" r="5"></circle></svg>',
-        'description'     => __( 'Langue (via WPML, ou GTranslate si présent sur la page), taille du texte, contraste élevé, curseur agrandi et soulignage des liens.', 'navi' ),
+        'description'     => __( 'Langue (via WPML, ou GTranslate si présent sur la page), taille du texte, contraste élevé, curseur agrandi et soulignage des liens.', 'saito-navi' ),
         'option_name'     => 'navi_module_active_accessibility',
         'default_active'  => true,
         'fab_action'      => 'open-accessibility-panel',

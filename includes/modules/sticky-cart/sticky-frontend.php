@@ -30,11 +30,11 @@ function navi_sticky_enqueue_assets() {
         'navi-sticky-js',
         'naviStickyCartI18n',
         array(
-            'addToCartText'       => __( 'Ajouter au panier - ', 'navi' ),
-            'addingText'          => __( 'Ajout en cours...', 'navi' ),
-            'addedText'           => __( 'Ajouté', 'navi' ),
-            'outOfStockText'      => __( 'Rupture de stock', 'navi' ),
-            'chooseVariationText' => __( 'Choisir une option', 'navi' ),
+            'addToCartText'       => __( 'Ajouter au panier - ', 'saito-navi' ),
+            'addingText'          => __( 'Ajout en cours...', 'saito-navi' ),
+            'addedText'           => __( 'Ajouté', 'saito-navi' ),
+            'outOfStockText'      => __( 'Rupture de stock', 'saito-navi' ),
+            'chooseVariationText' => __( 'Choisir une option', 'saito-navi' ),
         )
     );
 
