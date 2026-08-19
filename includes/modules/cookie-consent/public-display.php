@@ -47,7 +47,7 @@ function navi_cookie_inject_consent_mode() {
 add_shortcode( 'navi_cookie_preferences_link', 'navi_cookie_preferences_link_shortcode' );
 function navi_cookie_preferences_link_shortcode( $atts ) {
     $atts = shortcode_atts(
-        array( 'text' => __( 'Gérer les cookies', 'navi' ) ),
+        array( 'text' => __( 'Gérer les cookies', 'saito-navi' ) ),
         $atts,
         'navi_cookie_preferences_link'
     );
@@ -70,51 +70,51 @@ function navi_cookie_afficher_banniere() {
     ?>
 
     <div id="navi-cookie-banner" class="navi-cookie-banner" role="region" aria-labelledby="navi-cookie-banner-title" style="display: <?php echo $choix_fait ? 'none' : 'block'; ?>;">
-        <?php if ( ! empty( $logo ) ) : ?><img src="<?php echo esc_url( $logo ); ?>" alt="<?php esc_attr_e( 'Logo', 'navi' ); ?>" class="navi-cookie-logo" /><?php endif; ?>
-        <h3 class="navi-cookie-title" id="navi-cookie-banner-title"><?php esc_html_e( 'Gérer le consentement', 'navi' ); ?></h3>
+        <?php if ( ! empty( $logo ) ) : ?><img src="<?php echo esc_url( $logo ); ?>" alt="<?php esc_attr_e( 'Logo', 'saito-navi' ); ?>" class="navi-cookie-logo" /><?php endif; ?>
+        <h3 class="navi-cookie-title" id="navi-cookie-banner-title"><?php esc_html_e( 'Gérer le consentement', 'saito-navi' ); ?></h3>
         <p class="navi-cookie-desc"><?php echo nl2br( esc_html( $texte ) ); ?></p>
         <div class="navi-cookie-links">
-            <a href="<?php echo esc_url( $url_politique ); ?>"><?php esc_html_e( 'Politique de confidentialité', 'navi' ); ?></a> | <a href="<?php echo esc_url( $url_mentions ); ?>"><?php esc_html_e( 'Mentions légales', 'navi' ); ?></a>
+            <a href="<?php echo esc_url( $url_politique ); ?>"><?php esc_html_e( 'Politique de confidentialité', 'saito-navi' ); ?></a> | <a href="<?php echo esc_url( $url_mentions ); ?>"><?php esc_html_e( 'Mentions légales', 'saito-navi' ); ?></a>
         </div>
         <?php /* "Tout Accepter" et "Tout Refuser" à même niveau, même poids visuel :
                  la CNIL exige une prééminence équivalente entre les deux (recommandations
                  2020). "Personnaliser" reste un choix possible mais secondaire. */ ?>
         <div class="navi-cookie-actions">
-            <button id="navi-cookie-btn-accepter" class="navi-cookie-btn navi-cookie-btn-accepter"><?php esc_html_e( 'Tout Accepter', 'navi' ); ?></button>
-            <button id="navi-cookie-btn-refuser" class="navi-cookie-btn navi-cookie-btn-refuser"><?php esc_html_e( 'Tout Refuser', 'navi' ); ?></button>
+            <button id="navi-cookie-btn-accepter" class="navi-cookie-btn navi-cookie-btn-accepter"><?php esc_html_e( 'Tout Accepter', 'saito-navi' ); ?></button>
+            <button id="navi-cookie-btn-refuser" class="navi-cookie-btn navi-cookie-btn-refuser"><?php esc_html_e( 'Tout Refuser', 'saito-navi' ); ?></button>
         </div>
-        <button id="navi-cookie-btn-prefs" class="navi-cookie-btn-link"><?php esc_html_e( 'Personnaliser mes choix', 'navi' ); ?></button>
+        <button id="navi-cookie-btn-prefs" class="navi-cookie-btn-link"><?php esc_html_e( 'Personnaliser mes choix', 'saito-navi' ); ?></button>
     </div>
 
     <div id="navi-cookie-modal-overlay" class="navi-cookie-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="navi-cookie-modal-title" tabindex="-1">
         <div class="navi-cookie-modal" tabindex="-1">
-            <button type="button" class="navi-cookie-modal-close" aria-label="<?php esc_attr_e( 'Fermer', 'navi' ); ?>">✕</button>
+            <button type="button" class="navi-cookie-modal-close" aria-label="<?php esc_attr_e( 'Fermer', 'saito-navi' ); ?>">✕</button>
             <div class="navi-cookie-modal-scroll">
-                <h3 class="navi-cookie-title" id="navi-cookie-modal-title"><?php esc_html_e( 'Préférences des cookies', 'navi' ); ?></h3>
+                <h3 class="navi-cookie-title" id="navi-cookie-modal-title"><?php esc_html_e( 'Préférences des cookies', 'saito-navi' ); ?></h3>
                 <div class="navi-cookie-type">
                     <label for="navi-cookie-chk-necessaires">
-                        <strong><?php esc_html_e( 'Strictement Nécessaires', 'navi' ); ?></strong>
-                        <p class="navi-cookie-desc"><?php esc_html_e( 'Requis pour le site (panier, sécurité). Non désactivables.', 'navi' ); ?></p>
+                        <strong><?php esc_html_e( 'Strictement Nécessaires', 'saito-navi' ); ?></strong>
+                        <p class="navi-cookie-desc"><?php esc_html_e( 'Requis pour le site (panier, sécurité). Non désactivables.', 'saito-navi' ); ?></p>
                     </label>
                     <input type="checkbox" id="navi-cookie-chk-necessaires" checked disabled>
                 </div>
                 <div class="navi-cookie-type">
                     <label for="navi-cookie-chk-stats">
-                        <strong><?php esc_html_e( 'Statistiques (Google Analytics)', 'navi' ); ?></strong>
-                        <p class="navi-cookie-desc"><?php esc_html_e( "Pour mesurer l'audience de la boutique.", 'navi' ); ?></p>
+                        <strong><?php esc_html_e( 'Statistiques (Google Analytics)', 'saito-navi' ); ?></strong>
+                        <p class="navi-cookie-desc"><?php esc_html_e( "Pour mesurer l'audience de la boutique.", 'saito-navi' ); ?></p>
                     </label>
                     <input type="checkbox" id="navi-cookie-chk-stats" <?php echo ( '1' === navi_cookie_cookie_value( 'navi_consent_stats' ) ) ? 'checked' : ''; ?>>
                 </div>
                 <div class="navi-cookie-type">
                     <label for="navi-cookie-chk-mkt">
-                        <strong><?php esc_html_e( 'Marketing (Pixel Facebook, Google Ads)', 'navi' ); ?></strong>
-                        <p class="navi-cookie-desc"><?php esc_html_e( 'Pour afficher des publicités ciblées.', 'navi' ); ?></p>
+                        <strong><?php esc_html_e( 'Marketing (Pixel Facebook, Google Ads)', 'saito-navi' ); ?></strong>
+                        <p class="navi-cookie-desc"><?php esc_html_e( 'Pour afficher des publicités ciblées.', 'saito-navi' ); ?></p>
                     </label>
                     <input type="checkbox" id="navi-cookie-chk-mkt" <?php echo ( '1' === navi_cookie_cookie_value( 'navi_consent_mkt' ) ) ? 'checked' : ''; ?>>
                 </div>
                 <div class="navi-cookie-actions" style="margin-top: 20px;">
-                    <button id="navi-cookie-btn-save-prefs" class="navi-cookie-btn navi-cookie-btn-accepter"><?php esc_html_e( 'Enregistrer mes choix', 'navi' ); ?></button>
-                    <button id="navi-cookie-btn-close-modal" class="navi-cookie-btn navi-cookie-btn-refuser"><?php esc_html_e( 'Annuler', 'navi' ); ?></button>
+                    <button id="navi-cookie-btn-save-prefs" class="navi-cookie-btn navi-cookie-btn-accepter"><?php esc_html_e( 'Enregistrer mes choix', 'saito-navi' ); ?></button>
+                    <button id="navi-cookie-btn-close-modal" class="navi-cookie-btn navi-cookie-btn-refuser"><?php esc_html_e( 'Annuler', 'saito-navi' ); ?></button>
                 </div>
             </div>
         </div>

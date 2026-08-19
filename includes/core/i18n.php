@@ -42,7 +42,7 @@ function navi_current_language_override() {
 // Nom affiché dans sa propre langue (autonyme), sauf 'auto'.
 function navi_available_languages() {
     return array(
-        'auto' => __( 'Automatique', 'navi' ),
+        'auto' => __( 'Automatique', 'saito-navi' ),
         'fr'   => 'Français',
         'en'   => 'English',
     );
@@ -52,13 +52,13 @@ function navi_sanitize_language( $value ) {
     return array_key_exists( $value, navi_available_languages() ) ? $value : 'auto';
 }
 
-// Intercepte toutes les chaînes du text-domain 'navi' (que ce soit via
-// __(), _e(), esc_html__(), esc_html_e(), esc_attr__() ou esc_attr_e() :
+// Intercepte toutes les chaînes du text-domain 'saito-navi' (que ce soit
+// via __(), _e(), esc_html__(), esc_html_e(), esc_attr__() ou esc_attr_e() :
 // toutes passent par ce même filtre) pour les remplacer par leur traduction
 // si la langue active correspond à un dictionnaire connu.
 add_filter( 'gettext', 'navi_translate_strings', 10, 3 );
 function navi_translate_strings( $translated, $original, $domain ) {
-    if ( 'navi' !== $domain ) {
+    if ( 'saito-navi' !== $domain ) {
         return $translated;
     }
 
@@ -77,8 +77,8 @@ function navi_translate_strings( $translated, $original, $domain ) {
 
 /**
  * Dictionnaire français → anglais — une entrée par chaîne __()/_e()/
- * esc_html__()/esc_html_e()/esc_attr__()/esc_attr_e() du domaine 'navi'
- * dans le code (vérifiable par un grep sur ", 'navi' )"). À compléter à
+ * esc_html__()/esc_html_e()/esc_attr__()/esc_attr_e() du domaine 'saito-navi'
+ * dans le code (vérifiable par un grep sur ", 'saito-navi' )"). À compléter à
  * chaque nouvelle chaîne ajoutée ailleurs dans le plugin, sous peine de
  * mélange de langues dans le BO/front pour les sites en anglais.
  */

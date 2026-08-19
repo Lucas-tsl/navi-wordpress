@@ -52,8 +52,8 @@ function navi_stories_render_settings_panel() {
     $bubbleBorderDefault = '#2563eb';
     ?>
     <h2 class="nav-tab-wrapper" id="navi-stories-tabs">
-        <a href="#bulles" class="nav-tab nav-tab-active" data-tab="bulles"><?php esc_html_e( 'Bulles', 'navi' ); ?></a>
-        <a href="#mockup" class="nav-tab" data-tab="mockup"><?php esc_html_e( 'Mockup', 'navi' ); ?></a>
+        <a href="#bulles" class="nav-tab nav-tab-active" data-tab="bulles"><?php esc_html_e( 'Bulles', 'saito-navi' ); ?></a>
+        <a href="#mockup" class="nav-tab" data-tab="mockup"><?php esc_html_e( 'Mockup', 'saito-navi' ); ?></a>
     </h2>
 
     <form method="post" action="options.php">
@@ -65,7 +65,7 @@ function navi_stories_render_settings_panel() {
                 <table class="form-table">
                     <?php navi_render_module_active_field( 'stories' ); ?>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Afficher automatiquement après la galerie produit', 'navi' ); ?></th>
+                        <th scope="row"><?php esc_html_e( 'Afficher automatiquement après la galerie produit', 'saito-navi' ); ?></th>
                             <td>
                                 <input type="hidden" name="navi_stories_auto_display" value="0" />
                                 <input type="checkbox" name="navi_stories_auto_display" value="1" <?php checked( navi_stories_auto_display() ); ?> />
@@ -73,7 +73,7 @@ function navi_stories_render_settings_panel() {
                                     <?php
                                     printf(
                                         /* translators: %s: nom du shortcode entre crochets, ex. [navi_stories] */
-                                        esc_html__( 'Décocher pour positionner les bulles vous-même via le shortcode %s (dans le contenu, un constructeur de page, ou un template de thème) plutôt qu\'automatiquement après les images du produit.', 'navi' ),
+                                        esc_html__( 'Décocher pour positionner les bulles vous-même via le shortcode %s (dans le contenu, un constructeur de page, ou un template de thème) plutôt qu\'automatiquement après les images du produit.', 'saito-navi' ),
                                         '<code>[navi_stories]</code>'
                                     );
                                     ?>
@@ -81,7 +81,7 @@ function navi_stories_render_settings_panel() {
                             </td>
                         </tr>
                         <tr valign="top">
-                            <th scope="row"><?php esc_html_e( 'Afficher le titre de la bulle', 'navi' ); ?></th>
+                            <th scope="row"><?php esc_html_e( 'Afficher le titre de la bulle', 'saito-navi' ); ?></th>
                             <td>
                                 <input type="hidden" name="navi_stories_show_label" value="0" />
                                 <input type="checkbox" name="navi_stories_show_label" value="1" <?php checked( navi_stories_show_label() ); ?> />
@@ -92,11 +92,11 @@ function navi_stories_render_settings_panel() {
                 </div>
 
                 <div class="navi-admin-card">
-                    <h2><?php esc_html_e( 'Aspect de la bulle', 'navi' ); ?></h2>
+                    <h2><?php esc_html_e( 'Aspect de la bulle', 'saito-navi' ); ?></h2>
                     <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start; margin-top:16px;">
                         <div style="flex:1; min-width:260px;">
                             <p>
-                                <label for="navi_bubble_border_range"><?php esc_html_e( 'Épaisseur de la bordure', 'navi' ); ?></label>
+                                <label for="navi_bubble_border_range"><?php esc_html_e( 'Épaisseur de la bordure', 'saito-navi' ); ?></label>
                                 (<output id="navi_bubble_border_output"><?php echo esc_html( $borderWidth ); ?></output> px)
                             </p>
                             <input type="range" id="navi_bubble_border_range" name="navi_stories_border_width"
@@ -104,24 +104,24 @@ function navi_stories_render_settings_panel() {
                                    value="<?php echo esc_attr( $borderWidth ); ?>" style="width:100%;" />
 
                             <p style="margin-top:20px;">
-                                <label for="navi_bubble_border_style"><?php esc_html_e( 'Type de bordure', 'navi' ); ?></label>
+                                <label for="navi_bubble_border_style"><?php esc_html_e( 'Type de bordure', 'saito-navi' ); ?></label>
                             </p>
                             <select id="navi_bubble_border_style" name="navi_stories_bubble_border_style">
-                                <option value="gradient" <?php selected( 'gradient', $borderStyle ); ?>><?php esc_html_e( 'Dégradé', 'navi' ); ?></option>
-                                <option value="solid" <?php selected( 'solid', $borderStyle ); ?>><?php esc_html_e( 'Couleur unie', 'navi' ); ?></option>
+                                <option value="gradient" <?php selected( 'gradient', $borderStyle ); ?>><?php esc_html_e( 'Dégradé', 'saito-navi' ); ?></option>
+                                <option value="solid" <?php selected( 'solid', $borderStyle ); ?>><?php esc_html_e( 'Couleur unie', 'saito-navi' ); ?></option>
                             </select>
 
                             <div id="navi_bubble_border_solid_fields" <?php echo 'solid' === $borderStyle ? '' : 'style="display:none;"'; ?>>
                                 <p style="margin-top:20px;">
-                                    <label for="navi_stories_color_bubble_border"><?php esc_html_e( 'Couleur de la bordure', 'navi' ); ?></label>
+                                    <label for="navi_stories_color_bubble_border"><?php esc_html_e( 'Couleur de la bordure', 'saito-navi' ); ?></label>
                                 </p>
                                 <input type="text" name="navi_stories_color_bubble_border" id="navi_stories_color_bubble_border" class="navi-color-picker" value="<?php echo esc_attr( $bubbleBorder ); ?>" data-default-color="<?php echo esc_attr( $bubbleBorderDefault ); ?>" />
-                                <p class="description"><?php esc_html_e( 'Vide = couleur d\'accent du bouton flottant.', 'navi' ); ?></p>
+                                <p class="description"><?php esc_html_e( 'Vide = couleur d\'accent du bouton flottant.', 'saito-navi' ); ?></p>
                             </div>
 
                             <div id="navi_bubble_border_gradient_fields" <?php echo 'gradient' === $borderStyle ? '' : 'style="display:none;"'; ?>>
                                 <p style="margin-top:20px;">
-                                    <label for="navi_bubble_gradient_angle_range"><?php esc_html_e( 'Angle du dégradé', 'navi' ); ?></label>
+                                    <label for="navi_bubble_gradient_angle_range"><?php esc_html_e( 'Angle du dégradé', 'saito-navi' ); ?></label>
                                     (<output id="navi_bubble_gradient_angle_output"><?php echo esc_html( $gradientAngle ); ?></output>°)
                                 </p>
                                 <input type="range" id="navi_bubble_gradient_angle_range" name="navi_stories_bubble_gradient_angle"
@@ -130,23 +130,23 @@ function navi_stories_render_settings_panel() {
 
                                 <p style="margin-top:16px; display:flex; gap:16px; flex-wrap:wrap;">
                                     <span>
-                                        <label for="navi_stories_bubble_gradient_color_1"><?php esc_html_e( 'Couleur 1', 'navi' ); ?></label><br />
+                                        <label for="navi_stories_bubble_gradient_color_1"><?php esc_html_e( 'Couleur 1', 'saito-navi' ); ?></label><br />
                                         <input type="text" name="navi_stories_bubble_gradient_color_1" id="navi_stories_bubble_gradient_color_1" class="navi-color-picker navi-gradient-color" value="<?php echo esc_attr( $gradientColor1 ); ?>" data-default-color="<?php echo esc_attr( NAVI_STORIES_DEFAULT_GRADIENT_COLOR_1 ); ?>" />
                                     </span>
                                     <span>
-                                        <label for="navi_stories_bubble_gradient_color_2"><?php esc_html_e( 'Couleur 2', 'navi' ); ?></label><br />
+                                        <label for="navi_stories_bubble_gradient_color_2"><?php esc_html_e( 'Couleur 2', 'saito-navi' ); ?></label><br />
                                         <input type="text" name="navi_stories_bubble_gradient_color_2" id="navi_stories_bubble_gradient_color_2" class="navi-color-picker navi-gradient-color" value="<?php echo esc_attr( $gradientColor2 ); ?>" data-default-color="<?php echo esc_attr( NAVI_STORIES_DEFAULT_GRADIENT_COLOR_2 ); ?>" />
                                     </span>
                                     <span>
-                                        <label for="navi_stories_bubble_gradient_color_3"><?php esc_html_e( 'Couleur 3', 'navi' ); ?></label><br />
+                                        <label for="navi_stories_bubble_gradient_color_3"><?php esc_html_e( 'Couleur 3', 'saito-navi' ); ?></label><br />
                                         <input type="text" name="navi_stories_bubble_gradient_color_3" id="navi_stories_bubble_gradient_color_3" class="navi-color-picker navi-gradient-color" value="<?php echo esc_attr( $gradientColor3 ); ?>" data-default-color="<?php echo esc_attr( NAVI_STORIES_DEFAULT_GRADIENT_COLOR_3 ); ?>" />
                                     </span>
                                 </p>
-                                <p class="description"><?php esc_html_e( 'Réglage par défaut : anneau dégradé sombre/clair/sombre à 45°.', 'navi' ); ?></p>
+                                <p class="description"><?php esc_html_e( 'Réglage par défaut : anneau dégradé sombre/clair/sombre à 45°.', 'saito-navi' ); ?></p>
                             </div>
 
                             <p style="margin-top:20px;">
-                                <label for="navi_bubble_size_range"><?php esc_html_e( 'Taille de la bulle', 'navi' ); ?></label>
+                                <label for="navi_bubble_size_range"><?php esc_html_e( 'Taille de la bulle', 'saito-navi' ); ?></label>
                                 (<output id="navi_bubble_size_output"><?php echo esc_html( $bubbleSize ); ?></output> px)
                             </p>
                             <input type="range" id="navi_bubble_size_range" name="navi_stories_bubble_size"
@@ -165,31 +165,31 @@ function navi_stories_render_settings_panel() {
                 <div class="navi-admin-card">
                     <table class="form-table">
                         <tr valign="top">
-                            <th scope="row"><label for="navi_stories_color_phone_bg"><?php esc_html_e( 'Couleur du fond du mockup téléphone', 'navi' ); ?></label></th>
+                            <th scope="row"><label for="navi_stories_color_phone_bg"><?php esc_html_e( 'Couleur du fond du mockup téléphone', 'saito-navi' ); ?></label></th>
                             <td><input type="text" name="navi_stories_color_phone_bg" id="navi_stories_color_phone_bg" class="navi-color-picker" value="<?php echo esc_attr( navi_stories_color_phone_bg() ); ?>" data-default-color="<?php echo esc_attr( NAVI_STORIES_DEFAULT_PHONE_BG ); ?>" /></td>
                         </tr>
                         <tr valign="top">
-                            <th scope="row"><label for="navi_stories_color_close_icon"><?php esc_html_e( 'Couleur de la croix (icône)', 'navi' ); ?></label></th>
+                            <th scope="row"><label for="navi_stories_color_close_icon"><?php esc_html_e( 'Couleur de la croix (icône)', 'saito-navi' ); ?></label></th>
                             <td><input type="text" name="navi_stories_color_close_icon" id="navi_stories_color_close_icon" class="navi-color-picker" value="<?php echo esc_attr( navi_stories_color_close_icon() ); ?>" data-default-color="<?php echo esc_attr( NAVI_STORIES_DEFAULT_CLOSE_ICON ); ?>" /></td>
                         </tr>
                         <tr valign="top">
-                            <th scope="row"><label for="navi_stories_color_close_bg"><?php esc_html_e( 'Couleur du fond du bouton de fermeture', 'navi' ); ?></label></th>
+                            <th scope="row"><label for="navi_stories_color_close_bg"><?php esc_html_e( 'Couleur du fond du bouton de fermeture', 'saito-navi' ); ?></label></th>
                             <td><input type="text" name="navi_stories_color_close_bg" id="navi_stories_color_close_bg" class="navi-color-picker" value="<?php echo esc_attr( navi_stories_color_close_bg() ); ?>" data-default-color="<?php echo esc_attr( NAVI_STORIES_DEFAULT_CLOSE_BG ); ?>" /></td>
                         </tr>
                         <tr valign="top">
-                            <th scope="row"><label for="navi_stories_color_overlay"><?php esc_html_e( 'Couleur du fond plein écran (mobile)', 'navi' ); ?></label></th>
+                            <th scope="row"><label for="navi_stories_color_overlay"><?php esc_html_e( 'Couleur du fond plein écran (mobile)', 'saito-navi' ); ?></label></th>
                             <td><input type="text" name="navi_stories_color_overlay" id="navi_stories_color_overlay" class="navi-color-picker" value="<?php echo esc_attr( navi_stories_color_overlay() ); ?>" data-default-color="<?php echo esc_attr( NAVI_STORIES_DEFAULT_OVERLAY_BG ); ?>" /></td>
                         </tr>
                     </table>
                 </div>
 
                 <div class="navi-admin-card">
-                    <h2><?php esc_html_e( 'Aspect du mockup', 'navi' ); ?></h2>
-                    <p class="description"><?php esc_html_e( "Épaisseur du cadre autour de l'écran vidéo et taille du mockup de téléphone (panneau desktop/laptop/tablette).", 'navi' ); ?></p>
+                    <h2><?php esc_html_e( 'Aspect du mockup', 'saito-navi' ); ?></h2>
+                    <p class="description"><?php esc_html_e( "Épaisseur du cadre autour de l'écran vidéo et taille du mockup de téléphone (panneau desktop/laptop/tablette).", 'saito-navi' ); ?></p>
                     <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start; margin-top:16px;">
                         <div style="flex:1; min-width:260px;">
                             <p>
-                                <label for="navi_phone_padding_range"><?php esc_html_e( "Épaisseur du cadre autour de l'écran", 'navi' ); ?></label>
+                                <label for="navi_phone_padding_range"><?php esc_html_e( "Épaisseur du cadre autour de l'écran", 'saito-navi' ); ?></label>
                                 (<output id="navi_phone_padding_output"><?php echo esc_html( $padding ); ?></output> px)
                             </p>
                             <input type="range" id="navi_phone_padding_range" name="navi_stories_phone_padding"
@@ -197,7 +197,7 @@ function navi_stories_render_settings_panel() {
                                    value="<?php echo esc_attr( $padding ); ?>" style="width:100%;" />
 
                             <p style="margin-top:20px;">
-                                <label for="navi_phone_width_range"><?php esc_html_e( 'Taille du mockup de téléphone', 'navi' ); ?></label>
+                                <label for="navi_phone_width_range"><?php esc_html_e( 'Taille du mockup de téléphone', 'saito-navi' ); ?></label>
                                 (<output id="navi_phone_width_output"><?php echo esc_html( $width ); ?></output> px)
                             </p>
                             <input type="range" id="navi_phone_width_range" name="navi_stories_phone_width"
@@ -205,14 +205,14 @@ function navi_stories_render_settings_panel() {
                                    value="<?php echo esc_attr( $width ); ?>" style="width:100%;" />
 
                             <p style="margin-top:20px;">
-                                <label for="navi_video_zoom_range"><?php esc_html_e( 'Zoom de la vidéo', 'navi' ); ?></label>
+                                <label for="navi_video_zoom_range"><?php esc_html_e( 'Zoom de la vidéo', 'saito-navi' ); ?></label>
                                 (<output id="navi_video_zoom_output"><?php echo esc_html( $videoZoom ); ?></output> %)
                             </p>
                             <input type="range" id="navi_video_zoom_range" name="navi_stories_video_zoom"
                                    min="<?php echo esc_attr( NAVI_STORIES_MIN_VIDEO_ZOOM ); ?>" max="<?php echo esc_attr( NAVI_STORIES_MAX_VIDEO_ZOOM ); ?>" step="1"
                                    value="<?php echo esc_attr( $videoZoom ); ?>" style="width:100%;" />
                             <p class="description">
-                                <?php esc_html_e( 'YouTube affiche parfois son propre bandeau titre/chaîne et son filigrane "Shorts" par-dessus la vidéo (surtout au chargement et à la fin), sans moyen de le retirer autrement. Zoomer la vidéo le pousse hors du cadre visible, au prix d\'un léger recadrage sur les côtés. 100 % = aucun recadrage.', 'navi' ); ?>
+                                <?php esc_html_e( 'YouTube affiche parfois son propre bandeau titre/chaîne et son filigrane "Shorts" par-dessus la vidéo (surtout au chargement et à la fin), sans moyen de le retirer autrement. Zoomer la vidéo le pousse hors du cadre visible, au prix d\'un léger recadrage sur les côtés. 100 % = aucun recadrage.', 'saito-navi' ); ?>
                             </p>
                         </div>
 
@@ -220,7 +220,7 @@ function navi_stories_render_settings_panel() {
                             <div id="naviPreviewPhone" style="position:relative; aspect-ratio:9/18.5; background:#111; border-radius:34px; box-sizing:border-box; box-shadow:0 10px 30px rgba(0,0,0,.25); transition:width .1s ease, padding .1s ease; width:<?php echo esc_attr( $width ); ?>px; padding:<?php echo esc_attr( $padding ); ?>px;">
                                 <div style="width:100%; height:100%; border-radius:24px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#000;">
                                     <div id="naviPreviewVideo" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; transition:transform .1s ease; transform:scale(<?php echo esc_attr( $videoZoom / 100 ); ?>);">
-                                        <span style="color:#fff; font-size:.8125rem; font-family:sans-serif; opacity:.6;"><?php esc_html_e( 'Vidéo', 'navi' ); ?></span>
+                                        <span style="color:#fff; font-size:.8125rem; font-family:sans-serif; opacity:.6;"><?php esc_html_e( 'Vidéo', 'saito-navi' ); ?></span>
                                     </div>
                                 </div>
                             </div>

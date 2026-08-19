@@ -7,7 +7,7 @@
  * Requires PHP: 7.4
  * Author: Troteseil Lucas
  * Author URI: https://github.com/Lucas-tsl
- * Text Domain: navi
+ * Text Domain: saito-navi
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Requires Plugins: woocommerce
@@ -40,7 +40,7 @@ function navi_notice_woocommerce_manquant() {
     }
     ?>
     <div class="notice notice-warning">
-        <p><?php esc_html_e( 'Navi : WooCommerce est inactif. Les modules "Panier automatique" et "Stories" ne fonctionneront pas tant que WooCommerce ne sera pas réactivé.', 'navi' ); ?></p>
+        <p><?php esc_html_e( 'Navi : WooCommerce est inactif. Les modules "Panier automatique" et "Stories" ne fonctionneront pas tant que WooCommerce ne sera pas réactivé.', 'saito-navi' ); ?></p>
     </div>
     <?php
 }

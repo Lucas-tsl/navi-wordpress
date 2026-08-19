@@ -96,12 +96,12 @@ d'écran) sont prêts, exclus du zip du plugin. Une fois le dépôt SVN
 attribué :
 
 ```bash
-svn co https://plugins.svn.wordpress.org/navi navi-svn
-cp .wordpress-org/assets/*.png navi-svn/assets/
-svn add navi-svn/assets/*.png && svn commit -m "Assets"
+svn co https://plugins.svn.wordpress.org/saito-navi saito-navi-svn
+cp .wordpress-org/assets/*.png saito-navi-svn/assets/
+svn add saito-navi-svn/assets/*.png && svn commit -m "Assets"
 ```
 
-Le code va dans `navi-svn/trunk/` puis `navi-svn/tags/<version>/`. Avant
+Le code va dans `saito-navi-svn/trunk/` puis `saito-navi-svn/tags/<version>/`. Avant
 soumission : passer `readme.txt` au
 [validateur officiel](https://wordpress.org/plugins/developers/readme-validator/).
 

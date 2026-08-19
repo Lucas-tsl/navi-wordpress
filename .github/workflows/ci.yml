@@ -67,20 +67,20 @@ jobs:
 
       - name: Assembler le dossier du plugin (fichiers de dev exclus via .distignore)
         run: |
-          mkdir -p build/navi
-          rsync -a --exclude-from='.distignore' ./ build/navi/
-          cd build && zip -r navi.zip navi
+          mkdir -p build/saito-navi
+          rsync -a --exclude-from='.distignore' ./ build/saito-navi/
+          cd build && zip -r saito-navi.zip saito-navi
 
       - name: Uploader l'artefact de build
         uses: actions/upload-artifact@v4
         with:
-          name: navi
-          path: build/navi.zip
+          name: saito-navi
+          path: build/saito-navi.zip
 
       - name: Attacher le zip à la Release GitHub
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          files: build/navi.zip
+          files: build/saito-navi.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

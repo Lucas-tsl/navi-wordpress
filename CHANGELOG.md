@@ -35,6 +35,11 @@
 - Onglet Cookies : instructions concrètes pour configurer Google Tag
   Manager (Consent Mode, événement dataLayer poussé par le plugin) à la
   place d'une simple description.
+- Corrigé : `Text Domain` (navi.php) et domaine de toutes les chaînes
+  traduisibles alignés sur le slug WordPress.org réel (`saito-navi`,
+  pas `navi`) — remonté par Plugin Check en `textdomain_mismatch`.
+  Dossier de déploiement local, job de build CI et instructions SVN mis
+  à jour en conséquence.
 
 ## 0.4.0
 

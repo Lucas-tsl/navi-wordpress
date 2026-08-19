@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 add_filter( 'woocommerce_product_data_tabs', 'navi_stories_add_product_tab' );
 function navi_stories_add_product_tab( $tabs ) {
     $tabs['navi_stories'] = array(
-        'label'    => __( 'Stories (Navi)', 'navi' ),
+        'label'    => __( 'Stories (Navi)', 'saito-navi' ),
         'target'   => 'navi_stories_product_data',
         'class'    => array(),
         'priority' => 65,
@@ -30,7 +30,7 @@ function navi_stories_render_product_panel() {
                 <?php
                 printf(
                     /* translators: %d: taille maximale en Mo */
-                    esc_html__( "Jusqu'à 4 stories par produit. Chaque story affiche une bulle vidéo cliquable sur la fiche produit. Collez une URL ou un identifiant YouTube pour un aperçu immédiat, ou importez une vidéo MP4 (max. %d Mo).", 'navi' ),
+                    esc_html__( "Jusqu'à 4 stories par produit. Chaque story affiche une bulle vidéo cliquable sur la fiche produit. Collez une URL ou un identifiant YouTube pour un aperçu immédiat, ou importez une vidéo MP4 (max. %d Mo).", 'saito-navi' ),
                     (int) ( NAVI_STORY_MAX_BYTES / 1048576 )
                 );
                 ?>
@@ -63,9 +63,9 @@ function navi_stories_render_product_panel() {
                     <div class="navi-story-admin-card" data-slot="<?php echo esc_attr( $index ); ?>">
                         <div class="navi-story-admin-card-header">
                             <?php /* translators: %d: numéro de l'emplacement de story (1 à NAVI_STORY_LIMIT). */ ?>
-                            <span class="navi-story-admin-card-title"><?php echo esc_html( sprintf( __( 'Story #%d', 'navi' ), $index ) ); ?></span>
+                            <span class="navi-story-admin-card-title"><?php echo esc_html( sprintf( __( 'Story #%d', 'saito-navi' ), $index ) ); ?></span>
                             <span class="navi-story-admin-badge<?php echo $slot['youtube'] ? ' is-filled' : ''; ?>" id="navi-story-badge-<?php echo esc_attr( $index ); ?>">
-                                <?php echo $slot['youtube'] ? esc_html__( 'Configurée', 'navi' ) : esc_html__( 'Vide', 'navi' ); ?>
+                                <?php echo $slot['youtube'] ? esc_html__( 'Configurée', 'saito-navi' ) : esc_html__( 'Vide', 'saito-navi' ); ?>
                             </span>
                         </div>
 
@@ -75,13 +75,13 @@ function navi_stories_render_product_panel() {
                             ?>
                             <img id="navi-story-admin-thumb-<?php echo esc_attr( $index ); ?>" src="<?php echo esc_url( $thumbnail ); ?>" alt="" style="<?php echo $thumbnail ? 'display:block;' : ''; ?>" />
                             <span class="navi-story-admin-placeholder" id="navi-story-admin-placeholder-<?php echo esc_attr( $index ); ?>" style="<?php echo $thumbnail ? 'display:none;' : ''; ?>">
-                                <?php esc_html_e( 'Aucune vidéo', 'navi' ); ?>
+                                <?php esc_html_e( 'Aucune vidéo', 'saito-navi' ); ?>
                             </span>
                         </div>
 
                         <div class="navi-story-admin-body">
                             <div class="form-field">
-                                <label for="navi_story_youtube_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( 'URL ou identifiant YouTube', 'navi' ); ?></label>
+                                <label for="navi_story_youtube_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( 'URL ou identifiant YouTube', 'saito-navi' ); ?></label>
                                 <input type="text" class="navi-story-admin-youtube-input" style="width:100%;"
                                        id="navi_story_youtube_<?php echo esc_attr( $index ); ?>"
                                        name="navi_story_youtube_<?php echo esc_attr( $index ); ?>"
@@ -91,7 +91,7 @@ function navi_stories_render_product_panel() {
                             </div>
 
                             <div class="form-field">
-                                <label for="navi_story_label_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( 'Libellé affiché', 'navi' ); ?></label>
+                                <label for="navi_story_label_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( 'Libellé affiché', 'saito-navi' ); ?></label>
                                 <input type="text" style="width:100%;"
                                        id="navi_story_label_<?php echo esc_attr( $index ); ?>"
                                        name="navi_story_label_<?php echo esc_attr( $index ); ?>"
@@ -99,23 +99,23 @@ function navi_stories_render_product_panel() {
                             </div>
 
                             <details>
-                                <summary><?php esc_html_e( 'Prévisualisation personnalisée (optionnel)', 'navi' ); ?></summary>
+                                <summary><?php esc_html_e( 'Prévisualisation personnalisée (optionnel)', 'saito-navi' ); ?></summary>
 
                                 <p class="description">
-                                    <?php esc_html_e( 'Sans vidéo de prévisualisation, la bulle affiche une image fixe (vignette YouTube). Pour une bulle animée (mini-vidéo en boucle, plus vivante), importez un court extrait MP4 ci-dessous.', 'navi' ); ?>
+                                    <?php esc_html_e( 'Sans vidéo de prévisualisation, la bulle affiche une image fixe (vignette YouTube). Pour une bulle animée (mini-vidéo en boucle, plus vivante), importez un court extrait MP4 ci-dessous.', 'saito-navi' ); ?>
                                 </p>
 
                                 <div class="form-field">
-                                    <label for="navi_story_preview_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( 'URL de la vidéo de prévisualisation (MP4)', 'navi' ); ?></label>
+                                    <label for="navi_story_preview_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( 'URL de la vidéo de prévisualisation (MP4)', 'saito-navi' ); ?></label>
                                     <input type="text" style="width:100%;"
                                            id="navi_story_preview_<?php echo esc_attr( $index ); ?>"
                                            name="navi_story_preview_<?php echo esc_attr( $index ); ?>"
                                            value="<?php echo esc_attr( $slot['preview'] ); ?>" />
-                                    <p class="description"><?php esc_html_e( 'Laisser vide pour utiliser la vignette YouTube par défaut.', 'navi' ); ?></p>
+                                    <p class="description"><?php esc_html_e( 'Laisser vide pour utiliser la vignette YouTube par défaut.', 'saito-navi' ); ?></p>
                                 </div>
 
                                 <div class="form-field">
-                                    <label for="navi_story_preview_file_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( '...ou importer un fichier MP4', 'navi' ); ?></label>
+                                    <label for="navi_story_preview_file_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( '...ou importer un fichier MP4', 'saito-navi' ); ?></label>
                                     <input type="file" class="navi-story-admin-file-input"
                                            id="navi_story_preview_file_<?php echo esc_attr( $index ); ?>"
                                            name="navi_story_preview_file_<?php echo esc_attr( $index ); ?>"
@@ -131,9 +131,9 @@ function navi_stories_render_product_panel() {
 
             <script>
                 var NAVI_STORY_MAX_BYTES = <?php echo (int) NAVI_STORY_MAX_BYTES; ?>;
-                var NAVI_STORY_LABEL_CONFIGURED = '<?php echo esc_js( __( 'Configurée', 'navi' ) ); ?>';
-                var NAVI_STORY_LABEL_EMPTY = '<?php echo esc_js( __( 'Vide', 'navi' ) ); ?>';
-                var NAVI_STORY_LABEL_TOO_LARGE = '<?php echo esc_js( __( 'dépasse la taille maximale autorisée', 'navi' ) ); ?>';
+                var NAVI_STORY_LABEL_CONFIGURED = '<?php echo esc_js( __( 'Configurée', 'saito-navi' ) ); ?>';
+                var NAVI_STORY_LABEL_EMPTY = '<?php echo esc_js( __( 'Vide', 'saito-navi' ) ); ?>';
+                var NAVI_STORY_LABEL_TOO_LARGE = '<?php echo esc_js( __( 'dépasse la taille maximale autorisée', 'saito-navi' ) ); ?>';
 
                 (function () {
                     function extractYoutubeId(input) {

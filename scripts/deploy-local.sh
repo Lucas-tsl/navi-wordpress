@@ -6,8 +6,11 @@
 # languages/, uninstall.php) : on assemble d'abord un dossier propre via
 # rsync + .distignore (exactement ce que fait le job "build" de la CI, pour
 # tester le même contenu que ce qui serait réellement distribué), puis on le
-# copie dans le conteneur — pas de dossier "navi/" séparé côté dépôt comme
-# côté PrestaShop.
+# copie dans le conteneur — pas de dossier séparé côté dépôt comme côté
+# PrestaShop. Dossier de destination nommé "saito-navi" (pas "navi") :
+# c'est le slug WordPress.org réel (dérivé du nom du plugin "Saito Navi",
+# "navi" seul n'étant pas disponible), qui doit correspondre au Text Domain
+# (navi.php) pour que Plugin Check ne remonte pas de textdomain_mismatch.
 #
 # Usage : ./scripts/deploy-local.sh [--no-verify]
 #   NAVI_DEPLOY_CONTAINER : nom du conteneur web (défaut navi_wp_web)
@@ -21,7 +24,7 @@ REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 
 CONTAINER="${NAVI_DEPLOY_CONTAINER:-navi_wp_web}"
 BASE_URL="${NAVI_DEPLOY_BASE_URL:-http://localhost:8082}"
-MODULE_DEST="/var/www/html/wp-content/plugins/navi"
+MODULE_DEST="/var/www/html/wp-content/plugins/saito-navi"
 
 VERIFY=1
 for arg in "$@"; do
@@ -43,12 +46,12 @@ BUILD_DIR="$(mktemp -d)"
 trap 'rm -rf "$BUILD_DIR"' EXIT
 
 echo "==> Assemblage du plugin (rsync + .distignore) dans $BUILD_DIR"
-rsync -a --exclude-from="$REPO_ROOT/.distignore" "$REPO_ROOT/" "$BUILD_DIR/navi/"
+rsync -a --exclude-from="$REPO_ROOT/.distignore" "$REPO_ROOT/" "$BUILD_DIR/saito-navi/"
 
 echo "==> Copie vers $CONTAINER:$MODULE_DEST"
 docker exec "$CONTAINER" mkdir -p "$MODULE_DEST"
 docker exec "$CONTAINER" sh -c "rm -rf $MODULE_DEST/*"
-docker cp "$BUILD_DIR/navi/." "$CONTAINER:$MODULE_DEST"
+docker cp "$BUILD_DIR/saito-navi/." "$CONTAINER:$MODULE_DEST"
 
 # Toujours www-data : docker cp copie avec l'UID de l'hôte, l'image
 # WordPress officielle sert le site en www-data (comme sur presta_web).

@@ -59,7 +59,7 @@ separate implementations adapted to each ecosystem.
 
 == Installation ==
 
-1. Upload the `navi` folder to `/wp-content/plugins/`, or install
+1. Upload the `saito-navi` folder to `/wp-content/plugins/`, or install
    directly from **Plugins > Add New**.
 2. Activate the plugin from the **Plugins** menu.
 3. WooCommerce must be installed and active (required for the Sticky

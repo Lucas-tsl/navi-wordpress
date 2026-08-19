@@ -82,20 +82,20 @@ function navi_extract_youtube_id( $input ) {
  */
 function navi_validate_mp4_upload( array $file ) {
     if ( ! isset( $file['error'] ) || UPLOAD_ERR_OK !== $file['error'] ) {
-        return __( 'Erreur lors du transfert du fichier.', 'navi' );
+        return __( 'Erreur lors du transfert du fichier.', 'saito-navi' );
     }
 
     if ( $file['size'] > NAVI_STORY_MAX_BYTES ) {
         return sprintf(
             /* translators: %d: taille maximale en Mo */
-            __( 'Le fichier dépasse la taille maximale autorisée (%d Mo).', 'navi' ),
+            __( 'Le fichier dépasse la taille maximale autorisée (%d Mo).', 'saito-navi' ),
             NAVI_STORY_MAX_BYTES / 1048576
         );
     }
 
     $extension = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
     if ( 'mp4' !== $extension ) {
-        return __( 'Seuls les fichiers .mp4 sont acceptés.', 'navi' );
+        return __( 'Seuls les fichiers .mp4 sont acceptés.', 'saito-navi' );
     }
 
     if ( function_exists( 'finfo_open' ) ) {
@@ -103,7 +103,7 @@ function navi_validate_mp4_upload( array $file ) {
         $mime  = finfo_file( $finfo, $file['tmp_name'] );
         finfo_close( $finfo );
         if ( 'video/mp4' !== $mime ) {
-            return __( 'Le fichier ne semble pas être une vidéo MP4 valide.', 'navi' );
+            return __( 'Le fichier ne semble pas être une vidéo MP4 valide.', 'saito-navi' );
         }
     }
 
@@ -173,7 +173,7 @@ function navi_stories_handle_uploaded_preview( $index, &$errors ) {
     remove_filter( 'upload_dir', 'navi_stories_upload_dir_filter' );
 
     if ( ! isset( $moved['url'] ) || isset( $moved['error'] ) ) {
-        $errors[] = sprintf( '#%d — %s', $index, __( "Échec de l'enregistrement du fichier.", 'navi' ) );
+        $errors[] = sprintf( '#%d — %s', $index, __( "Échec de l'enregistrement du fichier.", 'saito-navi' ) );
         return null;
     }
 
@@ -230,7 +230,7 @@ function navi_stories_save( $product_id ) {
         // interne) — cohérent avec le reste de l'admin WooCommerce.
         if ( function_exists( 'wc_add_notice' ) ) {
             wc_add_notice(
-                __( 'Stories Navi : certains fichiers ont été ignorés.', 'navi' ) . ' ' . implode( ' ', $errors ),
+                __( 'Stories Navi : certains fichiers ont été ignorés.', 'saito-navi' ) . ' ' . implode( ' ', $errors ),
                 'error'
             );
         }

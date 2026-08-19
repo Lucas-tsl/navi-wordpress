@@ -77,8 +77,8 @@ function navi_enqueue_core_assets() {
         array(
             'id'              => 'top',
             'icon'            => '↑',
-            'label'           => __( 'Haut de page', 'navi' ),
-            'shortLabel'      => __( 'Haut', 'navi' ),
+            'label'           => __( 'Haut de page', 'saito-navi' ),
+            'shortLabel'      => __( 'Haut', 'saito-navi' ),
             'action'          => 'scroll-top',
             'condition'       => 'scroll',
             'scrollThreshold' => 50,
@@ -110,7 +110,7 @@ function navi_enqueue_core_assets() {
         array(
             'items'      => $items,
             'isProduct'  => function_exists( 'is_product' ) && is_product(),
-            'closeLabel' => __( 'Fermer', 'navi' ),
+            'closeLabel' => __( 'Fermer', 'saito-navi' ),
         )
     );
 }
@@ -129,7 +129,7 @@ define( 'NAVI_GEAR_SVG', '<svg viewBox="0 0 24 24" fill="none" stroke="currentCo
 add_action( 'wp_body_open', 'navi_render_skip_to_fab_link' );
 function navi_render_skip_to_fab_link() {
     ?>
-    <a href="#navi-fab-toggle" class="navi-skip-link"><?php esc_html_e( 'Aller aux réglages (accessibilité, cookies, panier)', 'navi' ); ?></a>
+    <a href="#navi-fab-toggle" class="navi-skip-link"><?php esc_html_e( 'Aller aux réglages (accessibilité, cookies, panier)', 'saito-navi' ); ?></a>
     <?php
 }
 
@@ -141,7 +141,7 @@ function navi_render_fab_markup() {
     // injecté par assets/js/core.js), plutôt que de flotter indépendamment.
     ?>
     <div id="navi-fab" class="navi-fab" data-state="closed" data-position="<?php echo esc_attr( get_option( 'navi_fab_position', 'right' ) ); ?>">
-        <button type="button" id="navi-fab-toggle" class="navi-fab-toggle" aria-expanded="false" aria-label="<?php esc_attr_e( 'Ouvrir le menu', 'navi' ); ?>">
+        <button type="button" id="navi-fab-toggle" class="navi-fab-toggle" aria-expanded="false" aria-label="<?php esc_attr_e( 'Ouvrir le menu', 'saito-navi' ); ?>">
             <span class="navi-fab-gear" aria-hidden="true"><?php echo NAVI_GEAR_SVG; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- constante SVG interne, pas une entrée utilisateur. ?></span>
         </button>
         <div id="navi-fab-menu" class="navi-fab-menu" role="menu"></div>
