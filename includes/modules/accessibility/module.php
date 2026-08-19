@@ -14,13 +14,20 @@ Navi_Module_Registry::register(
         'fab_action'      => 'open-accessibility-panel',
         'fab_condition'   => '',
         'available'       => true,
-        'settings_url'    => admin_url( 'admin.php?page=navi-accessibility' ),
+        'settings_url'    => admin_url( 'admin.php?page=navi-main#accessibility' ),
+        'settings_panel_callback' => 'navi_a11y_render_settings_panel',
         'visibility_selector' => '.navi-fab-item[data-item-id="accessibility"]',
     )
 );
 
-if ( Navi_Module_Registry::is_active( 'accessibility' ) ) {
+// Chargé même si le module est désactivé : sinon son onglet de réglages
+// (Navi > Navi > Accessibilité) disparaîtrait avec lui, sans aucun moyen de
+// le réactiver depuis le BO (voir navi_a11y_render_settings_panel()).
+if ( is_admin() ) {
     require_once __DIR__ . '/admin-settings.php';
+}
+
+if ( Navi_Module_Registry::is_active( 'accessibility' ) ) {
     require_once __DIR__ . '/public-display.php';
 
     add_action( 'wp_enqueue_scripts', 'navi_a11y_enqueue_assets' );

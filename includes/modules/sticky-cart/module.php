@@ -31,15 +31,19 @@ Navi_Module_Registry::register(
         'fab_action'      => 'open-sticky-cart',
         'fab_condition'   => 'is_product',
         'available'       => true,
-        'settings_url'    => admin_url( 'admin.php?page=navi-sticky-cart' ),
+        'settings_url'    => admin_url( 'admin.php?page=navi-main#sticky-cart' ),
+        'settings_panel_callback' => 'navi_sticky_render_settings_panel',
         'visibility_selector' => '#navi-sticky-bar, .navi-fab-item[data-item-id="sticky-cart"]',
     )
 );
 
-if ( Navi_Module_Registry::is_active( 'sticky-cart' ) ) {
+// Chargé même si le module est désactivé : sinon son onglet de réglages
+// (Navi > Navi > Panier) disparaîtrait avec lui, sans aucun moyen de le
+// réactiver depuis le BO (voir navi_sticky_render_settings_panel()).
+if ( is_admin() ) {
     require_once __DIR__ . '/admin-settings.php';
+}
 
-    if ( ! is_admin() ) {
-        require_once __DIR__ . '/sticky-frontend.php';
-    }
+if ( Navi_Module_Registry::is_active( 'sticky-cart' ) && ! is_admin() ) {
+    require_once __DIR__ . '/sticky-frontend.php';
 }

@@ -23,16 +23,23 @@ Navi_Module_Registry::register(
         'fab_action'      => '',
         'fab_condition'   => '',
         'available'       => true,
-        'settings_url'    => admin_url( 'admin.php?page=navi-stories' ),
+        'settings_url'    => admin_url( 'admin.php?page=navi-main#stories' ),
+        'settings_panel_callback' => 'navi_stories_render_settings_panel',
         'visibility_selector' => '.navi-story-row',
     )
 );
 
-if ( Navi_Module_Registry::is_active( 'stories' ) ) {
-    require_once __DIR__ . '/admin-product-tab.php';
+// Chargé même si le module est désactivé : sinon son onglet de réglages
+// (Navi > Navi > Stories) disparaîtrait avec lui, sans aucun moyen de le
+// réactiver depuis le BO (voir navi_stories_render_settings_panel()).
+if ( is_admin() ) {
     require_once __DIR__ . '/admin-settings.php';
+}
 
-    if ( ! is_admin() ) {
+if ( Navi_Module_Registry::is_active( 'stories' ) ) {
+    if ( is_admin() ) {
+        require_once __DIR__ . '/admin-product-tab.php';
+    } else {
         require_once __DIR__ . '/public-display.php';
         require_once __DIR__ . '/stories-frontend.php';
     }

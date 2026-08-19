@@ -23,15 +23,6 @@ function navi_sanitize_fab_position( $value ) {
     return ( 'left' === $value ) ? 'left' : 'right';
 }
 
-/**
- * Slug du menu admin sous lequel Navi (et ses sous-pages, comme les réglages
- * du module cookies) se rattachent : toujours son propre menu de premier
- * niveau ('navi-main'), indépendant de tout autre plugin.
- */
-function navi_admin_parent_slug() {
-    return 'navi-main';
-}
-
 // Triplet "R, G, B" à partir d'un hex #rrggbb ou #rgb : nécessaire pour les
 // couleurs de la DA (voir Navi > Couleurs, includes/core/admin-menu.php)
 // réutilisées dans des rgba(..., alpha) en CSS (assets/css/core.css), où un
@@ -110,6 +101,61 @@ function navi_admin_page_header( $title, $subtitle = '' ) {
             <?php endif; ?>
         </div>
     </div>
+    <?php
+}
+
+// À appeler juste après settings_fields() dans chaque onglet de Navi > Navi
+// (voir navi_render_dashboard_page(), admin-menu.php) : le champ
+// _wp_http_referer que settings_fields() ajoute déjà ne capture que
+// REQUEST_URI côté serveur, qui ne contient jamais le fragment d'URL
+// (#onglet) — un navigateur ne l'envoie jamais au serveur. Ce second champ,
+// de même nom, est rempli à la soumission du formulaire (pas au chargement
+// de la page : l'onglet actif — donc le hash — peut avoir changé entretemps)
+// avec l'URL complète telle que vue par le navigateur ; comme les deux
+// champs partagent le même name="_wp_http_referer", PHP ne garde dans
+// $_POST que la dernière valeur soumise — la nôtre, placée après. Sans ça,
+// tout enregistrement ramènerait sur l'onglet "Général" (redirection
+// d'options.php, qui n'a jamais connu le hash).
+function navi_render_hash_preserving_referer_field() {
+    ?>
+    <input type="hidden" name="_wp_http_referer" value="" />
+    <script>
+        (function () {
+            var input = document.currentScript.previousElementSibling;
+            var form = document.currentScript.closest( 'form' );
+            if ( form ) {
+                form.addEventListener( 'submit', function () {
+                    input.value = window.location.pathname + window.location.search + window.location.hash;
+                } );
+            }
+        })();
+    </script>
+    <?php
+}
+
+// Case à cocher "Activer ce module", en tête de chaque onglet de module
+// (Navi > Navi, voir navi_render_dashboard_page(), admin-menu.php) — un
+// module désactivé n'affiche plus rien côté front (Navi_Module_Registry::is_active(),
+// vérifié par chaque includes/modules/<nom>/module.php au chargement).
+function navi_render_module_active_field( $module_id ) {
+    $module = Navi_Module_Registry::get( $module_id );
+    if ( ! $module ) {
+        return;
+    }
+    ?>
+    <tr valign="top">
+        <th scope="row"><?php esc_html_e( 'Activer ce module', 'navi' ); ?></th>
+        <td>
+            <input type="hidden" name="<?php echo esc_attr( $module['option_name'] ); ?>" value="0" />
+            <input
+                type="checkbox"
+                name="<?php echo esc_attr( $module['option_name'] ); ?>"
+                value="1"
+                <?php checked( 1, get_option( $module['option_name'], $module['default_active'] ? 1 : 0 ) ); ?>
+                <?php disabled( ! $module['available'] ); ?>
+            />
+        </td>
+    </tr>
     <?php
 }
 

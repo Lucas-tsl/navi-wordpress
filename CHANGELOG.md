@@ -23,6 +23,13 @@
   l'apparence WordPress par défaut.
 - Langue du plugin réglable manuellement (Navi > Navi), indépendamment de
   la détection automatique (WPML ou langue du site).
+- Réglages regroupés sur une seule page à onglets (Navi > Navi : Général,
+  Cookies, Accessibilité, Panier, Stories), chaque onglet portant sa
+  propre activation — remplace les anciennes sous-pages séparées.
+- Sécurité : faille XSS corrigée dans le panneau plein écran Stories
+  (libellé de story injecté sans échappement).
+- Corrigé : bordure bleue résiduelle sur le sélecteur de couleur, logo
+  Navi désormais à fond transparent.
 
 ## 0.4.0
 
