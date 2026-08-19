@@ -76,6 +76,24 @@ function navi_extract_youtube_id( $input ) {
 }
 
 /**
+ * Vignette YouTube par défaut d'une story sans prévisualisation
+ * personnalisée. maxresdefault.jpg n'existe que pour les vidéos avec un
+ * master HD grand écran — quasiment jamais le cas des Shorts (format
+ * vertical), qui n'ont souvent qu'un simple hqdefault.jpg. Un
+ * wp_remote_head() vérifie sa disponibilité avant d'y recourir plutôt que
+ * de stocker une URL d'image cassée dans le postmeta.
+ */
+function navi_youtube_thumbnail_url( $youtube_id ) {
+    $maxres   = 'https://img.youtube.com/vi/' . $youtube_id . '/maxresdefault.jpg';
+    $response = wp_remote_head( $maxres, array( 'timeout' => 3 ) );
+    if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+        return $maxres;
+    }
+
+    return 'https://img.youtube.com/vi/' . $youtube_id . '/hqdefault.jpg';
+}
+
+/**
  * Validation centralisée (extension + MIME + taille) — même logique que
  * NaviStoryManager::validateMp4Upload() côté PrestaShop. Retourne un
  * message d'erreur, ou '' si le fichier est accepté.
@@ -208,7 +226,7 @@ function navi_stories_save( $product_id ) {
             ? $uploaded_url
             : ( isset( $_POST[ 'navi_story_preview_' . $index ] ) ? esc_url_raw( wp_unslash( $_POST[ 'navi_story_preview_' . $index ] ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié par l'appelant ; valeur passée à esc_url_raw().
         if ( '' === $preview ) {
-            $preview = 'https://img.youtube.com/vi/' . $youtube . '/maxresdefault.jpg';
+            $preview = navi_youtube_thumbnail_url( $youtube );
         }
 
         $slots[ $index ] = array(
