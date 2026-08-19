@@ -48,7 +48,8 @@ pour afficher son panneau dans `#navi-fab-detail`.
 
 Toutes les chaînes passent par `__()`/`_e()` (text-domain `navi`).
 `includes/core/i18n.php` intercepte le filtre `gettext` et traduit depuis
-un dictionnaire PHP embarqué (détection WPML sinon `get_locale()`) — pas
+un dictionnaire PHP embarqué (détection WPML sinon `get_locale()`, ou
+langue forcée manuellement dans Navi > Navi > Langue du plugin) — pas
 de fichier `.mo` à compiler. Ajouter une langue : dupliquer
 `navi_dictionary_en()` et l'ajouter à `$dictionaries`.
 

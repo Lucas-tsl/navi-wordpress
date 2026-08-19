@@ -99,6 +99,19 @@ function navi_register_module_settings() {
             'default'           => 4,
         )
     );
+
+    // Langue du plugin (voir navi_current_language(), includes/core/i18n.php) :
+    // 'auto' laisse WPML/la locale du site décider, sinon force la langue
+    // choisie quelle que soit la détection automatique.
+    register_setting(
+        'navi_modules_group',
+        'navi_language',
+        array(
+            'type'              => 'string',
+            'sanitize_callback' => 'navi_sanitize_language',
+            'default'           => 'auto',
+        )
+    );
 }
 
 // Sélecteurs de couleur natifs WordPress (wp-color-picker), uniquement sur
@@ -190,6 +203,19 @@ function navi_render_dashboard_page() {
                     </select>
                 </p>
                 <p class="description"><?php esc_html_e( "À changer si un autre widget flottant (chat, WhatsApp...) occupe déjà le bas droite du site.", 'navi' ); ?></p>
+            </div>
+
+            <div class="navi-admin-card">
+                <h2><?php esc_html_e( 'Langue du plugin', 'navi' ); ?></h2>
+                <p class="description"><?php esc_html_e( "Par défaut, Navi suit la langue détectée automatiquement (WPML si actif, sinon la langue du site). Choisissez une langue ici pour l'imposer, quelle que soit cette détection.", 'navi' ); ?></p>
+                <p>
+                    <label for="navi_language"><?php esc_html_e( 'Langue', 'navi' ); ?></label><br />
+                    <select name="navi_language" id="navi_language">
+                        <?php foreach ( navi_available_languages() as $code => $label ) : ?>
+                            <option value="<?php echo esc_attr( $code ); ?>" <?php selected( $code, navi_current_language_override() ); ?>><?php echo esc_html( $label ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </p>
             </div>
 
             <div class="navi-admin-card">

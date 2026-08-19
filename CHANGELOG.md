@@ -17,7 +17,12 @@
   CSS WooCommerce) ; bandes noires en haut/bas de la vidéo (conflit
   `max-width` avec certains thèmes, dont Storefront) ; icône de menu
   admin décalée par un padding WordPress par défaut ; centrage de
-  l'engrenage renforcé pour Safari/iOS.
+  l'engrenage renforcé pour Safari/iOS ; mélange français/anglais dans le
+  BO sur les sites en anglais (dictionnaire de traduction incomplet).
+- BO redessiné (cartes, interrupteurs, onglets en pastilles) plutôt que
+  l'apparence WordPress par défaut.
+- Langue du plugin réglable manuellement (Navi > Navi), indépendamment de
+  la détection automatique (WPML ou langue du site).
 
 ## 0.4.0
 
