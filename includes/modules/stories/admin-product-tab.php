@@ -16,6 +16,23 @@ function navi_stories_add_product_tab( $tabs ) {
     return $tabs;
 }
 
+/**
+ * wp.media (bouton "Choisir une vidéo", voir navi_stories_render_product_panel()
+ * ci-dessous) : uniquement sur l'écran d'édition produit, jamais chargé
+ * ailleurs dans l'admin.
+ */
+add_action( 'admin_enqueue_scripts', 'navi_stories_enqueue_media_library' );
+function navi_stories_enqueue_media_library( $hook_suffix ) {
+    if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ), true ) ) {
+        return;
+    }
+    $screen = get_current_screen();
+    if ( ! $screen || 'product' !== $screen->post_type ) {
+        return;
+    }
+    wp_enqueue_media();
+}
+
 add_action( 'woocommerce_product_data_panels', 'navi_stories_render_product_panel' );
 function navi_stories_render_product_panel() {
     global $post;
@@ -27,13 +44,7 @@ function navi_stories_render_product_panel() {
     <div id="navi_stories_product_data" class="panel woocommerce_options_panel hidden">
         <div class="options_group" style="padding: 12px 20px;">
             <p>
-                <?php
-                printf(
-                    /* translators: %d: taille maximale en Mo */
-                    esc_html__( "Jusqu'à 4 stories par produit. Chaque story affiche une bulle vidéo cliquable sur la fiche produit. Collez une URL ou un identifiant YouTube pour un aperçu immédiat, ou importez une vidéo MP4 (max. %d Mo).", 'saito-navi' ),
-                    (int) ( NAVI_STORY_MAX_BYTES / 1048576 )
-                );
-                ?>
+                <?php esc_html_e( "Jusqu'à 4 stories par produit. Chaque story affiche une bulle vidéo cliquable sur la fiche produit. Collez une URL ou un identifiant YouTube pour un aperçu immédiat, ou choisissez une vidéo MP4 depuis la médiathèque.", 'saito-navi' ); ?>
             </p>
 
             <?php wp_nonce_field( 'navi_story_save_' . $post->ID, 'navi_story_nonce' ); ?>
@@ -115,12 +126,12 @@ function navi_stories_render_product_panel() {
                                 </div>
 
                                 <div class="form-field">
-                                    <label for="navi_story_preview_file_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( '...ou importer un fichier MP4', 'saito-navi' ); ?></label>
-                                    <input type="file" class="navi-story-admin-file-input"
-                                           id="navi_story_preview_file_<?php echo esc_attr( $index ); ?>"
-                                           name="navi_story_preview_file_<?php echo esc_attr( $index ); ?>"
-                                           accept="video/mp4,.mp4"
-                                           data-slot="<?php echo esc_attr( $index ); ?>" />
+                                    <label><?php esc_html_e( '...ou choisir depuis la médiathèque', 'saito-navi' ); ?></label>
+                                    <p>
+                                        <button type="button" class="button navi-story-admin-media-button" data-slot="<?php echo esc_attr( $index ); ?>">
+                                            <?php esc_html_e( 'Choisir une vidéo', 'saito-navi' ); ?>
+                                        </button>
+                                    </p>
                                     <p class="navi-story-admin-file-info" id="navi-story-admin-file-info-<?php echo esc_attr( $index ); ?>"></p>
                                 </div>
                             </details>
@@ -130,10 +141,11 @@ function navi_stories_render_product_panel() {
             </div>
 
             <script>
-                var NAVI_STORY_MAX_BYTES = <?php echo (int) NAVI_STORY_MAX_BYTES; ?>;
                 var NAVI_STORY_LABEL_CONFIGURED = '<?php echo esc_js( __( 'Configurée', 'saito-navi' ) ); ?>';
                 var NAVI_STORY_LABEL_EMPTY = '<?php echo esc_js( __( 'Vide', 'saito-navi' ) ); ?>';
-                var NAVI_STORY_LABEL_TOO_LARGE = '<?php echo esc_js( __( 'dépasse la taille maximale autorisée', 'saito-navi' ) ); ?>';
+                var NAVI_STORY_MEDIA_TITLE = '<?php echo esc_js( __( 'Choisir une vidéo', 'saito-navi' ) ); ?>';
+                var NAVI_STORY_MEDIA_BUTTON = '<?php echo esc_js( __( 'Utiliser cette vidéo', 'saito-navi' ) ); ?>';
+                var NAVI_STORY_LABEL_INVALID_TYPE = '<?php echo esc_js( __( 'Seuls les fichiers .mp4 sont acceptés.', 'saito-navi' ) ); ?>';
 
                 (function () {
                     function extractYoutubeId(input) {
@@ -167,23 +179,38 @@ function navi_stories_render_product_panel() {
                         }
                     }
 
-                    function updateFileInfo(slot, input) {
-                        var info = document.getElementById('navi-story-admin-file-info-' + slot);
-                        if (!info) return;
-                        if (!input.files || !input.files.length) {
-                            info.textContent = '';
+                    function openMediaPicker(slot) {
+                        if (typeof wp === 'undefined' || !wp.media) return;
+
+                        var frame = wp.media({
+                            title: NAVI_STORY_MEDIA_TITLE,
+                            library: { type: 'video/mp4' },
+                            multiple: false,
+                            button: { text: NAVI_STORY_MEDIA_BUTTON }
+                        });
+
+                        frame.on('select', function () {
+                            var attachment = frame.state().get('selection').first().toJSON();
+                            var info = document.getElementById('navi-story-admin-file-info-' + slot);
+                            if (!info) return;
+
+                            if ('video/mp4' !== attachment.mime) {
+                                info.textContent = NAVI_STORY_LABEL_INVALID_TYPE;
+                                info.classList.add('is-warning');
+                                return;
+                            }
+
+                            var previewInput = document.getElementById('navi_story_preview_' + slot);
+                            if (previewInput) {
+                                previewInput.value = attachment.url;
+                            }
+
+                            var sizeMb = attachment.filesizeInBytes ? (attachment.filesizeInBytes / 1048576).toFixed(1) + ' Mo' : '';
+                            info.textContent = attachment.filename + (sizeMb ? ' — ' + sizeMb : '');
                             info.classList.remove('is-warning');
-                            return;
-                        }
-                        var file = input.files[0];
-                        var sizeMb = (file.size / 1048576).toFixed(1);
-                        if (file.size > NAVI_STORY_MAX_BYTES) {
-                            info.textContent = file.name + ' — ' + sizeMb + ' Mo — ' + NAVI_STORY_LABEL_TOO_LARGE;
-                            info.classList.add('is-warning');
-                        } else {
-                            info.textContent = file.name + ' — ' + sizeMb + ' Mo';
-                            info.classList.remove('is-warning');
-                        }
+                        });
+
+                        frame.open();
                     }
 
                     var youtubeInputs = document.querySelectorAll('.navi-story-admin-youtube-input');
@@ -193,10 +220,11 @@ function navi_stories_render_product_panel() {
                         });
                     }
 
-                    var fileInputs = document.querySelectorAll('.navi-story-admin-file-input');
-                    for (var j = 0; j < fileInputs.length; j++) {
-                        fileInputs[j].addEventListener('change', function (event) {
-                            updateFileInfo(event.target.getAttribute('data-slot'), event.target);
+                    var mediaButtons = document.querySelectorAll('.navi-story-admin-media-button');
+                    for (var k = 0; k < mediaButtons.length; k++) {
+                        mediaButtons[k].addEventListener('click', function (event) {
+                            event.preventDefault();
+                            openMediaPicker(event.currentTarget.getAttribute('data-slot'));
                         });
                     }
                 })();
