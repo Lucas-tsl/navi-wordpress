@@ -21,23 +21,13 @@ const NAVI_STORIES_DEFAULT_BUBBLE_SIZE   = 64;
 const NAVI_STORIES_MIN_BUBBLE_SIZE       = 40;
 const NAVI_STORIES_MAX_BUBBLE_SIZE       = 120;
 
-// Zoom de la vidéo dans le mockup (en %, 100 = aucun zoom) : YouTube
-// affiche parfois son propre bandeau titre/chaîne et son filigrane
-// "Shorts" par-dessus la vidéo, sans moyen de le retirer en CSS/JS
-// (iframe cross-origin) — zoomer pousse ce bandeau hors du cadre
-// visible, au prix d'un léger recadrage sur les côtés. 100% par défaut
-// (aucun recadrage) : voir aussi assets/css/stories.css pour le
-// correctif `max-width: none` (bandes noires causées par un conflit
-// avec la règle globale `iframe { max-width: 100% }` de certains
-// thèmes), sans rapport avec ce réglage de zoom.
+// Zoom vidéo (%, 100 = aucun) : pousse le bandeau titre/chaîne YouTube
+// hors du cadre au prix d'un recadrage. 100% par défaut.
 const NAVI_STORIES_DEFAULT_VIDEO_ZOOM = 100;
 const NAVI_STORIES_MIN_VIDEO_ZOOM     = 100;
 const NAVI_STORIES_MAX_VIDEO_ZOOM     = 150;
 
-// Bordure de bulle en dégradé par défaut (repris tel quel du motif de
-// référence lst-video-story : anneau "métallique" sombre/clair/sombre à
-// 45°) plutôt qu'une couleur unie — "gradient" reste le réglage par
-// défaut de navi_stories_bubble_border_style() ci-dessous.
+// Anneau "métallique" repris du motif de référence lst-video-story.
 const NAVI_STORIES_DEFAULT_BUBBLE_BORDER_STYLE = 'gradient';
 const NAVI_STORIES_DEFAULT_GRADIENT_ANGLE       = 45;
 const NAVI_STORIES_DEFAULT_GRADIENT_COLOR_1     = '#101820';
@@ -76,11 +66,8 @@ function navi_stories_show_label() {
     return (bool) get_option( 'navi_stories_show_label', 1 );
 }
 
-/**
- * Affichage automatique après la galerie produit (voir
- * public-display.php) — désactivable pour les sites qui ne veulent
- * positionner les bulles que via le shortcode [navi_stories].
- */
+// Désactivable pour les sites qui ne veulent positionner les bulles que
+// via le shortcode [navi_stories].
 function navi_stories_auto_display() {
     return (bool) get_option( 'navi_stories_auto_display', 1 );
 }
@@ -133,13 +120,8 @@ function navi_stories_bubble_gradient_color_3() {
     return $configured ? $configured : NAVI_STORIES_DEFAULT_GRADIENT_COLOR_3;
 }
 
-/**
- * Valeur CSS finale de --navi-story-bubble-border-bg : une couleur unie
- * (mode "solid", ou la couleur d'accent du thème si non réglée) ou une
- * fonction linear-gradient() complète (mode "gradient") — une seule
- * variable CSS couvre les deux cas, voir assets/css/stories.css (double
- * fond padding-box/border-box, `border-color: transparent`).
- */
+// Valeur de --navi-story-bubble-border-bg : couleur unie ou
+// linear-gradient() complet selon le mode (voir assets/css/stories.css).
 function navi_stories_bubble_border_css_value() {
     if ( 'solid' === navi_stories_bubble_border_style() ) {
         $color = navi_stories_color_bubble_border();

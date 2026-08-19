@@ -24,10 +24,8 @@
     --navi-story-bubble-size: 64px;
     --navi-story-video-zoom: 1;
 
-    /* Anneau dégradé sombre/clair/sombre à 45°, réglage par défaut de la
-       bordure de bulle (Navi > Stories > Bulles) — une couleur unie reste
-       possible en réglage, cette valeur est alors remplacée par une
-       surcharge inline (voir includes/modules/stories/stories-frontend.php). */
+    /* Anneau dégradé par défaut (Navi > Stories > Bulles) ; une couleur
+       unie remplace cette valeur via une surcharge inline si réglée. */
     --navi-story-bubble-border-bg: linear-gradient(45deg, #101820, #ccc, #101820);
 }
 
@@ -57,13 +55,8 @@
     font-family: inherit;
 }
 
-/* Bordure en dégradé (ou couleur unie, voir Navi > Stories > Bulles) via
-   le motif "double fond" plutôt que border-image : border transparente +
-   deux fonds superposés, l'un cadré sur le padding-box (remplissage
-   noir derrière l'aperçu), l'autre sur le border-box (dégradé ou couleur,
-   visible uniquement dans l'épaisseur de la bordure) — border-image ne
-   supporte pas border-radius de façon fiable inter-navigateurs, ce motif
-   oui. */
+/* Bordure dégradée ou unie via double fond (padding-box + border-box) :
+   plus fiable que border-image avec border-radius. */
 .navi-story-bubble-circle {
     position: relative;
     width: var(--navi-story-bubble-size);
@@ -208,25 +201,15 @@
     pointer-events: none;
 }
 
-/* Recadrage façon `object-fit: cover` : la zone d'écran est plus étroite
-   qu'une vidéo au format natif 9:16, donc l'iframe est dimensionnée sur la
-   HAUTEUR du conteneur puis sa largeur dérivée du ratio 9:16 (donc plus
-   large que le conteneur), centrée horizontalement et débordant sur les
-   côtés — équivalent d'un `object-fit: cover` (non supporté nativement sur
-   une iframe), `overflow: hidden` du parent masque le débordement latéral.
-   `max-width: none` est le correctif réel des bandes noires en haut/bas
-   observées avec certains thèmes (dont Storefront) : leur CSS pose une
-   règle globale `embed, iframe, object, video { max-width: 100% }` qui
-   plafonne la LARGEUR volontairement surdimensionnée ci-dessus (calculée
-   depuis `aspect-ratio` pour déborder horizontalement, jamais depuis
-   `max-width`), ce qui déforme le rendu et laisse apparaître le fond noir
-   du conteneur — pas le bandeau titre/chaîne YouTube (chrome du lecteur,
-   visible ponctuellement au chargement/à la fin de la vidéo, mais jamais
-   sous cette forme de bandes franches ; accepté tel quel, non traité ici).
-   Les zones `.navi-story-guard-top/bottom` ci-dessous absorbent le tap
-   sur ce bandeau plutôt que de laisser l'iframe y réagir, tout en
-   laissant le centre de la vidéo cliquable pour pause/lecture
-   (`pointer-events: auto`). */
+/* Recadrage façon `object-fit: cover` (non supporté nativement sur une
+   iframe) : hauteur = 100% du conteneur, largeur dérivée de
+   `aspect-ratio` (donc plus large que le conteneur, débordement masqué
+   par l'`overflow: hidden` du parent). `max-width: none` : certains
+   thèmes (dont Storefront) posent une règle globale
+   `embed, iframe, object, video { max-width: 100% }` qui sinon
+   plafonne cette largeur volontaire et déforme le rendu. Les zones
+   `.navi-story-guard-top/bottom` absorbent le tap sur le bandeau
+   titre/chaîne YouTube plutôt que de laisser l'iframe y réagir. */
 .navi-story-phone-screen iframe {
     position: absolute;
     top: 0;
@@ -385,12 +368,7 @@
     background: var(--navi-story-overlay-bg);
 }
 
-/* max-width: none et scale(var(--navi-story-video-zoom)) : mêmes
-   correctifs que le panneau desktop (.navi-story-phone-screen iframe
-   plus haut) — sans `max-width: none`, `min-width: 100%` ci-dessous et
-   la règle globale `max-width: 100%` de certains thèmes s'annulent en
-   pinçant la largeur à exactement 100%, quelle que soit la hauteur
-   voulue. */
+/* Mêmes correctifs que le panneau desktop ci-dessus. */
 .navi-story-fullscreen-slide iframe {
     position: absolute;
     top: 0;

@@ -1,9 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-// Menu de premier niveau propre au plugin, entièrement indépendant : ne se
-// rattache à aucun autre plugin/menu du site. Icône : même logo que Navi
-// PrestaShop (assets/img/logo-32.png), pas le dashicon générique d'origine.
 add_action( 'admin_menu', 'navi_add_admin_menu' );
 function navi_add_admin_menu() {
     add_menu_page(
@@ -15,6 +12,14 @@ function navi_add_admin_menu() {
         NAVI_PLUGIN_URL . 'assets/img/logo-32.png',
         58
     );
+}
+
+// WP core ajoute un padding-top à toute icône de menu personnalisée
+// (#adminmenu .wp-menu-image img) qui décale notre logo — retiré ici,
+// pour notre menu uniquement.
+add_action( 'admin_head', 'navi_admin_menu_icon_css' );
+function navi_admin_menu_icon_css() {
+    echo '<style>#toplevel_page_navi-main .wp-menu-image img { padding: 0; }</style>';
 }
 
 // Chaque module a sa propre option d'activation, déclarée ici en une seule
