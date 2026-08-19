@@ -159,43 +159,22 @@
 }
 
 /* ============================================================
-   Cases à cocher : case carrée classique plutôt qu'un interrupteur —
-   appearance:none + coche en image de fond (jamais de transform/position
-   animée, qui se composait mal sur certaines configurations GPU/pilote
-   Windows : cercle rendu en croissant plutôt qu'en disque plein). Aucun
-   changement de markup nécessaire (toujours de vraies
-   <input type="checkbox">, submit_button()/settings_fields() fonctionnent
-   à l'identique).
+   Cases à cocher : case native du navigateur (pas de appearance:none, pas
+   de pseudo-élément ni d'image de fond) — seulement teintée à la couleur
+   d'accent via accent-color. Les deux tentatives précédentes de case
+   entièrement personnalisée (interrupteur animé, puis coche en image de
+   fond) se composaient mal sur certaines configurations GPU/pilote
+   Windows (croissant au lieu d'un disque plein, coche dupliquée avec
+   celle dessinée par le navigateur) — accent-color délègue tout le rendu
+   au navigateur, garanti cohérent avec son propre thème/accessibilité.
    ============================================================ */
 .navi-admin input[type="checkbox"] {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 5px;
-    border: 1.5px solid var(--navi-admin-border);
-    background-color: var(--navi-admin-surface);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 13px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--navi-admin-accent);
     cursor: pointer;
     vertical-align: middle;
     flex-shrink: 0;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-
-.navi-admin input[type="checkbox"]:checked {
-    background-color: var(--navi-admin-accent);
-    border-color: var(--navi-admin-accent);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='3 8.5 6.5 12 13 4.5'/%3E%3C/svg%3E");
-}
-
-.navi-admin input[type="checkbox"]:hover {
-    border-color: var(--navi-admin-accent);
-}
-
-.navi-admin input[type="checkbox"]:focus-visible {
-    outline: 2px solid var(--navi-admin-accent);
-    outline-offset: 2px;
 }
 
 .navi-admin input[type="checkbox"]:disabled {
@@ -295,78 +274,11 @@
 }
 
 /* ============================================================
-   Liste des modules (tableau de bord, Navi > Navi) : grille de cartes
-   plutôt que le tableau widefat/striped natif.
-   ============================================================ */
-.navi-admin-modules {
-    display: grid;
-    gap: 12px;
-}
-
-.navi-admin-module {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    border: 1px solid var(--navi-admin-border);
-    border-radius: var(--navi-admin-radius-sm);
-    background: var(--navi-admin-surface);
-}
-
-.navi-admin-module-icon {
-    font-size: 1.375rem;
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    border-radius: 10px;
-    background: var(--navi-admin-accent-soft);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.navi-admin-module-body {
-    flex: 1;
-    min-width: 0;
-}
-
-.navi-admin-module-body strong {
-    font-size: 0.9375rem;
-    color: var(--navi-admin-ink);
-}
-
-.navi-admin-module-body p {
-    margin: 2px 0 0;
-    font-size: 0.8125rem;
-    color: var(--navi-admin-ink-soft);
-}
-
-.navi-admin-module-body em {
-    font-size: 0.75rem;
-    font-style: normal;
-    font-weight: 500;
-}
-
-.navi-admin-module-body em.is-active {
-    color: var(--navi-admin-accent-deep);
-}
-
-.navi-admin-module-body em.is-inactive,
-.navi-admin-module-body em.is-unavailable {
-    color: var(--navi-admin-ink-soft);
-}
-
-/* ============================================================
    Onglets de premier niveau (Navi > Navi) et panneaux associés — voir
    navi_render_dashboard_page() (includes/core/admin-menu.php).
    ============================================================ */
 .navi-admin-tab-panel {
     margin-top: 20px;
-}
-
-.navi-admin-module-settings {
-    flex-shrink: 0;
-    font-size: 0.8125rem;
 }
 
 /* ============================================================
