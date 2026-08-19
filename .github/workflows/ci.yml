@@ -39,6 +39,9 @@ jobs:
       - name: WordPress Coding Standards (PHPCS)
         run: vendor/bin/phpcs
 
+      - name: Tests unitaires (PHPUnit)
+        run: vendor/bin/phpunit
+
   js-css:
     name: JS & CSS Lint
     runs-on: ubuntu-latest

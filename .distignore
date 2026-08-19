@@ -18,3 +18,5 @@ eslint.config.js
 README.md
 scripts/
 docker-compose.yml
+tests/
+phpunit.xml.dist
