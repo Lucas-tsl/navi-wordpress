@@ -142,6 +142,13 @@
     color: var(--navi-admin-ink);
 }
 
+/* Espace supplémentaire pour la flèche native du select (WordPress la
+   dessine en fond, pas un élément séparable) : le padding-right partagé
+   ci-dessus la faisait chevaucher un texte long. */
+.navi-admin select {
+    padding: 7px 30px 7px 12px;
+}
+
 .navi-admin input[type="text"]:focus,
 .navi-admin input[type="number"]:focus,
 .navi-admin input[type="url"]:focus,
@@ -152,51 +159,38 @@
 }
 
 /* ============================================================
-   Cases à cocher -> interrupteurs : appearance:none + pseudo-élément
-   pour le curseur, aucun changement de markup nécessaire (toujours de
-   vraies <input type="checkbox">, submit_button()/settings_fields()
-   fonctionnent à l'identique).
+   Cases à cocher : case carrée classique plutôt qu'un interrupteur —
+   appearance:none + coche en image de fond (jamais de transform/position
+   animée, qui se composait mal sur certaines configurations GPU/pilote
+   Windows : cercle rendu en croissant plutôt qu'en disque plein). Aucun
+   changement de markup nécessaire (toujours de vraies
+   <input type="checkbox">, submit_button()/settings_fields() fonctionnent
+   à l'identique).
    ============================================================ */
 .navi-admin input[type="checkbox"] {
     appearance: none;
-    position: relative;
-    width: 38px;
-    height: 22px;
-    border-radius: 999px;
-    background: #d7dade;
-    border: none;
-    box-shadow: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 1.5px solid var(--navi-admin-border);
+    background-color: var(--navi-admin-surface);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 13px;
     cursor: pointer;
     vertical-align: middle;
     flex-shrink: 0;
-    transition: background-color 0.15s ease;
-}
-
-.navi-admin input[type="checkbox"]::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-
-    /* "left" plutôt que "transform: translateX()" : sur certaines
-       combinaisons GPU/pilote (essentiellement Windows), un cercle animé
-       par transform peut se retrouver mal composé (croissant au lieu
-       d'un disque plein) — animer la position elle-même est plus lent
-       mais fiable pour un si petit élément. */
-    transition: left 0.15s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .navi-admin input[type="checkbox"]:checked {
-    background: var(--navi-admin-accent);
+    background-color: var(--navi-admin-accent);
+    border-color: var(--navi-admin-accent);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='3 8.5 6.5 12 13 4.5'/%3E%3C/svg%3E");
 }
 
-.navi-admin input[type="checkbox"]:checked::before {
-    left: 18px;
+.navi-admin input[type="checkbox"]:hover {
+    border-color: var(--navi-admin-accent);
 }
 
 .navi-admin input[type="checkbox"]:focus-visible {

@@ -157,8 +157,6 @@ function navi_render_dashboard_page() {
         </h2>
 
         <div class="navi-admin-tab-panel" data-tab-panel="general">
-            <p class="description"><?php esc_html_e( 'Activez ou désactivez les modules pilotés par le bouton flottant du site depuis leur propre onglet ci-dessus.', 'navi' ); ?></p>
-
             <div class="navi-admin-modules">
                 <?php foreach ( $modules as $id => $module ) : ?>
                     <div class="navi-admin-module">
