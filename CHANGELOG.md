@@ -19,8 +19,8 @@
   admin décalée par un padding WordPress par défaut ; centrage de
   l'engrenage renforcé pour Safari/iOS ; mélange français/anglais dans le
   BO sur les sites en anglais (dictionnaire de traduction incomplet).
-- BO redessiné (cartes, interrupteurs, onglets en pastilles) plutôt que
-  l'apparence WordPress par défaut.
+- BO redessiné (cartes, cases à cocher modernes, onglets en pastilles)
+  plutôt que l'apparence WordPress par défaut.
 - Langue du plugin réglable manuellement (Navi > Navi), indépendamment de
   la détection automatique (WPML ou langue du site).
 - Réglages regroupés sur une seule page à onglets (Navi > Navi : Général,
@@ -29,7 +29,12 @@
 - Sécurité : faille XSS corrigée dans le panneau plein écran Stories
   (libellé de story injecté sans échappement).
 - Corrigé : bordure bleue résiduelle sur le sélecteur de couleur, logo
-  Navi désormais à fond transparent.
+  Navi désormais à fond transparent, interrupteurs remplacés par des
+  cases à cocher (rendu incohérent sur certaines configurations
+  GPU/pilote Windows).
+- Onglet Cookies : instructions concrètes pour configurer Google Tag
+  Manager (Consent Mode, événement dataLayer poussé par le plugin) à la
+  place d'une simple description.
 
 ## 0.4.0
 

@@ -157,30 +157,6 @@ function navi_render_dashboard_page() {
         </h2>
 
         <div class="navi-admin-tab-panel" data-tab-panel="general">
-            <p class="description"><?php esc_html_e( 'Activez ou désactivez les modules pilotés par le bouton flottant du site depuis leur propre onglet ci-dessus.', 'navi' ); ?></p>
-
-            <div class="navi-admin-modules">
-                <?php foreach ( $modules as $id => $module ) : ?>
-                    <div class="navi-admin-module">
-                        <div class="navi-admin-module-icon"><?php echo esc_html( $module['icon'] ); ?></div>
-                        <div class="navi-admin-module-body">
-                            <strong><?php echo esc_html( $module['label'] ); ?></strong>
-                            <?php if ( ! $module['available'] ) : ?>
-                                <em class="is-unavailable"><?php esc_html_e( 'Bientôt disponible', 'navi' ); ?></em>
-                            <?php elseif ( Navi_Module_Registry::is_active( $id ) ) : ?>
-                                <em class="is-active"><?php esc_html_e( 'Actif', 'navi' ); ?></em>
-                            <?php else : ?>
-                                <em class="is-inactive"><?php esc_html_e( 'Inactif', 'navi' ); ?></em>
-                            <?php endif; ?>
-                            <p><?php echo esc_html( $module['description'] ); ?></p>
-                        </div>
-                        <?php if ( $module['available'] ) : ?>
-                            <a class="navi-admin-module-settings" href="#<?php echo esc_attr( $id ); ?>"><?php esc_html_e( 'Réglages', 'navi' ); ?></a>
-                        <?php endif; ?>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
             <form method="post" action="options.php">
                 <?php settings_fields( 'navi_modules_group' ); ?>
                 <?php navi_render_hash_preserving_referer_field(); ?>

@@ -28,7 +28,17 @@ function navi_cookie_render_settings_panel() {
         <?php settings_fields( 'navi_cookie_options_group' ); ?>
         <?php navi_render_hash_preserving_referer_field(); ?>
         <div class="navi-admin-card">
-            <p class="description"><?php esc_html_e( 'Bannière RGPD, connectée au Google Consent Mode V2 via Google Tag Manager.', 'navi' ); ?></p>
+            <p class="description">
+                <?php
+                printf(
+                    /* translators: 1: gtag, 2: gtag('consent', 'update', ...), 3: navi_cookie_consent_updated (nom d'événement dataLayer) */
+                    esc_html__( "Bannière RGPD conforme au Google Consent Mode V2. À chaque choix du visiteur, si %1\$s est défini sur le site, le plugin appelle %2\$s ; il pousse aussi un événement %3\$s dans le dataLayer à chaque changement. Dans GTM : activez le Consent Mode (état par défaut refusé), et utilisez cet événement comme déclencheur personnalisé pour vos propres balises conditionnées au consentement.", 'navi' ),
+                    '<code>gtag</code>',
+                    '<code>gtag(\'consent\', \'update\', …)</code>',
+                    '<code>navi_cookie_consent_updated</code>'
+                );
+                ?>
+            </p>
             <table class="form-table">
                 <?php navi_render_module_active_field( 'cookie-consent' ); ?>
                 <tr valign="top">

@@ -112,11 +112,9 @@ function navi_dictionary_en() {
         'Accessibilité' => 'Accessibility',
         'Langue (via WPML, ou GTranslate si présent sur la page), taille du texte, contraste élevé, curseur agrandi et soulignage des liens.' => 'Language (via WPML, or GTranslate if present on the page), text size, high contrast, enlarged cursor and underlined links.',
         "Vous n'avez pas les permissions nécessaires pour accéder à cette page." => 'You do not have sufficient permissions to access this page.',
-        'Activez ou désactivez les modules pilotés par le bouton flottant du site.' => "Enable or disable the modules driven by the site's floating button.",
-        'Bientôt disponible' => 'Coming soon',
-        'Réglages' => 'Settings',
-        'Réglages Bannière Cookie' => 'Cookie Banner Settings',
-        'Réglages Accessibilité' => 'Accessibility Settings',
+        'Bientôt disponible.' => 'Coming soon.',
+        'Général' => 'General',
+        'Activer ce module' => 'Enable this module',
         'URL du Logo' => 'Logo URL',
         'Laisser vide pour utiliser automatiquement le logo du site (Apparence > Personnaliser > Identité du site).' => "Leave empty to automatically use the site's logo (Appearance > Customize > Site Identity).",
         "Laisser vide si aucun logo ne doit apparaître. Le site n'a pas encore de logo configuré dans Apparence > Personnaliser > Identité du site — dès qu'il en aura un, il sera utilisé automatiquement ici." => "Leave empty if no logo should appear. The site does not yet have a logo configured in Appearance > Customize > Site Identity — as soon as it does, it will be used automatically here.",
@@ -155,10 +153,8 @@ function navi_dictionary_en() {
         // Panier automatique (sticky-cart).
         'Ajout au panier' => 'Add to cart',
         'Panneau produit (image, variation, ajout au panier) ancré au bouton, qui suit l\'utilisateur sur les fiches produit.' => 'Product panel (image, variation, add to cart) anchored to the button, following the user across product pages.',
-        'Réglages Panier' => 'Cart Settings',
         'Panier' => 'Cart',
-        'Le panneau panier détecte automatiquement le prix, le nom et l\'image du produit sur la fiche produit, en essayant plusieurs emplacements courants (blocs Gutenberg, WooCommerce classique, quelques variantes de thèmes répandues).' => "The cart panel automatically detects the product's price, name and image on the product page, trying several common locations (Gutenberg blocks, classic WooCommerce, a few common theme variants).",
-        'Si votre thème n\'affiche pas correctement ces informations dans le panneau, indiquez ici un sélecteur CSS précis : il sera essayé en priorité, avant la détection automatique. Laisser vide pour garder la détection automatique.' => 'If your theme does not display this information correctly in the panel, specify a precise CSS selector here: it will be tried first, before automatic detection. Leave empty to keep automatic detection.',
+        'Le panneau panier détecte automatiquement le prix, le nom et l\'image du produit sur la fiche produit, en essayant plusieurs emplacements courants (blocs Gutenberg, WooCommerce classique, quelques variantes de thèmes répandues). Si votre thème ne les affiche pas correctement, indiquez ici un sélecteur CSS précis : il sera essayé en priorité, avant la détection automatique. Laisser vide pour garder la détection automatique.' => "The cart panel automatically detects the product's price, name and image on the product page, trying several common locations (Gutenberg blocks, classic WooCommerce, a few common theme variants). If your theme does not display them correctly, specify a precise CSS selector here: it will be tried first, before automatic detection. Leave empty to keep automatic detection.",
         'Sélecteur CSS du prix' => 'Price CSS selector',
         'Sélecteur CSS du nom du produit' => 'Product name CSS selector',
         "Sélecteur CSS de l'image du produit" => 'Product image CSS selector',
@@ -170,13 +166,12 @@ function navi_dictionary_en() {
         'Navi : WooCommerce est inactif. Les modules "Panier automatique" et "Stories" ne fonctionneront pas tant que WooCommerce ne sera pas réactivé.' => 'Navi: WooCommerce is inactive. The "Automatic cart" and "Stories" modules will not work until WooCommerce is reactivated.',
 
         // Bannière cookies (mise à jour BO modernisé).
-        'Bannière RGPD, connectée au Google Consent Mode V2 via Google Tag Manager.' => 'GDPR banner, connected to Google Consent Mode V2 via Google Tag Manager.',
+        "Bannière RGPD conforme au Google Consent Mode V2. À chaque choix du visiteur, si %1\$s est défini sur le site, le plugin appelle %2\$s ; il pousse aussi un événement %3\$s dans le dataLayer à chaque changement. Dans GTM : activez le Consent Mode (état par défaut refusé), et utilisez cet événement comme déclencheur personnalisé pour vos propres balises conditionnées au consentement." => "GDPR banner, compliant with Google Consent Mode V2. On every visitor choice, if %1\$s is defined on the site, the plugin calls %2\$s; it also pushes a %3\$s event to the dataLayer on every change. In GTM: enable Consent Mode (default state denied), and use this event as a custom trigger for your own tags gated on consent.",
 
         // Stories.
         'Stories' => 'Stories',
         'Stories (Navi)' => 'Stories (Navi)',
         'Bulles vidéo "stories" sur la fiche produit, jusqu\'à 4 par produit (YouTube ou vidéo MP4 importée).' => 'Video "stories" bubbles on the product page, up to 4 per product (YouTube or uploaded MP4 video).',
-        'Réglages Stories' => 'Stories Settings',
         'Afficher automatiquement après la galerie produit' => 'Automatically display after the product gallery',
         'Décocher pour positionner les bulles vous-même via le shortcode %s (dans le contenu, un constructeur de page, ou un template de thème) plutôt qu\'automatiquement après les images du produit.' => 'Uncheck to position the bubbles yourself via the %s shortcode (in the content, a page builder, or a theme template) instead of automatically after the product images.',
         'Afficher le titre de la bulle' => 'Show the bubble title',
