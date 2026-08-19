@@ -93,8 +93,15 @@ synchronisés.
 ## Soumission WordPress.org
 
 `readme.txt` et `.wordpress-org/assets/` (bannière, icônes, captures
-d'écran) sont prêts, exclus du zip du plugin. Une fois le dépôt SVN
-attribué :
+d'écran) sont prêts, exclus du zip du plugin.
+
+Construire et vérifier le zip de soumission : `./scripts/build-wporg-release.sh
+--copy-to <dossier>` (voir aussi `.claude/skills/wordpress-org-release/` — même
+procédure, invocable directement). Assemble sous le vrai nom de dossier du
+slug (`saito-navi`, pas `navi`), vérifie que le Text Domain y correspond,
+lance `wp plugin check` si la stack de dev locale tourne.
+
+Une fois le dépôt SVN attribué :
 
 ```bash
 svn co https://plugins.svn.wordpress.org/saito-navi saito-navi-svn
