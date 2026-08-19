@@ -28,9 +28,10 @@ propres (voir `settings_panel_callback`, `class-navi-module-registry.php`).
   pour les thèmes non reconnus.
 - **Stories** — jusqu'à 4 bulles vidéo par produit (YouTube ou MP4),
   onglet dédié sur la fiche produit, panneau desktop + plein écran
-  mobile. Affichage automatique après la galerie ou via le shortcode
-  `[navi_stories]` (`id="123"` pour cibler un produit précis). Sous-onglets
-  Bulles / Mockup imbriqués dans son propre onglet.
+  mobile. Affichage automatique après la galerie, ou positionnement
+  manuel via le shortcode `[navi_stories]` (`id="123"` pour cibler un
+  produit précis) ou le bloc Gutenberg équivalent "Navi Stories". Sous-
+  onglets Bulles / Mockup imbriqués dans son propre onglet.
 
 ## Architecture
 

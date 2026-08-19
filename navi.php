@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Saito Navi
  * Description: Floating engagement hub for WordPress/WooCommerce: cookie consent (Google Consent Mode V2), sticky add-to-cart on the product page, accessibility (language, text size, contrast, cursor, underlined links), all driven from a single button.
- * Version: 0.5.0
+ * Version: 0.6.0
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * Author: Troteseil Lucas
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'NAVI_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'NAVI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'NAVI_VERSION', '0.5.0' );
+define( 'NAVI_VERSION', '0.6.0' );
 
 // Pas d'appel à load_plugin_textdomain() : discouraged depuis WP 4.6 pour
 // les plugins hébergés sur WordPress.org, qui chargent automatiquement les
@@ -49,6 +49,7 @@ function navi_notice_woocommerce_manquant() {
 require_once NAVI_PLUGIN_DIR . 'includes/core/class-navi-module-registry.php';
 require_once NAVI_PLUGIN_DIR . 'includes/core/helpers.php';
 require_once NAVI_PLUGIN_DIR . 'includes/core/i18n.php';
+require_once NAVI_PLUGIN_DIR . 'includes/core/onboarding.php';
 require_once NAVI_PLUGIN_DIR . 'includes/core/admin-menu.php';
 require_once NAVI_PLUGIN_DIR . 'includes/core/frontend.php';
 
