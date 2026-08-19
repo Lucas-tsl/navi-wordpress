@@ -1,18 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-add_action( 'admin_menu', 'navi_stories_ajouter_menu' );
-function navi_stories_ajouter_menu() {
-    add_submenu_page(
-        navi_admin_parent_slug(),
-        __( 'Réglages Stories', 'navi' ),
-        __( 'Stories', 'navi' ),
-        'manage_options',
-        'navi-stories',
-        'navi_stories_page_reglages_html'
-    );
-}
-
 add_action( 'admin_init', 'navi_stories_enregistrer_parametres' );
 function navi_stories_enregistrer_parametres() {
     register_setting( 'navi_stories_options_group', 'navi_stories_show_label', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
@@ -33,30 +21,19 @@ function navi_stories_enregistrer_parametres() {
     register_setting( 'navi_stories_options_group', 'navi_stories_phone_width', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_story_phone_width', 'default' => NAVI_STORIES_DEFAULT_PHONE_WIDTH ) );
     register_setting( 'navi_stories_options_group', 'navi_stories_video_zoom', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_story_video_zoom', 'default' => NAVI_STORIES_DEFAULT_VIDEO_ZOOM ) );
 
-    // Visibilité par appareil (voir navi_render_visibility_fields, helpers.php).
+    // Activation du module + visibilité par appareil (voir navi_render_module_active_field()/
+    // navi_render_visibility_fields, helpers.php).
+    register_setting( 'navi_stories_options_group', 'navi_module_active_stories', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
     register_setting( 'navi_stories_options_group', 'navi_show_desktop_stories', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
     register_setting( 'navi_stories_options_group', 'navi_show_mobile_stories', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
 }
 
-// Sélecteurs de couleur natifs WordPress (wp-color-picker), uniquement sur
-// cette page de réglages.
-add_action( 'admin_enqueue_scripts', 'navi_stories_enqueue_color_picker_assets' );
-function navi_stories_enqueue_color_picker_assets( $hook_suffix ) {
-    if ( 'navi_page_navi-stories' !== $hook_suffix ) {
-        return;
-    }
-    wp_enqueue_style( 'wp-color-picker' );
-    wp_enqueue_script( 'wp-color-picker' );
-    wp_add_inline_script(
-        'wp-color-picker',
-        "jQuery(function($){ $('.navi-color-picker').wpColorPicker(); });"
-    );
-}
-
-function navi_stories_page_reglages_html() {
-    if ( ! navi_user_can_manage() ) {
-        wp_die( esc_html__( "Vous n'avez pas les permissions nécessaires pour accéder à cette page.", 'navi' ) );
-    }
+// Contenu de l'onglet "Stories" (Navi > Navi) — plus de page dédiée séparée ;
+// voir navi_render_dashboard_page() (admin-menu.php), qui l'appelle via
+// $module['settings_panel_callback']. Sélecteurs de couleur natifs
+// (wp-color-picker) initialisés une seule fois pour toute la page par
+// navi_enqueue_color_picker_assets() (admin-menu.php), pas ici.
+function navi_stories_render_settings_panel() {
     $padding        = navi_stories_phone_padding();
     $width          = navi_stories_phone_width();
     $videoZoom      = navi_stories_video_zoom();
@@ -74,22 +51,21 @@ function navi_stories_page_reglages_html() {
     // dans le sélecteur de couleur (le CSS applique ce même repli).
     $bubbleBorderDefault = '#2563eb';
     ?>
-    <div class="wrap navi-admin">
-        <?php navi_admin_page_header( __( 'Stories', 'navi' ) ); ?>
+    <h2 class="nav-tab-wrapper" id="navi-stories-tabs">
+        <a href="#bulles" class="nav-tab nav-tab-active" data-tab="bulles"><?php esc_html_e( 'Bulles', 'navi' ); ?></a>
+        <a href="#mockup" class="nav-tab" data-tab="mockup"><?php esc_html_e( 'Mockup', 'navi' ); ?></a>
+    </h2>
 
-        <h2 class="nav-tab-wrapper" id="navi-stories-tabs">
-            <a href="#bulles" class="nav-tab nav-tab-active" data-tab="bulles"><?php esc_html_e( 'Bulles', 'navi' ); ?></a>
-            <a href="#mockup" class="nav-tab" data-tab="mockup"><?php esc_html_e( 'Mockup', 'navi' ); ?></a>
-        </h2>
+    <form method="post" action="options.php">
+        <?php settings_fields( 'navi_stories_options_group' ); ?>
+        <?php navi_render_hash_preserving_referer_field(); ?>
 
-        <form method="post" action="options.php">
-            <?php settings_fields( 'navi_stories_options_group' ); ?>
-
-            <div class="navi-stories-tab-panel" data-tab-panel="bulles">
-                <div class="navi-admin-card">
-                    <table class="form-table">
-                        <tr valign="top">
-                            <th scope="row"><?php esc_html_e( 'Afficher automatiquement après la galerie produit', 'navi' ); ?></th>
+        <div class="navi-stories-tab-panel" data-tab-panel="bulles">
+            <div class="navi-admin-card">
+                <table class="form-table">
+                    <?php navi_render_module_active_field( 'stories' ); ?>
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e( 'Afficher automatiquement après la galerie produit', 'navi' ); ?></th>
                             <td>
                                 <input type="hidden" name="navi_stories_auto_display" value="0" />
                                 <input type="checkbox" name="navi_stories_auto_display" value="1" <?php checked( navi_stories_auto_display() ); ?> />
@@ -253,15 +229,17 @@ function navi_stories_page_reglages_html() {
                 </div>
             </div>
 
-            <?php submit_button(); ?>
-        </form>
-    </div>
+        <?php submit_button(); ?>
+    </form>
     <script>
         (function () {
-            // Onglets : pas de rechargement de page, un seul formulaire pour
-            // les deux onglets (mêmes options_group) — juste un
-            // afficher/masquer, l'ancre #bulles/#mockup permet de rouvrir
-            // le bon onglet après enregistrement (redirection options.php).
+            // Sous-onglets Bulles/Mockup, imbriqués dans l'onglet "Stories" de
+            // la page Navi (voir navi-main-tabs, admin-menu.php) : le hash de
+            // l'URL est partagé entre les deux niveaux au format
+            // "#<onglet-principal>/<sous-onglet>" (ex. "#stories/mockup"),
+            // pour rester compatible avec le routage par hash de la page
+            // plutôt que d'entrer en conflit avec lui (chacun ne lit/écrit
+            // que son propre segment).
             var tabs = document.querySelectorAll('#navi-stories-tabs .nav-tab');
             var panels = document.querySelectorAll('.navi-stories-tab-panel');
             function activateTab(name) {
@@ -272,15 +250,18 @@ function navi_stories_page_reglages_html() {
                     panel.style.display = panel.dataset.tabPanel === name ? '' : 'none';
                 });
             }
+            function subTabFromHash() {
+                var parts = window.location.hash.replace('#', '').split('/');
+                activateTab('mockup' === parts[1] ? 'mockup' : 'bulles');
+            }
             tabs.forEach(function (tab) {
                 tab.addEventListener('click', function (e) {
                     e.preventDefault();
-                    activateTab(tab.dataset.tab);
-                    window.location.hash = tab.dataset.tab;
+                    window.location.hash = 'stories/' + tab.dataset.tab;
                 });
             });
-            var initial = window.location.hash.replace('#', '');
-            if (initial === 'mockup') activateTab('mockup');
+            window.addEventListener('hashchange', subTabFromHash);
+            subTabFromHash();
 
             var borderRange = document.getElementById('navi_bubble_border_range');
             var borderOutput = document.getElementById('navi_bubble_border_output');

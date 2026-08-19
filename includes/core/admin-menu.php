@@ -22,22 +22,14 @@ function navi_admin_menu_icon_css() {
     echo '<style>#toplevel_page_navi-main .wp-menu-image img { padding: 0; }</style>';
 }
 
-// Chaque module a sa propre option d'activation, déclarée ici en une seule
-// fois pour tous les modules du registre.
+// Réglages transverses (pas propres à un module) : chacun a sa propre
+// option d'activation enregistrée par son propre onglet désormais (voir
+// navi_render_module_active_field(), helpers.php, et le
+// navi_..._enregistrer_parametres() de chaque module) — seuls les réglages
+// globaux ci-dessous vivent dans ce groupe central, rendu par l'onglet
+// "Général" (navi_render_dashboard_page() ci-dessous).
 add_action( 'admin_init', 'navi_register_module_settings' );
 function navi_register_module_settings() {
-    foreach ( Navi_Module_Registry::all() as $module ) {
-        register_setting(
-            'navi_modules_group',
-            $module['option_name'],
-            array(
-                'type'              => 'integer',
-                'sanitize_callback' => 'navi_sanitize_checkbox',
-                'default'           => $module['default_active'] ? 1 : 0,
-            )
-        );
-    }
-
     // Position du bouton flottant : un widget tiers (chat, WhatsApp...) est
     // très souvent logé en bas-droite sur les sites e-commerce, d'où ce
     // réglage pour éviter toute collision visuelle.
@@ -130,125 +122,167 @@ function navi_enqueue_color_picker_assets( $hook_suffix ) {
     );
 }
 
-// Design system du BO (assets/css/admin.css) : reskin des pages Navi
-// uniquement, jamais chargé ailleurs dans l'admin WordPress (voir
-// navi_admin_page_hook_suffixes() ci-dessous pour la liste exhaustive).
+// Design system du BO (assets/css/admin.css) : reskin de la page Navi
+// uniquement (page unique désormais — modules réglés par onglet, voir
+// navi_render_dashboard_page() ci-dessous), jamais chargé ailleurs dans
+// l'admin WordPress.
 add_action( 'admin_enqueue_scripts', 'navi_enqueue_admin_assets' );
 function navi_enqueue_admin_assets( $hook_suffix ) {
-    if ( ! in_array( $hook_suffix, navi_admin_page_hook_suffixes(), true ) ) {
+    if ( 'toplevel_page_navi-main' !== $hook_suffix ) {
         return;
     }
     navi_enqueue_style( 'navi-admin-css', NAVI_PLUGIN_URL . 'assets/css/admin.css', array(), NAVI_VERSION );
 }
 
 /**
- * Hook suffixes de toutes les pages Navi (tableau de bord + un par module) —
- * format WordPress standard : "toplevel_page_<slug>" pour le menu de premier
- * niveau, "<slug-parent>_page_<slug>" pour un sous-menu (ici "navi_page_...",
- * navi_admin_parent_slug() valant "navi-main" sans le suffixe "toplevel_page_").
+ * Page unique Navi > Navi, avec un onglet "Général" et un onglet par module
+ * (contenu fourni par $module['settings_panel_callback'], voir
+ * class-navi-module-registry.php et includes/modules/<nom>/admin-settings.php)
+ * — remplace les anciennes sous-pages "Réglages" séparées par module.
  */
-function navi_admin_page_hook_suffixes() {
-    return array(
-        'toplevel_page_navi-main',
-        'navi_page_navi-cookie-consent',
-        'navi_page_navi-accessibility',
-        'navi_page_navi-sticky-cart',
-        'navi_page_navi-stories',
-    );
-}
-
 function navi_render_dashboard_page() {
     if ( ! navi_user_can_manage() ) {
         wp_die( esc_html__( "Vous n'avez pas les permissions nécessaires pour accéder à cette page.", 'navi' ) );
     }
+    $modules = Navi_Module_Registry::all();
     ?>
     <div class="wrap navi-admin">
-        <?php navi_admin_page_header( __( 'Navi', 'navi' ), __( 'Activez ou désactivez les modules pilotés par le bouton flottant du site.', 'navi' ) ); ?>
-        <form method="post" action="options.php">
-            <?php settings_fields( 'navi_modules_group' ); ?>
+        <?php navi_admin_page_header( __( 'Navi', 'navi' ) ); ?>
+
+        <h2 class="nav-tab-wrapper" id="navi-main-tabs">
+            <a href="#general" class="nav-tab nav-tab-active" data-tab="general"><?php esc_html_e( 'Général', 'navi' ); ?></a>
+            <?php foreach ( $modules as $id => $module ) : ?>
+                <a href="#<?php echo esc_attr( $id ); ?>" class="nav-tab" data-tab="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( ! empty( $module['short_label'] ) ? $module['short_label'] : $module['label'] ); ?></a>
+            <?php endforeach; ?>
+        </h2>
+
+        <div class="navi-admin-tab-panel" data-tab-panel="general">
+            <p class="description"><?php esc_html_e( 'Activez ou désactivez les modules pilotés par le bouton flottant du site depuis leur propre onglet ci-dessus.', 'navi' ); ?></p>
 
             <div class="navi-admin-modules">
-                <?php foreach ( Navi_Module_Registry::all() as $module ) : ?>
+                <?php foreach ( $modules as $id => $module ) : ?>
                     <div class="navi-admin-module">
                         <div class="navi-admin-module-icon"><?php echo esc_html( $module['icon'] ); ?></div>
                         <div class="navi-admin-module-body">
                             <strong><?php echo esc_html( $module['label'] ); ?></strong>
                             <?php if ( ! $module['available'] ) : ?>
-                                <em><?php esc_html_e( 'Bientôt disponible', 'navi' ); ?></em>
+                                <em class="is-unavailable"><?php esc_html_e( 'Bientôt disponible', 'navi' ); ?></em>
+                            <?php elseif ( Navi_Module_Registry::is_active( $id ) ) : ?>
+                                <em class="is-active"><?php esc_html_e( 'Actif', 'navi' ); ?></em>
+                            <?php else : ?>
+                                <em class="is-inactive"><?php esc_html_e( 'Inactif', 'navi' ); ?></em>
                             <?php endif; ?>
                             <p><?php echo esc_html( $module['description'] ); ?></p>
                         </div>
-                        <?php if ( ! empty( $module['settings_url'] ) ) : ?>
-                            <a class="navi-admin-module-settings" href="<?php echo esc_url( $module['settings_url'] ); ?>"><?php esc_html_e( 'Réglages', 'navi' ); ?></a>
+                        <?php if ( $module['available'] ) : ?>
+                            <a class="navi-admin-module-settings" href="#<?php echo esc_attr( $id ); ?>"><?php esc_html_e( 'Réglages', 'navi' ); ?></a>
                         <?php endif; ?>
-                        <input type="hidden" name="<?php echo esc_attr( $module['option_name'] ); ?>" value="0" />
-                        <input
-                            type="checkbox"
-                            name="<?php echo esc_attr( $module['option_name'] ); ?>"
-                            value="1"
-                            <?php checked( 1, get_option( $module['option_name'], $module['default_active'] ? 1 : 0 ) ); ?>
-                            <?php disabled( ! $module['available'] ); ?>
-                        />
                     </div>
                 <?php endforeach; ?>
             </div>
 
-            <div class="navi-admin-card">
-                <h2><?php esc_html_e( 'Position du bouton flottant', 'navi' ); ?></h2>
-                <p>
-                    <label for="navi_fab_position"><?php esc_html_e( "Coin de l'écran", 'navi' ); ?></label><br />
-                    <select name="navi_fab_position" id="navi_fab_position">
-                        <option value="right" <?php selected( 'right', get_option( 'navi_fab_position', 'right' ) ); ?>><?php esc_html_e( 'Bas droite (par défaut)', 'navi' ); ?></option>
-                        <option value="left" <?php selected( 'left', get_option( 'navi_fab_position', 'right' ) ); ?>><?php esc_html_e( 'Bas gauche', 'navi' ); ?></option>
-                    </select>
-                </p>
-                <p class="description"><?php esc_html_e( "À changer si un autre widget flottant (chat, WhatsApp...) occupe déjà le bas droite du site.", 'navi' ); ?></p>
-            </div>
+            <form method="post" action="options.php">
+                <?php settings_fields( 'navi_modules_group' ); ?>
+                <?php navi_render_hash_preserving_referer_field(); ?>
 
-            <div class="navi-admin-card">
-                <h2><?php esc_html_e( 'Langue du plugin', 'navi' ); ?></h2>
-                <p class="description"><?php esc_html_e( "Par défaut, Navi suit la langue détectée automatiquement (WPML si actif, sinon la langue du site). Choisissez une langue ici pour l'imposer, quelle que soit cette détection.", 'navi' ); ?></p>
-                <p>
-                    <label for="navi_language"><?php esc_html_e( 'Langue', 'navi' ); ?></label><br />
-                    <select name="navi_language" id="navi_language">
-                        <?php foreach ( navi_available_languages() as $code => $label ) : ?>
-                            <option value="<?php echo esc_attr( $code ); ?>" <?php selected( $code, navi_current_language_override() ); ?>><?php echo esc_html( $label ); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </p>
-            </div>
+                <div class="navi-admin-card">
+                    <h2><?php esc_html_e( 'Position du bouton flottant', 'navi' ); ?></h2>
+                    <p>
+                        <label for="navi_fab_position"><?php esc_html_e( "Coin de l'écran", 'navi' ); ?></label><br />
+                        <select name="navi_fab_position" id="navi_fab_position">
+                            <option value="right" <?php selected( 'right', get_option( 'navi_fab_position', 'right' ) ); ?>><?php esc_html_e( 'Bas droite (par défaut)', 'navi' ); ?></option>
+                            <option value="left" <?php selected( 'left', get_option( 'navi_fab_position', 'right' ) ); ?>><?php esc_html_e( 'Bas gauche', 'navi' ); ?></option>
+                        </select>
+                    </p>
+                    <p class="description"><?php esc_html_e( "À changer si un autre widget flottant (chat, WhatsApp...) occupe déjà le bas droite du site.", 'navi' ); ?></p>
+                </div>
 
-            <div class="navi-admin-card">
-                <h2><?php esc_html_e( 'Apparence', 'navi' ); ?></h2>
-                <p class="description"><?php esc_html_e( "Couleurs du bouton flottant et des panneaux (cookies, accessibilité), arrondis des boutons et de l'image produit (panier sticky) : à adapter à l'identité visuelle de ce site.", 'navi' ); ?></p>
-                <table class="form-table">
-                    <tr valign="top">
-                        <th scope="row"><label for="navi_color_ink"><?php esc_html_e( 'Couleur principale', 'navi' ); ?></label></th>
-                        <td><input type="text" name="navi_color_ink" id="navi_color_ink" class="navi-color-picker" value="<?php echo esc_attr( navi_color_ink() ); ?>" data-default-color="#1a1a1a" /></td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row"><label for="navi_color_ink_soft"><?php esc_html_e( 'Couleur secondaire', 'navi' ); ?></label></th>
-                        <td><input type="text" name="navi_color_ink_soft" id="navi_color_ink_soft" class="navi-color-picker" value="<?php echo esc_attr( navi_color_ink_soft() ); ?>" data-default-color="#6b6b6b" /></td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row"><label for="navi_radius_button"><?php esc_html_e( 'Arrondi des boutons (px)', 'navi' ); ?></label></th>
-                        <td>
-                            <input type="number" name="navi_radius_button" id="navi_radius_button" min="0" max="50" value="<?php echo esc_attr( navi_radius_button() ); ?>" class="small-text" /> px
-                            <p class="description"><?php esc_html_e( '0 = angles droits. Boutons concernés : bannière cookies, panier sticky.', 'navi' ); ?></p>
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row"><label for="navi_radius_image"><?php esc_html_e( "Arrondi de l'image produit (px)", 'navi' ); ?></label></th>
-                        <td>
-                            <input type="number" name="navi_radius_image" id="navi_radius_image" min="0" max="50" value="<?php echo esc_attr( navi_radius_image() ); ?>" class="small-text" /> px
-                            <p class="description"><?php esc_html_e( 'Miniature produit affichée dans le panier sticky.', 'navi' ); ?></p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+                <div class="navi-admin-card">
+                    <h2><?php esc_html_e( 'Langue du plugin', 'navi' ); ?></h2>
+                    <p class="description"><?php esc_html_e( "Par défaut, Navi suit la langue détectée automatiquement (WPML si actif, sinon la langue du site). Choisissez une langue ici pour l'imposer, quelle que soit cette détection.", 'navi' ); ?></p>
+                    <p>
+                        <label for="navi_language"><?php esc_html_e( 'Langue', 'navi' ); ?></label><br />
+                        <select name="navi_language" id="navi_language">
+                            <?php foreach ( navi_available_languages() as $code => $label ) : ?>
+                                <option value="<?php echo esc_attr( $code ); ?>" <?php selected( $code, navi_current_language_override() ); ?>><?php echo esc_html( $label ); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </p>
+                </div>
 
-            <?php submit_button(); ?>
-        </form>
+                <div class="navi-admin-card">
+                    <h2><?php esc_html_e( 'Apparence', 'navi' ); ?></h2>
+                    <p class="description"><?php esc_html_e( "Couleurs du bouton flottant et des panneaux (cookies, accessibilité), arrondis des boutons et de l'image produit (panier sticky) : à adapter à l'identité visuelle de ce site.", 'navi' ); ?></p>
+                    <table class="form-table">
+                        <tr valign="top">
+                            <th scope="row"><label for="navi_color_ink"><?php esc_html_e( 'Couleur principale', 'navi' ); ?></label></th>
+                            <td><input type="text" name="navi_color_ink" id="navi_color_ink" class="navi-color-picker" value="<?php echo esc_attr( navi_color_ink() ); ?>" data-default-color="#1a1a1a" /></td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row"><label for="navi_color_ink_soft"><?php esc_html_e( 'Couleur secondaire', 'navi' ); ?></label></th>
+                            <td><input type="text" name="navi_color_ink_soft" id="navi_color_ink_soft" class="navi-color-picker" value="<?php echo esc_attr( navi_color_ink_soft() ); ?>" data-default-color="#6b6b6b" /></td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row"><label for="navi_radius_button"><?php esc_html_e( 'Arrondi des boutons (px)', 'navi' ); ?></label></th>
+                            <td>
+                                <input type="number" name="navi_radius_button" id="navi_radius_button" min="0" max="50" value="<?php echo esc_attr( navi_radius_button() ); ?>" class="small-text" /> px
+                                <p class="description"><?php esc_html_e( '0 = angles droits. Boutons concernés : bannière cookies, panier sticky.', 'navi' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row"><label for="navi_radius_image"><?php esc_html_e( "Arrondi de l'image produit (px)", 'navi' ); ?></label></th>
+                            <td>
+                                <input type="number" name="navi_radius_image" id="navi_radius_image" min="0" max="50" value="<?php echo esc_attr( navi_radius_image() ); ?>" class="small-text" /> px
+                                <p class="description"><?php esc_html_e( 'Miniature produit affichée dans le panier sticky.', 'navi' ); ?></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <?php submit_button(); ?>
+            </form>
+        </div>
+
+        <?php foreach ( $modules as $id => $module ) : ?>
+            <div class="navi-admin-tab-panel" data-tab-panel="<?php echo esc_attr( $id ); ?>" style="display:none;">
+                <?php if ( ! empty( $module['settings_panel_callback'] ) && is_callable( $module['settings_panel_callback'] ) ) : ?>
+                    <?php call_user_func( $module['settings_panel_callback'] ); ?>
+                <?php else : ?>
+                    <p class="description"><?php esc_html_e( 'Bientôt disponible.', 'navi' ); ?></p>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
     </div>
+    <script>
+        (function () {
+            // Onglets de premier niveau : afficher/masquer par hash d'URL
+            // ("#cookie-consent", "#stories"...), pour permettre les liens
+            // directs (ex. "Réglages" sur une carte de l'onglet Général) sans
+            // rechargement de page. Le hash peut porter un second segment
+            // pour un sous-onglet imbriqué (ex. "#stories/mockup", voir
+            // includes/modules/stories/admin-settings.php) : seul le premier
+            // segment est utilisé ici, le reste appartient au module.
+            var tabs = document.querySelectorAll('#navi-main-tabs .nav-tab');
+            var panels = document.querySelectorAll('.navi-admin-tab-panel');
+            function activateTab( name ) {
+                var found = false;
+                tabs.forEach(function (tab) {
+                    var match = tab.dataset.tab === name;
+                    tab.classList.toggle('nav-tab-active', match);
+                    if (match) found = true;
+                });
+                panels.forEach(function (panel) {
+                    panel.style.display = panel.dataset.tabPanel === name ? '' : 'none';
+                });
+                return found;
+            }
+            function fromHash() {
+                var name = window.location.hash.replace('#', '').split('/')[0];
+                if (!name || !activateTab(name)) activateTab('general');
+            }
+            window.addEventListener('hashchange', fromHash);
+            fromHash();
+        })();
+    </script>
     <?php
 }

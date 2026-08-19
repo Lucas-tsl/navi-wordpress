@@ -135,6 +135,11 @@
     border-radius: var(--navi-admin-radius-sm);
     padding: 7px 10px;
     box-shadow: none;
+
+    /* Couleur posée explicitement : select héritait sinon une couleur
+       d'accent selon le thème de couleurs BO choisi par l'utilisateur
+       (Utilisateurs > Profil), au lieu du texte neutre attendu ici. */
+    color: var(--navi-admin-ink);
 }
 
 .navi-admin input[type="text"]:focus,
@@ -177,7 +182,13 @@
     border-radius: 50%;
     background: #fff;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-    transition: transform 0.15s ease;
+
+    /* "left" plutôt que "transform: translateX()" : sur certaines
+       combinaisons GPU/pilote (essentiellement Windows), un cercle animé
+       par transform peut se retrouver mal composé (croissant au lieu
+       d'un disque plein) — animer la position elle-même est plus lent
+       mais fiable pour un si petit élément. */
+    transition: left 0.15s ease;
 }
 
 .navi-admin input[type="checkbox"]:checked {
@@ -185,7 +196,7 @@
 }
 
 .navi-admin input[type="checkbox"]:checked::before {
-    transform: translateX(16px);
+    left: 18px;
 }
 
 .navi-admin input[type="checkbox"]:focus-visible {
@@ -338,9 +349,25 @@
 
 .navi-admin-module-body em {
     font-size: 0.75rem;
-    color: var(--navi-admin-accent-deep);
     font-style: normal;
     font-weight: 500;
+}
+
+.navi-admin-module-body em.is-active {
+    color: var(--navi-admin-accent-deep);
+}
+
+.navi-admin-module-body em.is-inactive,
+.navi-admin-module-body em.is-unavailable {
+    color: var(--navi-admin-ink-soft);
+}
+
+/* ============================================================
+   Onglets de premier niveau (Navi > Navi) et panneaux associés — voir
+   navi_render_dashboard_page() (includes/core/admin-menu.php).
+   ============================================================ */
+.navi-admin-tab-panel {
+    margin-top: 20px;
 }
 
 .navi-admin-module-settings {

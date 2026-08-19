@@ -24,6 +24,10 @@ class Navi_Module_Registry {
             'option_name'     => 'navi_module_active_' . $id,
             'default_active'  => true,
             'settings_url'    => '',
+            // Callable qui affiche le contenu de l'onglet de ce module dans
+            // Navi > Navi (voir navi_render_dashboard_page(), admin-menu.php) —
+            // remplace l'ancienne page de réglages dédiée par module.
+            'settings_panel_callback' => '',
             // Action déclenchée sur le bus d'événements front-end ('navi:action')
             // quand l'icône du module est cliquée dans le menu du bouton flottant.
             'fab_action'      => '',

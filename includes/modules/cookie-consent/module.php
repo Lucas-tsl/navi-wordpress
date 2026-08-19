@@ -53,13 +53,20 @@ Navi_Module_Registry::register(
         'fab_action'      => 'open-cookie-modal',
         'fab_condition'   => '',
         'available'       => true,
-        'settings_url'    => admin_url( 'admin.php?page=navi-cookie-consent' ),
+        'settings_url'    => admin_url( 'admin.php?page=navi-main#cookie-consent' ),
+        'settings_panel_callback' => 'navi_cookie_render_settings_panel',
         'visibility_selector' => '#navi-cookie-banner, .navi-fab-item[data-item-id="cookie-consent"]',
     )
 );
 
-if ( Navi_Module_Registry::is_active( 'cookie-consent' ) ) {
+// Chargé même si le module est désactivé : sinon son onglet de réglages
+// (Navi > Navi > Cookies) disparaîtrait avec lui, sans aucun moyen de le
+// réactiver depuis le BO (voir navi_cookie_render_settings_panel()).
+if ( is_admin() ) {
     require_once __DIR__ . '/admin-settings.php';
+}
+
+if ( Navi_Module_Registry::is_active( 'cookie-consent' ) ) {
     require_once __DIR__ . '/public-display.php';
 
     add_action( 'wp_enqueue_scripts', 'navi_cookie_enqueue_assets' );

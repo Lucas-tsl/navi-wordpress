@@ -16,17 +16,21 @@ Sœur du module [Navi pour PrestaShop](https://github.com/Lucas-tsl/navi-prestas
 
 ## Modules
 
+Réglages regroupés sur une seule page (Navi > Navi), un onglet par module —
+chaque onglet porte à la fois l'activation du module et ses réglages
+propres (voir `settings_panel_callback`, `class-navi-module-registry.php`).
+
 - **Consentement cookies** — bannière RGPD, Google Consent Mode V2.
 - **Accessibilité** — langue (WPML ou repli GTranslate), taille du
   texte, contraste, curseur, soulignage des liens.
 - **Panier automatique** (`sticky-cart`) — produits simples et à
   variations, sélecteur de teinte, sélecteurs CSS personnalisables
-  (Navi > Panier) pour les thèmes non reconnus.
+  pour les thèmes non reconnus.
 - **Stories** — jusqu'à 4 bulles vidéo par produit (YouTube ou MP4),
   onglet dédié sur la fiche produit, panneau desktop + plein écran
   mobile. Affichage automatique après la galerie ou via le shortcode
-  `[navi_stories]` (`id="123"` pour cibler un produit précis). Réglages
-  dans Navi > Stories (onglets Bulles / Mockup).
+  `[navi_stories]` (`id="123"` pour cibler un produit précis). Sous-onglets
+  Bulles / Mockup imbriqués dans son propre onglet.
 
 ## Architecture
 
