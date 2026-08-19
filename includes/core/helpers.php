@@ -96,6 +96,23 @@ function navi_show_mobile( $module_id ) {
     return (bool) get_option( 'navi_show_mobile_' . $module_id, 1 );
 }
 
+// En-tête partagé de chaque page Navi (assets/css/admin.css, .navi-admin-header)
+// : logo + titre + sous-titre optionnel, pour ne pas dupliquer ce balisage
+// dans chaque admin-settings.php de module.
+function navi_admin_page_header( $title, $subtitle = '' ) {
+    ?>
+    <div class="navi-admin-header">
+        <img src="<?php echo esc_url( NAVI_PLUGIN_URL . 'assets/img/logo-256.png' ); ?>" alt="" />
+        <div>
+            <h1><?php echo esc_html( $title ); ?></h1>
+            <?php if ( '' !== $subtitle ) : ?>
+                <p><?php echo esc_html( $subtitle ); ?></p>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php
+}
+
 // Deux cases à cocher "Afficher sur ordinateur"/"Afficher sur mobile" pour
 // un module donné — même bloc de balisage réutilisé par chaque
 // admin-settings.php de module concerné (cookie-consent, accessibility,
