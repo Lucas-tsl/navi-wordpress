@@ -2,7 +2,7 @@
 Contributors: lucastsl
 Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 0.7.0
 License: GPLv2 or later
