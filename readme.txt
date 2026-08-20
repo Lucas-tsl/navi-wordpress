@@ -4,7 +4,7 @@ Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.6.0
+Stable tag: 0.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
@@ -145,6 +145,16 @@ exclusively.
 
 == Changelog ==
 
+= 0.7.0 =
+* Story preview video is now picked directly from the WordPress Media
+  Library (restricted to MP4 files) instead of a raw file upload field —
+  no more dedicated upload folder to manage or clean up on uninstall.
+* Fixed: YouTube fallback thumbnail could stay broken for Shorts
+  (vertical videos without a `maxresdefault.jpg`) — now falls back to
+  `hqdefault.jpg` automatically.
+* Expanded PHPUnit test suite (Stories validation, Accessibility language
+  fallback, module registry).
+
 = 0.6.0 =
 * "Navi Stories" block (Gutenberg), alongside the `[navi_stories]`
   shortcode.
@@ -176,6 +186,11 @@ exclusively.
   Accessibility modules.
 
 == Upgrade Notice ==
+
+= 0.7.0 =
+Existing story preview videos keep working. Sites upgrading from before
+0.6.0 with MP4 videos uploaded via the old form: the files remain in
+their upload folder and are cleaned up on uninstall as before.
 
 = 0.6.0 =
 No action required on upgrade.

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.7.0
+
+- Story MP4 : la vidéo de prévisualisation se choisit désormais directement
+  dans la médiathèque WordPress (`wp.media`, restreinte aux fichiers
+  `video/mp4`) plutôt que via un champ fichier brut — plus besoin de gérer
+  son propre dossier d'upload, la validation et le nettoyage à la
+  désinstallation ; l'ancien pipeline (`navi_validate_mp4_upload()` et son
+  dossier dédié) est retiré.
+- Corrigé : vignette YouTube de secours qui pouvait rester cassée pour les
+  Shorts (format vertical, sans `maxresdefault.jpg`) — repli automatique
+  sur `hqdefault.jpg` si le format haute résolution n'existe pas.
+- Suite PHPUnit étendue : fonctions de validation Stories (extraction
+  d'ID YouTube, réglages d'apparence), repli de langue de l'Accessibilité
+  (WPML/GTranslate), `Navi_Module_Registry` — 37 tests au total.
+
 ## 0.6.0
 
 - Bloc Gutenberg "Navi Stories" (`navi/stories`), équivalent visuel du
