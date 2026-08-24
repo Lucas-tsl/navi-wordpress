@@ -4,7 +4,7 @@ Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.7.0
+Stable tag: 0.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
@@ -154,6 +154,17 @@ exclusively.
 
 == Changelog ==
 
+= 0.7.1 =
+* WordPress.org review: replaced every inline `<script>`/`<style>` block
+  with `wp_register_script()`/`wp_enqueue_script()`/`wp_localize_script()`
+  and `wp_enqueue_style()`/`wp_add_inline_style()` (hash-preserving
+  referer field, Google Consent Mode injection, admin dashboard tabs,
+  Stories settings live preview, Stories product tab). No behavior
+  change.
+* Documented the `wp_remote_head()` call to `img.youtube.com` (YouTube
+  HD thumbnail availability check) in the "External services and
+  embedded content" section.
+
 = 0.7.0 =
 * Story preview video is now picked directly from the WordPress Media
   Library (restricted to MP4 files) instead of a raw file upload field —
@@ -195,6 +206,9 @@ exclusively.
   Accessibility modules.
 
 == Upgrade Notice ==
+
+= 0.7.1 =
+No action required on upgrade. Internal-only fixes (WordPress.org review).
 
 = 0.7.0 =
 Existing story preview videos keep working. Sites upgrading from before

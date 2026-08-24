@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.1
+
+- Retour de revue WordPress.org : tous les `<script>`/`<style>` imprimés
+  en dur en PHP sont remplacés par `wp_register_script()`/
+  `wp_enqueue_script()`/`wp_localize_script()` et `wp_enqueue_style()`/
+  `wp_add_inline_style()` (champ referer hash-preserving, injection du
+  Consent Mode, onglets du dashboard admin, aperçu live des réglages
+  Stories, onglet Stories de la fiche produit). Aucun changement de
+  comportement.
+- Documenté dans le readme l'appel `wp_remote_head()` vers
+  `img.youtube.com` (vérification de disponibilité de la vignette HD
+  YouTube).
+
 ## 0.7.0
 
 - Story MP4 : la vidéo de prévisualisation se choisit désormais directement
