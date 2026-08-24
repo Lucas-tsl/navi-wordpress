@@ -118,18 +118,7 @@ function navi_admin_page_header( $title, $subtitle = '' ) {
 // d'options.php, qui n'a jamais connu le hash).
 function navi_render_hash_preserving_referer_field() {
     ?>
-    <input type="hidden" name="_wp_http_referer" value="" />
-    <script>
-        (function () {
-            var input = document.currentScript.previousElementSibling;
-            var form = document.currentScript.closest( 'form' );
-            if ( form ) {
-                form.addEventListener( 'submit', function () {
-                    input.value = window.location.pathname + window.location.search + window.location.hash;
-                } );
-            }
-        })();
-    </script>
+    <input type="hidden" name="_wp_http_referer" class="navi-hash-referer-input" value="" />
     <?php
 }
 
