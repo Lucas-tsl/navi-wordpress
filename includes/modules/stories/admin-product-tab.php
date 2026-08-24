@@ -4,9 +4,44 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Onglet "Stories (Navi)" sur la fiche produit WooCommerce — équivalent de
  * Navi::hookDisplayAdminProductsExtra() côté PrestaShop.
+ *
+ * Si le plugin compagnon Navi FAQ est actif, son panneau "Navi" partagé
+ * (includes/navi-panel.php côté navi-faq, metabox autonome sous l'éditeur
+ * de description, hors "Données produit") prend le relais via le filtre
+ * ouvert navi_product_panel_tabs — Stories y devient un onglet interne aux
+ * côtés de FAQ, plutôt qu'une entrée de plus dans "Données produit". Sans
+ * Navi FAQ, ce filtre n'existe simplement pas : navi_stories_uses_navi_panel()
+ * retombe sur false et Stories garde son propre onglet WooCommerce comme
+ * avant, sans dépendance dure à navi-faq.
  */
+function navi_stories_uses_navi_panel() {
+    if ( ! function_exists( 'navi_panel_get_tabs' ) ) {
+        return false;
+    }
+    // navi-faq peut exclure 'product' de sa propre couverture (filtre
+    // navi_faq_post_types) : dans ce cas son panneau ne s'enregistre pas du
+    // tout sur la fiche produit, et s'appuyer dessus ferait disparaître
+    // Stories plutôt que de la replier sur son propre onglet.
+    if ( function_exists( 'navi_faq_post_types' ) && ! in_array( 'product', navi_faq_post_types(), true ) ) {
+        return false;
+    }
+    return true;
+}
+
+add_filter( 'navi_product_panel_tabs', 'navi_stories_register_panel_tab' );
+function navi_stories_register_panel_tab( $tabs ) {
+    $tabs['stories'] = array(
+        'label'    => __( 'Stories', 'saito-navi' ),
+        'callback' => 'navi_stories_render_panel_content',
+    );
+    return $tabs;
+}
+
 add_filter( 'woocommerce_product_data_tabs', 'navi_stories_add_product_tab' );
 function navi_stories_add_product_tab( $tabs ) {
+    if ( navi_stories_uses_navi_panel() ) {
+        return $tabs;
+    }
     $tabs['navi_stories'] = array(
         'label'    => __( 'Stories (Navi)', 'saito-navi' ),
         'target'   => 'navi_stories_product_data',
@@ -50,13 +85,34 @@ function navi_stories_enqueue_media_library( $hook_suffix ) {
 
 add_action( 'woocommerce_product_data_panels', 'navi_stories_render_product_panel' );
 function navi_stories_render_product_panel() {
+    if ( navi_stories_uses_navi_panel() ) {
+        return; // Rendu par navi_panel_render() (navi-faq) via l'onglet enregistré ci-dessus.
+    }
     global $post;
+    if ( ! $post ) {
+        return;
+    }
+    ?>
+    <div id="navi_stories_product_data" class="panel woocommerce_options_panel hidden">
+        <?php navi_stories_render_panel_content( $post ); ?>
+    </div>
+    <?php
+}
+
+/**
+ * Contenu partagé entre les deux points d'entrée possibles : l'onglet
+ * WooCommerce "Données produit" (navi_stories_render_product_panel()
+ * ci-dessus) et l'onglet interne du panneau "Navi" partagé de navi-faq
+ * (navi_stories_register_panel_tab() ci-dessus) — même props et champs de
+ * sauvegarde (navi_story_nonce, navi_story_submitted) quel que soit le
+ * conteneur visuel.
+ */
+function navi_stories_render_panel_content( $post ) {
     if ( ! $post ) {
         return;
     }
     $slots = navi_stories_get( $post->ID );
     ?>
-    <div id="navi_stories_product_data" class="panel woocommerce_options_panel hidden">
         <div class="options_group" style="padding: 12px 20px;">
             <p>
                 <?php esc_html_e( "Jusqu'à 4 stories par produit. Chaque story affiche une bulle vidéo cliquable sur la fiche produit. Collez une URL ou un identifiant YouTube pour un aperçu immédiat, ou choisissez une vidéo MP4 depuis la médiathèque.", 'saito-navi' ); ?>
@@ -136,7 +192,6 @@ function navi_stories_render_product_panel() {
                 <?php endforeach; ?>
             </div>
         </div>
-    </div>
     <?php
 }
 
