@@ -132,6 +132,7 @@ function navi_enqueue_admin_assets( $hook_suffix ) {
         return;
     }
     navi_enqueue_style( 'navi-admin-css', NAVI_PLUGIN_URL . 'assets/css/admin.css', array(), NAVI_VERSION );
+    navi_enqueue_script( 'navi-admin-hash-referer-js', NAVI_PLUGIN_URL . 'assets/js/admin-hash-referer.js', array(), NAVI_VERSION, true );
 }
 
 /**
