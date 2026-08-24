@@ -16,10 +16,13 @@ function navi_add_admin_menu() {
 
 // WP core ajoute un padding-top à toute icône de menu personnalisée
 // (#adminmenu .wp-menu-image img) qui décale notre logo — retiré ici,
-// pour notre menu uniquement.
-add_action( 'admin_head', 'navi_admin_menu_icon_css' );
-function navi_admin_menu_icon_css() {
-    echo '<style>#toplevel_page_navi-main .wp-menu-image img { padding: 0; }</style>';
+// pour notre menu uniquement. Le menu WP est visible sur tout l'admin (pas
+// seulement nos propres pages), donc ce CSS s'accroche à 'common' — le
+// handle de style core toujours chargé en admin — plutôt qu'à un fichier
+// propre au plugin qu'il faudrait enqueue partout.
+add_action( 'admin_enqueue_scripts', 'navi_enqueue_admin_menu_icon_css' );
+function navi_enqueue_admin_menu_icon_css() {
+    wp_add_inline_style( 'common', '#toplevel_page_navi-main .wp-menu-image img { padding: 0; }' );
 }
 
 // Réglages transverses (pas propres à un module) : chacun a sa propre
@@ -132,6 +135,7 @@ function navi_enqueue_admin_assets( $hook_suffix ) {
         return;
     }
     navi_enqueue_style( 'navi-admin-css', NAVI_PLUGIN_URL . 'assets/css/admin.css', array(), NAVI_VERSION );
+    navi_enqueue_script( 'navi-admin-dashboard-tabs-js', NAVI_PLUGIN_URL . 'assets/js/admin-dashboard-tabs.js', array(), NAVI_VERSION, true );
 }
 
 /**
@@ -230,36 +234,5 @@ function navi_render_dashboard_page() {
             </div>
         <?php endforeach; ?>
     </div>
-    <script>
-        (function () {
-            // Onglets de premier niveau : afficher/masquer par hash d'URL
-            // ("#cookie-consent", "#stories"...), pour permettre les liens
-            // directs (ex. "Réglages" sur une carte de l'onglet Général) sans
-            // rechargement de page. Le hash peut porter un second segment
-            // pour un sous-onglet imbriqué (ex. "#stories/mockup", voir
-            // includes/modules/stories/admin-settings.php) : seul le premier
-            // segment est utilisé ici, le reste appartient au module.
-            var tabs = document.querySelectorAll('#navi-main-tabs .nav-tab');
-            var panels = document.querySelectorAll('.navi-admin-tab-panel');
-            function activateTab( name ) {
-                var found = false;
-                tabs.forEach(function (tab) {
-                    var match = tab.dataset.tab === name;
-                    tab.classList.toggle('nav-tab-active', match);
-                    if (match) found = true;
-                });
-                panels.forEach(function (panel) {
-                    panel.style.display = panel.dataset.tabPanel === name ? '' : 'none';
-                });
-                return found;
-            }
-            function fromHash() {
-                var name = window.location.hash.replace('#', '').split('/')[0];
-                if (!name || !activateTab(name)) activateTab('general');
-            }
-            window.addEventListener('hashchange', fromHash);
-            fromHash();
-        })();
-    </script>
     <?php
 }
