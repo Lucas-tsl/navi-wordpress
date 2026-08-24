@@ -4,7 +4,7 @@ Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.7.1
+Stable tag: 0.7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
@@ -154,6 +154,13 @@ exclusively.
 
 == Changelog ==
 
+= 0.7.2 =
+* Stories now integrates with the companion Navi FAQ plugin when it's
+  active: both share a single "Navi" panel on the product edit screen
+  (one internal tab per feature) instead of each adding its own separate
+  entry under "Product data". Without Navi FAQ, Stories keeps its own
+  "Stories (Navi)" tab under "Product data" as before.
+
 = 0.7.1 =
 * WordPress.org review: replaced every inline `<script>`/`<style>` block
   with `wp_register_script()`/`wp_enqueue_script()`/`wp_localize_script()`
@@ -206,6 +213,10 @@ exclusively.
   Accessibility modules.
 
 == Upgrade Notice ==
+
+= 0.7.2 =
+No action required on upgrade. Product edit screen only changes when the
+Navi FAQ plugin is also active.
 
 = 0.7.1 =
 No action required on upgrade. Internal-only fixes (WordPress.org review).

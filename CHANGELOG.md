@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.2
+
+- Stories s'intègre au panneau "Navi" partagé du plugin compagnon Navi FAQ
+  quand celui-ci est actif : les deux fonctionnalités deviennent des
+  onglets internes d'un seul panneau (sous l'éditeur de description) au
+  lieu d'avoir chacune sa propre entrée dans "Données produit". Sans Navi
+  FAQ, Stories garde son onglet WooCommerce autonome comme avant — aucune
+  dépendance dure ajoutée entre les deux plugins.
+
 ## 0.7.1
 
 - Retour de revue WordPress.org : tous les `<script>`/`<style>` imprimés
