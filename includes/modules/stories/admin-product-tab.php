@@ -31,6 +31,21 @@ function navi_stories_enqueue_media_library( $hook_suffix ) {
         return;
     }
     wp_enqueue_media();
+
+    wp_enqueue_style( 'navi-admin-stories-product-tab-css', NAVI_PLUGIN_URL . 'assets/css/admin-stories-product-tab.css', array(), NAVI_VERSION );
+
+    wp_enqueue_script( 'navi-admin-stories-product-tab-js', NAVI_PLUGIN_URL . 'assets/js/admin-stories-product-tab.js', array( 'media-editor' ), NAVI_VERSION, true );
+    wp_localize_script(
+        'navi-admin-stories-product-tab-js',
+        'naviStoryAdminData',
+        array(
+            'labelConfigured'  => __( 'Configurée', 'saito-navi' ),
+            'labelEmpty'       => __( 'Vide', 'saito-navi' ),
+            'mediaTitle'       => __( 'Choisir une vidéo', 'saito-navi' ),
+            'mediaButton'      => __( 'Utiliser cette vidéo', 'saito-navi' ),
+            'labelInvalidType' => __( 'Seuls les fichiers .mp4 sont acceptés.', 'saito-navi' ),
+        )
+    );
 }
 
 add_action( 'woocommerce_product_data_panels', 'navi_stories_render_product_panel' );
@@ -49,25 +64,6 @@ function navi_stories_render_product_panel() {
 
             <?php wp_nonce_field( 'navi_story_save_' . $post->ID, 'navi_story_nonce' ); ?>
             <input type="hidden" name="navi_story_submitted" value="1" />
-
-            <style>
-                .navi-story-admin-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
-                .navi-story-admin-card { flex: 1 1 calc(50% - 16px); min-width: 280px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; background: #fff; }
-                .navi-story-admin-card-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #f6f7f7; border-bottom: 1px solid #ddd; }
-                .navi-story-admin-card-title { font-weight: 700; }
-                .navi-story-admin-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; background: #e5e5e5; color: #666; }
-                .navi-story-admin-badge.is-filled { background: #d4edda; color: #256029; }
-                .navi-story-admin-preview { position: relative; display: flex; align-items: center; justify-content: center; height: 140px; background: #222; }
-                .navi-story-admin-preview img { max-width: 100%; max-height: 100%; display: none; }
-                .navi-story-admin-placeholder { color: #999; font-size: 0.8125rem; }
-                .navi-story-admin-body { padding: 14px; overflow: hidden; }
-                .navi-story-admin-body .form-field { float: none; width: auto; padding: 0; margin: 0 0 12px; clear: both; }
-                .navi-story-admin-body label { font-weight: 600; font-size: 0.8125rem; display: block; float: none; width: auto; margin: 0 0 4px; }
-                .navi-story-admin-body details { margin-top: 8px; }
-                .navi-story-admin-body summary { cursor: pointer; font-size: 0.8125rem; color: #666; margin-bottom: 8px; }
-                .navi-story-admin-file-info { font-size: 0.75rem; margin-top: 4px; }
-                .navi-story-admin-file-info.is-warning { color: #c0392b; font-weight: 700; }
-            </style>
 
             <div class="navi-story-admin-grid">
                 <?php foreach ( $slots as $index => $slot ) : ?>
@@ -139,96 +135,6 @@ function navi_stories_render_product_panel() {
                     </div>
                 <?php endforeach; ?>
             </div>
-
-            <script>
-                var NAVI_STORY_LABEL_CONFIGURED = '<?php echo esc_js( __( 'Configurée', 'saito-navi' ) ); ?>';
-                var NAVI_STORY_LABEL_EMPTY = '<?php echo esc_js( __( 'Vide', 'saito-navi' ) ); ?>';
-                var NAVI_STORY_MEDIA_TITLE = '<?php echo esc_js( __( 'Choisir une vidéo', 'saito-navi' ) ); ?>';
-                var NAVI_STORY_MEDIA_BUTTON = '<?php echo esc_js( __( 'Utiliser cette vidéo', 'saito-navi' ) ); ?>';
-                var NAVI_STORY_LABEL_INVALID_TYPE = '<?php echo esc_js( __( 'Seuls les fichiers .mp4 sont acceptés.', 'saito-navi' ) ); ?>';
-
-                (function () {
-                    function extractYoutubeId(input) {
-                        input = (input || '').trim();
-                        if (!input) return '';
-                        var urlMatch = input.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
-                        if (urlMatch) return urlMatch[1];
-                        if (/^[A-Za-z0-9_-]{11}$/.test(input)) return input;
-                        return '';
-                    }
-
-                    function updatePreview(slot) {
-                        var input = document.getElementById('navi_story_youtube_' + slot);
-                        var thumb = document.getElementById('navi-story-admin-thumb-' + slot);
-                        var placeholder = document.getElementById('navi-story-admin-placeholder-' + slot);
-                        var badge = document.getElementById('navi-story-badge-' + slot);
-                        if (!input || !thumb || !placeholder || !badge) return;
-
-                        var videoId = extractYoutubeId(input.value);
-                        if (videoId) {
-                            thumb.src = 'https://img.youtube.com/vi/' + videoId + '/mqdefault.jpg';
-                            thumb.style.display = 'block';
-                            placeholder.style.display = 'none';
-                            badge.textContent = NAVI_STORY_LABEL_CONFIGURED;
-                            badge.classList.add('is-filled');
-                        } else {
-                            thumb.style.display = 'none';
-                            placeholder.style.display = 'block';
-                            badge.textContent = NAVI_STORY_LABEL_EMPTY;
-                            badge.classList.remove('is-filled');
-                        }
-                    }
-
-                    function openMediaPicker(slot) {
-                        if (typeof wp === 'undefined' || !wp.media) return;
-
-                        var frame = wp.media({
-                            title: NAVI_STORY_MEDIA_TITLE,
-                            library: { type: 'video/mp4' },
-                            multiple: false,
-                            button: { text: NAVI_STORY_MEDIA_BUTTON }
-                        });
-
-                        frame.on('select', function () {
-                            var attachment = frame.state().get('selection').first().toJSON();
-                            var info = document.getElementById('navi-story-admin-file-info-' + slot);
-                            if (!info) return;
-
-                            if ('video/mp4' !== attachment.mime) {
-                                info.textContent = NAVI_STORY_LABEL_INVALID_TYPE;
-                                info.classList.add('is-warning');
-                                return;
-                            }
-
-                            var previewInput = document.getElementById('navi_story_preview_' + slot);
-                            if (previewInput) {
-                                previewInput.value = attachment.url;
-                            }
-
-                            var sizeMb = attachment.filesizeInBytes ? (attachment.filesizeInBytes / 1048576).toFixed(1) + ' Mo' : '';
-                            info.textContent = attachment.filename + (sizeMb ? ' — ' + sizeMb : '');
-                            info.classList.remove('is-warning');
-                        });
-
-                        frame.open();
-                    }
-
-                    var youtubeInputs = document.querySelectorAll('.navi-story-admin-youtube-input');
-                    for (var i = 0; i < youtubeInputs.length; i++) {
-                        youtubeInputs[i].addEventListener('input', function (event) {
-                            updatePreview(event.target.getAttribute('data-slot'));
-                        });
-                    }
-
-                    var mediaButtons = document.querySelectorAll('.navi-story-admin-media-button');
-                    for (var k = 0; k < mediaButtons.length; k++) {
-                        mediaButtons[k].addEventListener('click', function (event) {
-                            event.preventDefault();
-                            openMediaPicker(event.currentTarget.getAttribute('data-slot'));
-                        });
-                    }
-                })();
-            </script>
         </div>
     </div>
     <?php
