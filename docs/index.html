@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saito Navi — Documentation</title>
+<meta name="description" content="Documentation Saito Navi pour l'équipe digital : configuration du bouton flottant, des modules (cookies, accessibilité, panier automatique, stories) et des shortcodes.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f6f7f7;
+    --text: #1d2327;
+    --text-muted: #555;
+    --border: #dcdcde;
+    --accent: #2271b1;
+    --accent-bg: #eaf2fa;
+    --warn-bg: #fdf3e0;
+    --warn-border: #e0a63c;
+    --note-bg: #f0f6fc;
+    --code-bg: #f6f7f7;
+    --shadow: 0 1px 2px rgba(0,0,0,.06);
+    --max-width: 820px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+  }
+  header.hero {
+    background: linear-gradient(135deg, #1d2327, #2c3338);
+    color: #fff;
+    padding: 56px 24px 40px;
+    text-align: center;
+  }
+  header.hero .icon { font-size: 2.5rem; margin-bottom: 8px; }
+  header.hero h1 { margin: 0 0 8px; font-size: 2rem; }
+  header.hero p { margin: 0 auto; max-width: 640px; color: #cbd0d3; font-size: 1.05rem; }
+  header.hero .badges { margin-top: 20px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  header.hero .badge {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 0.8125rem;
+  }
+  header.hero a.repo-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #fff;
+    background: var(--accent);
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+  header.hero a.repo-link:hover { background: #1a5a8f; }
+
+  main {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  nav.toc {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 48px;
+  }
+  nav.toc h2 { margin: 0 0 12px; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); }
+  nav.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 24px; }
+  nav.toc li { margin-bottom: 6px; break-inside: avoid; }
+  nav.toc a { color: var(--accent); text-decoration: none; font-size: 0.9375rem; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  section { margin-bottom: 56px; scroll-margin-top: 24px; }
+  section h2 {
+    font-size: 1.5rem;
+    margin: 0 0 4px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+  }
+  section h3 { font-size: 1.125rem; margin: 28px 0 8px; }
+  section p { color: var(--text); }
+  section p.lead { color: var(--text-muted); }
+
+  code {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 0.875em;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    font-size: 0.875rem;
+  }
+  pre code { background: none; border: none; padding: 0; }
+
+  .callout {
+    display: flex;
+    gap: 12px;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 18px 0;
+    font-size: 0.9375rem;
+  }
+  .callout .emoji { flex: 0 0 auto; font-size: 1.15rem; line-height: 1.4; }
+  .callout.note { background: var(--note-bg); border: 1px solid #c9dff2; }
+  .callout.warn { background: var(--warn-bg); border: 1px solid var(--warn-border); }
+  .callout.info { background: var(--accent-bg); border: 1px solid #b9d6ee; }
+
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .module-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    background: var(--bg-alt);
+  }
+  .module-card .emoji { font-size: 1.3rem; }
+  .module-card strong { display: block; margin: 6px 0 2px; font-size: 0.9375rem; }
+  .module-card span { font-size: 0.8125rem; color: var(--text-muted); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 0.9375rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: var(--bg-alt); font-weight: 600; }
+
+  details {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 18px;
+    background: var(--bg-alt);
+    margin-bottom: 10px;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 12px 0;
+  }
+  details[open] summary { border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+  details ul { margin: 12px 0; padding-left: 20px; }
+  details li { margin-bottom: 8px; }
+  details p:first-child { margin-top: 0; }
+
+  footer {
+    text-align: center;
+    padding: 32px 24px 64px;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+  footer a { color: var(--accent); }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --bg-alt: #1c1f24;
+      --text: #e6e6e6;
+      --text-muted: #9a9fa6;
+      --border: #33383f;
+      --accent: #6cb2f4;
+      --accent-bg: #1a2733;
+      --warn-bg: #2b2413;
+      --warn-border: #7a5c1e;
+      --note-bg: #16222d;
+      --code-bg: #1c1f24;
+      --shadow: 0 1px 2px rgba(0,0,0,.4);
+    }
+    header.hero { background: linear-gradient(135deg, #0d0f12, #1a1d21); }
+  }
+
+  @media (max-width: 640px) {
+    nav.toc ol { columns: 1; }
+    header.hero h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="icon">🧭</div>
+  <h1>Saito Navi</h1>
+  <p>Un seul bouton flottant qui regroupe le consentement cookies, l'accessibilité, le panier automatique et les stories vidéo produit — pensé pour être réglé entièrement depuis le Back Office, sans toucher au code.</p>
+  <div class="badges">
+    <span class="badge">Version 0.7.1</span>
+    <span class="badge">WordPress 6.0+</span>
+    <span class="badge">WooCommerce</span>
+  </div>
+  <a class="repo-link" href="https://github.com/Lucas-tsl/navi-wordpress">Voir le dépôt sur GitHub →</a>
+</header>
+
+<main>
+
+  <nav class="toc" aria-label="Sommaire">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#pourquoi">Pourquoi ce plugin</a></li>
+      <li><a href="#config">Où tout se configure</a></li>
+      <li><a href="#cookies">Consentement cookies</a></li>
+      <li><a href="#accessibilite">Accessibilité</a></li>
+      <li><a href="#panier">Panier automatique</a></li>
+      <li><a href="#stories">Stories</a></li>
+      <li><a href="#apparence">Apparence et visibilité</a></li>
+      <li><a href="#shortcodes">Shortcodes</a></li>
+      <li><a href="#faq">Questions fréquentes</a></li>
+      <li><a href="#technique">Résumé technique</a></li>
+    </ol>
+  </nav>
+
+  <section id="pourquoi">
+    <h2>Pourquoi ce plugin</h2>
+    <p>Sur une boutique WooCommerce, chaque besoin d'engagement client (cookies, accessibilité, panier, vidéos produit) est habituellement couvert par un plugin séparé — autant de widgets flottants qui s'accumulent et finissent par se chevaucher à l'écran. <strong>Saito Navi</strong> regroupe quatre de ces besoins derrière <strong>un seul bouton</strong> (icône engrenage, coin de l'écran), et centralise tous les réglages sur une seule page du Back Office : <strong>Navi &gt; Navi</strong>.</p>
+    <div class="module-grid">
+      <div class="module-card"><span class="emoji">🍪</span><strong>Consentement cookies</strong><span>Bannière RGPD, Google Consent Mode V2</span></div>
+      <div class="module-card"><span class="emoji">♿</span><strong>Accessibilité</strong><span>Langue, taille du texte, contraste</span></div>
+      <div class="module-card"><span class="emoji">🛒</span><strong>Panier automatique</strong><span>Panneau sticky sur la fiche produit</span></div>
+      <div class="module-card"><span class="emoji">🎬</span><strong>Stories</strong><span>Bulles vidéo produit (YouTube/MP4)</span></div>
+    </div>
+    <p class="lead">Chaque module s'active ou se désactive indépendamment ; désactivé, il n'affiche plus rien côté visiteur.</p>
+  </section>
+
+  <section id="config">
+    <h2>Où tout se configure</h2>
+    <p>Un seul menu dans le Back Office : <strong>Navi &gt; Navi</strong>. La page est organisée en onglets — <strong>Général</strong> (position du bouton, langue, couleurs, arrondis) puis un onglet par module, chacun portant à la fois son interrupteur d'activation et ses propres réglages.</p>
+    <div class="callout note">
+      <span class="emoji">💡</span>
+      <span>Chaque onglet a sa propre URL avec ancre (ex. <code>#stories</code>) : un lien direct vers un onglet précis peut être partagé ou mis en favori.</span>
+    </div>
+  </section>
+
+  <section id="cookies">
+    <h2>🍪 Consentement cookies</h2>
+    <p class="lead">Bannière RGPD, modale de préférences, Google Consent Mode V2.</p>
+    <p>Affiche une bannière de consentement en bas de page (texte, lien politique de confidentialité et mentions légales personnalisables) avec trois choix : <strong>Tout accepter</strong>, <strong>Tout refuser</strong>, ou <strong>Personnaliser</strong> (statistiques / marketing séparément). Les deux premiers boutons ont volontairement le même poids visuel — c'est une exigence des recommandations CNIL 2020.</p>
+    <p>Le choix du visiteur est transmis à Google Tag Manager / gtag.js via le <strong>Consent Mode V2</strong> standard (<code>window.dataLayer</code>) — le plugin ne contacte lui-même aucun serveur Google, il alimente juste le signal que votre GTM déjà en place sait interpréter.</p>
+    <div class="callout warn">
+      <span class="emoji">⚠️</span>
+      <span>Le Consent Mode ne fait rien tout seul : GTM/gtag.js doit déjà être installé sur le site pour que ce signal serve à quelque chose.</span>
+    </div>
+    <p>Un lien <strong>« Gérer les cookies »</strong> peut être ajouté n'importe où (typiquement le footer) via le shortcode <code>[navi_cookie_preferences_link]</code>, pour rouvrir la modale de préférences sans passer par le bouton flottant.</p>
+  </section>
+
+  <section id="accessibilite">
+    <h2>♿ Accessibilité</h2>
+    <p class="lead">Sélecteur de langue, taille du texte, contraste, curseur, liens soulignés.</p>
+    <p>Ouvre un panneau permettant au visiteur d'ajuster son confort de lecture : taille du texte, contraste élevé, curseur agrandi, soulignage systématique des liens.</p>
+    <p>Le sélecteur de langue s'appuie sur <strong>WPML</strong> s'il est actif ; en son absence, il bascule automatiquement sur <strong>GTranslate</strong> si ce plugin est installé ; si aucun des deux n'est présent, le sélecteur de langue disparaît simplement (les autres réglages d'accessibilité restent disponibles).</p>
+  </section>
+
+  <section id="panier">
+    <h2>🛒 Panier automatique</h2>
+    <p class="lead">Panneau qui suit le visiteur sur la fiche produit, avec le prix et le bouton d'ajout au panier toujours visibles.</p>
+    <p>Fonctionne avec les produits simples et à variations (sélecteur de teinte inclus), compatible <strong>WCBoost Variation Swatches</strong>. Une chaîne de sélecteurs CSS de repli couvre le balisage WooCommerce standard et les thèmes les plus courants ; si votre thème a une structure inhabituelle, un réglage de <strong>sélecteur CSS personnalisé</strong> par champ (prix, nom, image) est disponible dans l'onglet Panier.</p>
+    <div class="callout info">
+      <span class="emoji">ℹ️</span>
+      <span>Compatible avec le template Produit du Site Editor (thèmes en blocs) — le formulaire de variations classique que le panier automatique détecte persiste sous les blocs. Seul le bloc expérimental WooCommerce « Ajouter au panier + Options (Bêta) », entièrement piloté en JS, n'est pas pris en charge tant qu'il reste en bêta.</span>
+    </div>
+  </section>
+
+  <section id="stories">
+    <h2>🎬 Stories</h2>
+    <p class="lead">Jusqu'à 4 bulles vidéo cliquables par produit — format YouTube ou MP4.</p>
+    <p>Sur la fiche produit, un onglet dédié <strong>« Stories (Navi) »</strong> permet de configurer jusqu'à 4 emplacements vidéo : coller une URL ou un identifiant YouTube pour un aperçu immédiat, ou choisir une vidéo MP4 directement depuis la médiathèque WordPress.</p>
+    <p>Côté visiteur : sur ordinateur, un panneau s'ouvre avec un mockup de téléphone (100 % CSS, aucune image externe) ; sur mobile, la vidéo s'ouvre en plein écran façon story. Affiché <strong>automatiquement après la galerie produit</strong> par défaut, ou positionné manuellement via le shortcode <code>[navi_stories]</code> ou le bloc Gutenberg <strong>« Navi Stories »</strong>.</p>
+    <div class="callout note">
+      <span class="emoji">💡</span>
+      <span>Sans vidéo de prévisualisation personnalisée, la bulle affiche la vignette officielle YouTube de la vidéo. Pour une bulle animée (mini-vidéo en boucle), une prévisualisation MP4 peut être ajoutée dans les réglages avancés de chaque emplacement.</span>
+    </div>
+  </section>
+
+  <section id="apparence">
+    <h2>Apparence et visibilité</h2>
+    <p>Depuis l'onglet <strong>Général</strong> de Navi &gt; Navi :</p>
+    <ul>
+      <li><strong>Position du bouton</strong> : bas droite (par défaut) ou bas gauche — à changer si un autre widget flottant (chat, WhatsApp...) occupe déjà un coin.</li>
+      <li><strong>Couleurs</strong> : couleur principale et secondaire, appliquées au bouton flottant et aux panneaux (cookies, accessibilité).</li>
+      <li><strong>Arrondis</strong> : boutons et image produit (panier automatique), de 0 (angles droits) à 50px.</li>
+      <li><strong>Langue du plugin</strong> : automatique (WPML/langue du site) ou forcée manuellement.</li>
+    </ul>
+    <p>Chaque module a en plus, dans son propre onglet, deux cases <strong>« Afficher sur ordinateur »</strong> / <strong>« Afficher sur mobile »</strong> — pratique pour désactiver un module sur un seul type d'appareil sans le désactiver complètement.</p>
+  </section>
+
+  <section id="shortcodes">
+    <h2>Shortcodes</h2>
+    <table>
+      <thead>
+        <tr><th>Shortcode</th><th>Effet</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>[navi_stories]</code></td><td>Bulles vidéo Stories du produit courant, ou d'un produit précis via <code>id="123"</code> — utile pour désactiver l'affichage automatique après galerie et choisir soi-même l'emplacement.</td></tr>
+        <tr><td><code>[navi_cookie_preferences_link]</code></td><td>Lien « Gérer les cookies » réutilisable n'importe où (texte personnalisable via <code>text="..."</code>).</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="faq">
+    <h2>Questions fréquentes</h2>
+
+    <details>
+      <summary>WooCommerce est-il obligatoire ?</summary>
+      <p>Le cœur du plugin et les modules Consentement cookies / Accessibilité fonctionnent sans WooCommerce. Les modules Panier automatique et Stories sont liés à la fiche produit WooCommerce et nécessitent qu'il soit actif — un message s'affiche dans le Back Office s'il est absent ou désactivé.</p>
+    </details>
+
+    <details>
+      <summary>Où sont stockées les vidéos MP4 des stories ?</summary>
+      <p>Les vidéos de prévisualisation sont choisies ou importées via la médiathèque WordPress standard (le même sélecteur que partout ailleurs dans l'admin) : elles sont donc stockées comme n'importe quel autre média, jamais dans le dossier du plugin — ce dernier peut être écrasé à chaque mise à jour, contrairement au dossier des médias.</p>
+    </details>
+
+    <details>
+      <summary>Le sélecteur de langue fonctionne-t-il sans WPML ?</summary>
+      <p>Oui : si le plugin GTranslate est installé, le sélecteur bascule automatiquement dessus. Sinon, le sélecteur de langue disparaît simplement — les autres réglages d'accessibilité restent disponibles.</p>
+    </details>
+
+    <details>
+      <summary>Le panier automatique fonctionne-t-il avec mon thème ?</summary>
+      <p>Une chaîne de sélecteurs CSS de repli couvre le balisage WooCommerce standard et les thèmes les plus courants. Si votre thème a une structure inhabituelle, un réglage de sélecteur CSS personnalisé par champ (prix, nom, image) est disponible dans Navi &gt; Panier.</p>
+    </details>
+
+    <details>
+      <summary>Puis-je choisir où affichent les bulles Stories ?</summary>
+      <p>Par défaut elles apparaissent juste après la galerie produit. Utilisez le shortcode <code>[navi_stories]</code> pour les placer ailleurs (contenu, constructeur de page, template de thème) — <code>id="123"</code> pour cibler un produit précis, ou vide pour le produit de la page courante. Pour éviter un doublon, désactivez « Afficher automatiquement » dans Navi &gt; Stories si vous utilisez le shortcode.</p>
+    </details>
+  </section>
+
+  <section id="technique">
+    <h2>Résumé technique</h2>
+    <details>
+      <summary>Architecture, pour l'équipe dev</summary>
+      <ul>
+        <li><strong>Architecture modulaire</strong> : chaque module s'enregistre auprès d'un registre central (<code>Navi_Module_Registry</code>) et communique avec le bouton flottant via un événement JS générique (<code>navi:action</code>) — aucun module ne connaît les autres.</li>
+        <li><strong>Fichiers</strong> : <code>includes/core/</code> (registre, menu admin, frontend, i18n), <code>includes/modules/&lt;nom&gt;/</code> (un dossier par module).</li>
+        <li><strong>Traduction</strong> : toutes les chaînes passent par <code>__()</code>/<code>_e()</code> ; pas de fichier <code>.mo</code>, un dictionnaire PHP embarqué intercepte le filtre <code>gettext</code> (détection WPML, sinon locale du site, ou langue forcée dans Navi &gt; Navi).</li>
+        <li><strong>Assets</strong> : chaque script/style est chargé via <code>wp_enqueue_script()</code>/<code>wp_enqueue_style()</code>, jamais en inline — conforme aux exigences de revue WordPress.org.</li>
+      </ul>
+    </details>
+    <div class="callout note" style="margin-top:20px;">
+      <span class="emoji">📦</span>
+      <span>Version <strong>0.7.1</strong> — code source et changelog complet sur <a href="https://github.com/Lucas-tsl/navi-wordpress">github.com/Lucas-tsl/navi-wordpress</a>.</span>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Saito Navi — <a href="https://github.com/Lucas-tsl/navi-wordpress">github.com/Lucas-tsl/navi-wordpress</a></p>
+</footer>
+
+</body>
+</html>
