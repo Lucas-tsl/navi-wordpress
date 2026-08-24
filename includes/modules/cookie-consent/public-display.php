@@ -9,33 +9,19 @@ function navi_cookie_cookie_value( $nom ) {
     return sanitize_text_field( wp_unslash( $_COOKIE[ $nom ] ) );
 }
 
-// Injection du Google Consent Mode V2 (AVANT GTM, très important de garder ce JS ici dans le <head>)
-add_action( 'wp_head', 'navi_cookie_inject_consent_mode', 1 );
-function navi_cookie_inject_consent_mode() {
-    ?>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-
-        var naviConsentVersion = document.cookie.match(/(?:^|; )navi_consent_version=([^;]*)/);
-        var naviHasConsent = document.cookie.indexOf('navi_consent_all=') !== -1
-            && naviConsentVersion !== null
-            && naviConsentVersion[1] === '<?php echo esc_js( NAVI_COOKIE_CONSENT_VERSION ); ?>';
-        var naviStats = document.cookie.indexOf('navi_consent_stats=1') !== -1 ? 'granted' : 'denied';
-        var naviMkt = document.cookie.indexOf('navi_consent_mkt=1') !== -1 ? 'granted' : 'denied';
-
-        gtag('consent', 'default', {
-            'ad_storage': naviHasConsent ? naviMkt : 'denied',
-            'ad_user_data': naviHasConsent ? naviMkt : 'denied',
-            'ad_personalization': naviHasConsent ? naviMkt : 'denied',
-            'analytics_storage': naviHasConsent ? naviStats : 'denied',
-            // Le délai n'a d'utilité que le temps de laisser un nouveau visiteur
-            // répondre à la bannière ; inutile de ralentir GTM pour un visiteur
-            // dont le choix est déjà connu.
-            'wait_for_update': naviHasConsent ? 0 : 500
-        });
-    </script>
-    <?php
+// Injection du Google Consent Mode V2 (AVANT GTM, très important de garder ce
+// script tôt dans le <head>) : enqueue en priorité 1 sur wp_enqueue_scripts
+// avec in_footer=false, pour être imprimé avant tout hook wp_head par
+// défaut (priorité 10), là où un snippet GTM classique s'injecte.
+add_action( 'wp_enqueue_scripts', 'navi_cookie_enqueue_consent_mode', 1 );
+function navi_cookie_enqueue_consent_mode() {
+    wp_register_script( 'navi-cookie-consent-mode', NAVI_PLUGIN_URL . 'assets/js/cookie-consent-mode.js', array(), NAVI_VERSION, false );
+    wp_localize_script(
+        'navi-cookie-consent-mode',
+        'naviConsentModeData',
+        array( 'version' => NAVI_COOKIE_CONSENT_VERSION )
+    );
+    wp_enqueue_script( 'navi-cookie-consent-mode' );
 }
 
 // Lien de gestion des cookies utilisable n'importe où (typiquement le footer
