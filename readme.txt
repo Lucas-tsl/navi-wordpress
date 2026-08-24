@@ -56,6 +56,15 @@ separate implementations adapted to each ecosystem.
   videos via `youtube-nocookie.com` in an iframe, only on product pages
   where a YouTube story has been configured by the site administrator.
   See the [YouTube privacy policy](https://policies.google.com/privacy).
+* **YouTube thumbnails**: when an administrator sets a YouTube story
+  without a custom preview, the plugin makes a server-side `HEAD` request
+  (3s timeout, no data sent beyond the request itself, no account or API
+  key involved) to `img.youtube.com` to check whether the HD thumbnail
+  (`maxresdefault.jpg`) exists for that video, falling back to a lower
+  resolution (`hqdefault.jpg`) if it doesn't — this avoids storing a
+  broken image URL for videos (mostly YouTube Shorts) that only have the
+  lower-resolution thumbnail. This request only happens when a product is
+  saved with a YouTube story configured, never on a visitor's page load.
 
 == Installation ==
 
