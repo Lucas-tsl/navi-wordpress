@@ -19,6 +19,7 @@ function navi_sticky_enregistrer_parametres() {
     register_setting( 'navi_sticky_options_group', 'navi_sticky_selector_price', array( 'sanitize_callback' => 'sanitize_text_field' ) );
     register_setting( 'navi_sticky_options_group', 'navi_sticky_selector_name', array( 'sanitize_callback' => 'sanitize_text_field' ) );
     register_setting( 'navi_sticky_options_group', 'navi_sticky_selector_image', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+    register_setting( 'navi_sticky_options_group', 'navi_sticky_selector_swatch', array( 'sanitize_callback' => 'sanitize_text_field' ) );
 
     // Activation du module + visibilité par appareil (voir navi_render_module_active_field()/
     // navi_render_visibility_fields, helpers.php).
@@ -52,6 +53,15 @@ function navi_sticky_render_settings_panel() {
                 <tr valign="top">
                     <th scope="row"><label for="navi_sticky_selector_image"><?php esc_html_e( 'Sélecteur CSS de l\'image du produit', 'saito-navi' ); ?></label></th>
                     <td><input type="text" name="navi_sticky_selector_image" id="navi_sticky_selector_image" value="<?php echo esc_attr( get_option( 'navi_sticky_selector_image', '' ) ); ?>" class="regular-text" placeholder=".woocommerce-product-gallery__image img" /></td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="navi_sticky_selector_swatch"><?php esc_html_e( 'Sélecteur CSS de la vignette de variation', 'saito-navi' ); ?></label></th>
+                    <td>
+                        <input type="text" name="navi_sticky_selector_swatch" id="navi_sticky_selector_swatch" value="<?php echo esc_attr( get_option( 'navi_sticky_selector_swatch', '' ) ); ?>" class="regular-text" placeholder="#{value}" />
+                        <p class="description">
+                            <?php esc_html_e( 'Pour le menu de teintes du panier flottant, quand le plugin WCBoost Variation Swatches n\'est pas utilisé. Renseignez un sélecteur CSS ciblant le conteneur de chaque option de variation sur votre thème, avec {value} à la place de la valeur de l\'attribut (ex. "#{value}" si l\'identifiant de cet élément correspond à la valeur, comme "15ml"). Une image à l\'intérieur de ce conteneur est utilisée en priorité, sinon sa couleur de fond. Laisser vide si votre thème n\'a pas de vignette par variation.', 'saito-navi' ); ?>
+                        </p>
+                    </td>
                 </tr>
                 <?php navi_render_visibility_fields( 'sticky-cart' ); ?>
             </table>

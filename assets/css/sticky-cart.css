@@ -243,10 +243,14 @@
 
 /* Pastille de couleur de la teinte affichée (déclencheur) ou listée (menu
    déplié ci-dessous), lue depuis les vignettes WCBoost Variation Swatches de
-   la fiche produit si ce plugin est actif (voir getSwatchColor,
-   assets/js/sticky-cart.js) — vide sinon, voir .navi-sticky-shade-swatch--empty
-   plus bas. Carrée avec un simple filet 1px (pas un rond), teintée d'accent
-   plutôt que d'encre neutre. Taille fixe, ne rétrécit jamais. */
+   la fiche produit si ce plugin est actif, ou depuis le sélecteur CSS
+   personnalisé (Navi > Panier) sinon — couleur ou image selon ce que trouve
+   getSwatchVisual() (assets/js/sticky-cart.js) — vide si aucune des deux
+   sources ne correspond, voir .navi-sticky-shade-swatch--empty plus bas.
+   Carrée avec un simple filet 1px (pas un rond), teintée d'accent plutôt que
+   d'encre neutre. Taille fixe, ne rétrécit jamais. background-size/position
+   ne s'appliquent que lorsqu'une image est effectivement posée en JS (une
+   simple couleur de fond n'est pas affectée par ces deux propriétés). */
 .navi-sticky-shade-trigger-swatch,
 .navi-sticky-shade-option-swatch {
     flex: 0 0 auto;
@@ -254,6 +258,8 @@
     height: 20px;
     border-radius: 0;
     border: 1px solid rgba(var(--navi-color-accent-rgb), 0.45);
+    background-size: cover;
+    background-position: center;
 }
 
 /* Aucune couleur trouvée pour la teinte (vignette de swatches absente ou non

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.3
+
+- Panier flottant : le sélecteur de teinte/vignette de variation accepte
+  désormais un sélecteur CSS personnalisé (Navi > Panier) pour les thèmes
+  ou plugins de swatches autres que WCBoost Variation Swatches — modèle
+  avec `{value}` (ex. `#{value}`), une image trouvée dans l'élément ciblé
+  étant utilisée en priorité, sinon sa couleur de fond.
+
 ## 0.7.2
 
 - Stories s'intègre au panneau "Navi" partagé du plugin compagnon Navi FAQ

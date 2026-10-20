@@ -28,6 +28,7 @@ module.exports = [
         naviConsentModeData: "readonly",
         dataLayer: "writable",
         wp: "readonly",
+        CSS: "readonly",
         console: "readonly",
         setTimeout: "readonly",
         clearTimeout: "readonly",
