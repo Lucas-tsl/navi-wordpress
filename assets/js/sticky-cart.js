@@ -190,6 +190,14 @@
          }, 900);
      }
 
+     // Les textes du panneau sont réglables en BO (Navi > Panier) : échappés
+     // avant d'être insérés dans le gabarit HTML ci-dessous.
+     function escapeHtml(text) {
+         return String(text).replace(/[&<>"']/g, function(c) {
+             return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+         });
+     }
+
      // Créer le HTML du sticky bar
      function createStickyBar() {
          const stickyHTML = `
@@ -217,10 +225,10 @@
                               a besoin d'être informé de ces mises à jour. -->
                          <div class="navi-sticky-availability" role="status" aria-live="polite">
                              <button class="navi-sticky-add-to-cart" disabled>
-                                <span class="navi-sticky-button-text">${stickyI18n.addToCartText}</span> &nbsp;
+                                <span class="navi-sticky-button-text">${escapeHtml(stickyI18n.addToCartText)}</span> &nbsp;
                                  <span class="navi-sticky-price"></span>
                              </button>
-                             <div class="navi-sticky-out-of-stock" style="display:none;">${stickyI18n.outOfStockText}</div>
+                             <div class="navi-sticky-out-of-stock" style="display:none;">${escapeHtml(stickyI18n.outOfStockText)}</div>
                          </div>
                      </div>
                  </div>

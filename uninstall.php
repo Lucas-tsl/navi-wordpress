@@ -30,6 +30,8 @@ $navi_options = array(
     'navi_sticky_selector_name',
     'navi_sticky_selector_image',
     'navi_sticky_selector_swatch',
+    'navi_sticky_text_add_to_cart',
+    'navi_sticky_text_out_of_stock',
     // Module Stories (Navi > Stories)
     'navi_stories_auto_display',
     'navi_stories_show_label',

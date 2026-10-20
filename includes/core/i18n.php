@@ -172,6 +172,11 @@ function navi_dictionary_en() {
         'Ajouté' => 'Added',
         'Rupture de stock' => 'Out of stock',
         'Choisir une option' => 'Choose an option',
+        "Texte du bouton d'ajout au panier" => 'Add to cart button text',
+        'Ajouter au panier' => 'Add to cart',
+        'Le prix est ajouté automatiquement après ce texte. Laisser vide pour le texte par défaut.' => 'The price is added automatically after this text. Leave empty for the default text.',
+        'Texte de rupture de stock' => 'Out of stock text',
+        'Affiché à la place du bouton quand le produit ou la variation choisie est épuisé. Laisser vide pour le texte par défaut.' => 'Shown instead of the button when the product or the selected variation is out of stock. Leave empty for the default text.',
         'Navi : WooCommerce est inactif. Les modules "Panier automatique" et "Stories" ne fonctionneront pas tant que WooCommerce ne sera pas réactivé.' => 'Navi: WooCommerce is inactive. The "Automatic cart" and "Stories" modules will not work until WooCommerce is reactivated.',
 
         // Bannière cookies (mise à jour BO modernisé).

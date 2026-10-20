@@ -21,6 +21,11 @@ function navi_sticky_enregistrer_parametres() {
     register_setting( 'navi_sticky_options_group', 'navi_sticky_selector_image', array( 'sanitize_callback' => 'sanitize_text_field' ) );
     register_setting( 'navi_sticky_options_group', 'navi_sticky_selector_swatch', array( 'sanitize_callback' => 'sanitize_text_field' ) );
 
+    // Textes du panneau : vide = texte par défaut traduit (voir
+    // navi_sticky_text(), sticky-frontend.php).
+    register_setting( 'navi_sticky_options_group', 'navi_sticky_text_add_to_cart', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+    register_setting( 'navi_sticky_options_group', 'navi_sticky_text_out_of_stock', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+
     // Activation du module + visibilité par appareil (voir navi_render_module_active_field()/
     // navi_render_visibility_fields, helpers.php).
     register_setting( 'navi_sticky_options_group', 'navi_module_active_sticky-cart', array( 'type' => 'integer', 'sanitize_callback' => 'navi_sanitize_checkbox', 'default' => 1 ) );
@@ -61,6 +66,20 @@ function navi_sticky_render_settings_panel() {
                         <p class="description">
                             <?php esc_html_e( 'Pour le menu de teintes du panier flottant, quand le plugin WCBoost Variation Swatches n\'est pas utilisé. Renseignez un sélecteur CSS ciblant le conteneur de chaque option de variation sur votre thème, avec {value} à la place de la valeur de l\'attribut (ex. "#{value}" si l\'identifiant de cet élément correspond à la valeur, comme "15ml"). Une image à l\'intérieur de ce conteneur est utilisée en priorité, sinon sa couleur de fond. Laisser vide si votre thème n\'a pas de vignette par variation.', 'saito-navi' ); ?>
                         </p>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="navi_sticky_text_add_to_cart"><?php esc_html_e( 'Texte du bouton d\'ajout au panier', 'saito-navi' ); ?></label></th>
+                    <td>
+                        <input type="text" name="navi_sticky_text_add_to_cart" id="navi_sticky_text_add_to_cart" value="<?php echo esc_attr( get_option( 'navi_sticky_text_add_to_cart', '' ) ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Ajouter au panier', 'saito-navi' ); ?>" />
+                        <p class="description"><?php esc_html_e( 'Le prix est ajouté automatiquement après ce texte. Laisser vide pour le texte par défaut.', 'saito-navi' ); ?></p>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="navi_sticky_text_out_of_stock"><?php esc_html_e( 'Texte de rupture de stock', 'saito-navi' ); ?></label></th>
+                    <td>
+                        <input type="text" name="navi_sticky_text_out_of_stock" id="navi_sticky_text_out_of_stock" value="<?php echo esc_attr( get_option( 'navi_sticky_text_out_of_stock', '' ) ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Rupture de stock', 'saito-navi' ); ?>" />
+                        <p class="description"><?php esc_html_e( 'Affiché à la place du bouton quand le produit ou la variation choisie est épuisé. Laisser vide pour le texte par défaut.', 'saito-navi' ); ?></p>
                     </td>
                 </tr>
                 <?php navi_render_visibility_fields( 'sticky-cart' ); ?>

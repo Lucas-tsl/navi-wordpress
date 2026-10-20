@@ -6,6 +6,8 @@
   sous-menu (Saito > Navi, même adresse admin.php?page=navi-main), à côté
   d'un tableau de bord des plugins Saito, d'une page Outils (CSS et
   JavaScript additionnels du site) et d'une page Documentation.
+- Panier flottant : les textes « Ajouter au panier » et « Rupture de
+  stock » sont personnalisables (Navi > Panier). Vide = texte par défaut.
 
 ## 0.7.3
 

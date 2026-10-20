@@ -169,6 +169,8 @@ exclusively.
   lives under Saito, next to a dashboard of the Saito plugins, a Tools
   page (additional CSS and JavaScript for the whole site) and a
   Documentation page (source code, documentation, WordPress.org pages).
+* Sticky add-to-cart: the "Add to cart" and "Out of stock" texts can now be
+  customized (Navi > Cart). Empty = default text.
 
 = 0.7.3 =
 * Sticky add-to-cart: the variation color/thumbnail picker now supports a
