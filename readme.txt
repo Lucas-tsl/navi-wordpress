@@ -4,7 +4,7 @@ Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.8.0
+Stable tag: 0.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
@@ -32,6 +32,13 @@ behind **a single floating button** (gear icon, corner of the screen):
   mobile full-screen stories-style view. Displayed by default after the
   product gallery, or wherever you like via the `[navi_stories]`
   shortcode.
+* **Calendar** — opens a [Saito Calendar Event](https://wordpress.org/plugins/saito-calendar-event/)
+  calendar (advent calendar, countdown) from the floating button, on every
+  page that doesn't already show it. Requires Saito Calendar Event.
+
+The floating button adapts its icon to the page: a cart with a "+" on
+product pages, a calendar when a calendar is offered, and the usual gear
+as soon as the footer is in view.
 
 Built from the ground up to welcome new modules without touching the
 core: each module registers itself and talks to the central button
@@ -164,6 +171,20 @@ exclusively.
 
 == Changelog ==
 
+= 0.9.0 =
+* The floating button's icon now depends on the page: a cart with a "+"
+  on product pages (sticky add-to-cart active), a calendar when the
+  Calendar module has a calendar to show, and the gear when the footer is
+  in view (or everywhere else).
+* New Calendar module: opens a Saito Calendar Event calendar inside the
+  floating button (Saito > Navi > Calendar: choose the calendar, or the most
+  recent one by default). Hidden on pages that already show that calendar
+  and outside the calendar's publication period.
+* The floating button now goes under the WooCommerce mini-cart drawer when
+  it opens, instead of staying on top of it.
+* Shared "Saito" menu: the dashboard cards no longer repeat the
+  "Documentation" link (still at the end of the submenu).
+
 = 0.8.0 =
 * New shared "Saito" admin menu, common to all Saito plugins: "Navi" (admin.php?page=navi-main, unchanged) now
   lives under Saito, next to a dashboard of the Saito plugins, a Tools
@@ -242,6 +263,9 @@ exclusively.
   Accessibility modules.
 
 == Upgrade Notice ==
+
+= 0.9.0 =
+Contextual icon for the floating button and a new optional Calendar module (requires Saito Calendar Event). No action required.
 
 = 0.8.0 =
 The "Navi" menu moves under the new shared "Saito" menu (Saito > Navi). Settings are unchanged.

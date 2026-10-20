@@ -11,6 +11,7 @@ $navi_options = array(
     'navi_module_active_cookie-consent',
     'navi_module_active_accessibility',
     'navi_module_active_sticky-cart',
+    'navi_module_active_calendar',
     'navi_module_active_stories',
     // Position du bouton flottant, langue forcée du plugin
     'navi_fab_position',
@@ -32,6 +33,8 @@ $navi_options = array(
     'navi_sticky_selector_swatch',
     'navi_sticky_text_add_to_cart',
     'navi_sticky_text_out_of_stock',
+    // Module Calendrier (Saito > Navi > Calendrier)
+    'navi_calendar_id',
     // Module Stories (Navi > Stories)
     'navi_stories_auto_display',
     'navi_stories_show_label',
@@ -57,6 +60,8 @@ $navi_options = array(
     'navi_show_mobile_accessibility',
     'navi_show_desktop_sticky-cart',
     'navi_show_mobile_sticky-cart',
+    'navi_show_desktop_calendar',
+    'navi_show_mobile_calendar',
     'navi_show_desktop_stories',
     'navi_show_mobile_stories',
 );
