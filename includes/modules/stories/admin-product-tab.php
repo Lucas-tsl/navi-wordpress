@@ -5,29 +5,39 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Onglet "Stories (Navi)" sur la fiche produit WooCommerce — équivalent de
  * Navi::hookDisplayAdminProductsExtra() côté PrestaShop.
  *
- * Si le plugin compagnon Navi FAQ est actif, son panneau "Navi" partagé
- * (includes/navi-panel.php côté navi-faq, metabox autonome sous l'éditeur
+ * Si le plugin compagnon Saito FAQ est actif, son panneau "Navi" partagé
+ * (includes/saito-panel.php côté saito-faq, metabox autonome sous l'éditeur
  * de description, hors "Données produit") prend le relais via le filtre
- * ouvert navi_product_panel_tabs — Stories y devient un onglet interne aux
- * côtés de FAQ, plutôt qu'une entrée de plus dans "Données produit". Sans
- * Navi FAQ, ce filtre n'existe simplement pas : navi_stories_uses_navi_panel()
+ * ouvert saito_panel_tabs — Stories y devient un onglet interne aux côtés
+ * de FAQ, plutôt qu'une entrée de plus dans "Données produit". Sans Saito
+ * FAQ, ce filtre n'existe simplement pas : navi_stories_uses_navi_panel()
  * retombe sur false et Stories garde son propre onglet WooCommerce comme
- * avant, sans dépendance dure à navi-faq.
+ * avant, sans dépendance dure à saito-faq.
+ *
+ * Saito FAQ 0.1.0 exposait ce panneau sous des noms navi_ (navi_panel_get_tabs(),
+ * filtre navi_product_panel_tabs, navi_faq_post_types()), renommés en
+ * saito_ en 0.2.0 : les deux sont reconnus tant que la 0.1.0 peut encore
+ * être installée.
  */
 function navi_stories_uses_navi_panel() {
-    if ( ! function_exists( 'navi_panel_get_tabs' ) ) {
+    if ( function_exists( 'saito_panel_get_tabs' ) ) {
+        $faq_post_types = function_exists( 'saito_faq_post_types' ) ? saito_faq_post_types() : null;
+    } elseif ( function_exists( 'navi_panel_get_tabs' ) ) {
+        $faq_post_types = function_exists( 'navi_faq_post_types' ) ? navi_faq_post_types() : null;
+    } else {
         return false;
     }
-    // navi-faq peut exclure 'product' de sa propre couverture (filtre
-    // navi_faq_post_types) : dans ce cas son panneau ne s'enregistre pas du
+    // Saito FAQ peut exclure 'product' de sa propre couverture (filtre
+    // saito_faq_post_types) : dans ce cas son panneau ne s'enregistre pas du
     // tout sur la fiche produit, et s'appuyer dessus ferait disparaître
     // Stories plutôt que de la replier sur son propre onglet.
-    if ( function_exists( 'navi_faq_post_types' ) && ! in_array( 'product', navi_faq_post_types(), true ) ) {
+    if ( is_array( $faq_post_types ) && ! in_array( 'product', $faq_post_types, true ) ) {
         return false;
     }
     return true;
 }
 
+add_filter( 'saito_panel_tabs', 'navi_stories_register_panel_tab' );
 add_filter( 'navi_product_panel_tabs', 'navi_stories_register_panel_tab' );
 function navi_stories_register_panel_tab( $tabs ) {
     $tabs['stories'] = array(
@@ -86,7 +96,7 @@ function navi_stories_enqueue_media_library( $hook_suffix ) {
 add_action( 'woocommerce_product_data_panels', 'navi_stories_render_product_panel' );
 function navi_stories_render_product_panel() {
     if ( navi_stories_uses_navi_panel() ) {
-        return; // Rendu par navi_panel_render() (navi-faq) via l'onglet enregistré ci-dessus.
+        return; // Rendu par le panneau de Saito FAQ via l'onglet enregistré ci-dessus.
     }
     global $post;
     if ( ! $post ) {
