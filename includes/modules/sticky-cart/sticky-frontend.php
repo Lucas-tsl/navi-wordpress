@@ -30,10 +30,10 @@ function navi_sticky_enqueue_assets() {
         'navi-sticky-js',
         'naviStickyCartI18n',
         array(
-            'addToCartText'       => __( 'Ajouter au panier - ', 'saito-navi' ),
+            'addToCartText'       => navi_sticky_text( 'navi_sticky_text_add_to_cart', __( 'Ajouter au panier - ', 'saito-navi' ), ' - ' ),
             'addingText'          => __( 'Ajout en cours...', 'saito-navi' ),
             'addedText'           => __( 'Ajouté', 'saito-navi' ),
-            'outOfStockText'      => __( 'Rupture de stock', 'saito-navi' ),
+            'outOfStockText'      => navi_sticky_text( 'navi_sticky_text_out_of_stock', __( 'Rupture de stock', 'saito-navi' ) ),
             'chooseVariationText' => __( 'Choisir une option', 'saito-navi' ),
         )
     );
@@ -57,4 +57,13 @@ function navi_sticky_enqueue_assets() {
             'swatchSelector' => get_option( 'navi_sticky_selector_swatch', '' ),
         )
     );
+}
+
+// Texte personnalisé du panneau (Navi > Panier, admin-settings.php), ou le
+// texte par défaut traduit si le réglage est vide. $suffix sépare le texte
+// du bouton du prix qui le suit ("Ajouter au panier - 20,00 €") : déjà
+// présent dans le texte par défaut, il est ajouté au texte personnalisé.
+function navi_sticky_text( $option, $default, $suffix = '' ) {
+    $text = trim( (string) get_option( $option, '' ) );
+    return '' === $text ? $default : $text . $suffix;
 }

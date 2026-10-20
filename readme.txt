@@ -4,7 +4,7 @@ Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.7.3
+Stable tag: 0.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
@@ -74,7 +74,7 @@ separate implementations adapted to each ecosystem.
 3. WooCommerce must be installed and active (required for the Sticky
    add-to-cart and Stories modules; the Cookie consent and Accessibility
    modules work without it).
-4. Configure the modules from the new **Navi** menu in the Back Office.
+4. Configure the modules from **Saito → Navi** in the Back Office (the "Saito" menu is shared by all Saito plugins).
 
 == Frequently Asked Questions ==
 
@@ -104,14 +104,14 @@ accessibility settings remain available).
 A fallback chain of CSS selectors covers standard WooCommerce markup and
 the most common themes. If your theme has an unusual structure, a
 "custom CSS selector" setting per field (price, name, image) is
-available under Navi > Cart.
+available under Saito > Navi > Cart.
 
 = Does the color/thumbnail picker on the sticky bar work with any swatches plugin? =
 
 Out of the box it reads colors from WCBoost Variation Swatches if that
 plugin is active. For any other theme or plugin displaying its own
 per-variation thumbnails (image or color), set the "Sélecteur CSS de la
-vignette de variation" field under Navi > Cart to a template such as
+vignette de variation" field under Saito > Navi > Cart to a template such as
 `#{value}` (with `{value}` replaced automatically by each variation's
 value) pointing at your theme's markup — an image found inside is used
 first, otherwise its background color.
@@ -136,12 +136,12 @@ By default they appear right after the product gallery. Use the
 content, a page builder, or a theme template) — add
 `id="123"` to target a specific product, or leave it empty to use the
 current product page. To avoid showing the bubbles twice, turn off
-"Afficher automatiquement" under Navi > Stories if you use the shortcode
+"Afficher automatiquement" under Saito > Navi > Stories if you use the shortcode
 exclusively.
 
 == Screenshots ==
 
-1. Navi > Navi, General tab: floating button position, plugin language,
+1. Saito > Navi, General tab: floating button position, plugin language,
    appearance (colors, corner radius).
 2. Cookie consent tab: banner settings, with concrete Google Tag Manager /
    Consent Mode V2 setup instructions.
@@ -163,6 +163,14 @@ exclusively.
     page.
 
 == Changelog ==
+
+= 0.8.0 =
+* New shared "Saito" admin menu, common to all Saito plugins: "Navi" (admin.php?page=navi-main, unchanged) now
+  lives under Saito, next to a dashboard of the Saito plugins, a Tools
+  page (additional CSS and JavaScript for the whole site) and a
+  Documentation page (source code, documentation, WordPress.org pages).
+* Sticky add-to-cart: the "Add to cart" and "Out of stock" texts can now be
+  customized (Navi > Cart). Empty = default text.
 
 = 0.7.3 =
 * Sticky add-to-cart: the variation color/thumbnail picker now supports a
@@ -234,6 +242,9 @@ exclusively.
   Accessibility modules.
 
 == Upgrade Notice ==
+
+= 0.8.0 =
+The "Navi" menu moves under the new shared "Saito" menu (Saito > Navi). Settings are unchanged.
 
 = 0.7.3 =
 No action required on upgrade. New optional setting under Navi > Cart for

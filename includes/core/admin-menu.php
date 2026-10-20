@@ -1,28 +1,25 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+// Sous-menu Saito > Navi (menu commun, voir includes/saito-hub/hub.php). Le
+// slug navi-main ne change pas : les liens admin.php?page=navi-main
+// existants restent valables.
 add_action( 'admin_menu', 'navi_add_admin_menu' );
 function navi_add_admin_menu() {
-    add_menu_page(
+    $GLOBALS['navi_admin_page_hook'] = add_submenu_page(
+        saito_hub_menu_slug(),
         __( 'Navi', 'saito-navi' ),
         __( 'Navi', 'saito-navi' ),
         'manage_options',
         'navi-main',
-        'navi_render_dashboard_page',
-        NAVI_PLUGIN_URL . 'assets/img/logo-32.png',
-        58
+        'navi_render_dashboard_page'
     );
 }
 
-// WP core ajoute un padding-top à toute icône de menu personnalisée
-// (#adminmenu .wp-menu-image img) qui décale notre logo — retiré ici,
-// pour notre menu uniquement. Le menu WP est visible sur tout l'admin (pas
-// seulement nos propres pages), donc ce CSS s'accroche à 'common' — le
-// handle de style core toujours chargé en admin — plutôt qu'à un fichier
-// propre au plugin qu'il faudrait enqueue partout.
-add_action( 'admin_enqueue_scripts', 'navi_enqueue_admin_menu_icon_css' );
-function navi_enqueue_admin_menu_icon_css() {
-    wp_add_inline_style( 'common', '#toplevel_page_navi-main .wp-menu-image img { padding: 0; }' );
+// Écran de la page Navi : son identifiant dépend du menu parent, d'où la
+// valeur renvoyée par add_submenu_page() plutôt qu'un nom écrit en dur.
+function navi_is_admin_page( $hook_suffix ) {
+    return ! empty( $GLOBALS['navi_admin_page_hook'] ) && $GLOBALS['navi_admin_page_hook'] === $hook_suffix;
 }
 
 // Réglages transverses (pas propres à un module) : chacun a sa propre
@@ -114,7 +111,7 @@ function navi_register_module_settings() {
 // le reste de l'admin.
 add_action( 'admin_enqueue_scripts', 'navi_enqueue_color_picker_assets' );
 function navi_enqueue_color_picker_assets( $hook_suffix ) {
-    if ( 'toplevel_page_navi-main' !== $hook_suffix ) {
+    if ( ! navi_is_admin_page( $hook_suffix ) ) {
         return;
     }
     wp_enqueue_style( 'wp-color-picker' );
@@ -131,7 +128,7 @@ function navi_enqueue_color_picker_assets( $hook_suffix ) {
 // l'admin WordPress.
 add_action( 'admin_enqueue_scripts', 'navi_enqueue_admin_assets' );
 function navi_enqueue_admin_assets( $hook_suffix ) {
-    if ( 'toplevel_page_navi-main' !== $hook_suffix ) {
+    if ( ! navi_is_admin_page( $hook_suffix ) ) {
         return;
     }
     navi_enqueue_style( 'navi-admin-css', NAVI_PLUGIN_URL . 'assets/css/admin.css', array(), NAVI_VERSION );
