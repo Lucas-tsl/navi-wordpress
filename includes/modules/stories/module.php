@@ -4,14 +4,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 require_once __DIR__ . '/data.php';
 require_once __DIR__ . '/appearance.php';
 
+// Libellés traduits du module, lus à la demande par le registre (voir
+// 'texts', Navi_Module_Registry::register()).
+function navi_stories_module_texts() {
+    return array(
+        'label'       => __( 'Stories', 'saito-navi' ),
+        'short_label' => __( 'Stories', 'saito-navi' ),
+        'description' => __( 'Bulles vidéo "stories" sur la fiche produit, jusqu\'à 4 par produit (YouTube ou vidéo MP4 importée).', 'saito-navi' ),
+    );
+}
+
 Navi_Module_Registry::register(
     'stories',
     array(
-        'label'           => __( 'Stories', 'saito-navi' ),
-        'short_label'     => __( 'Stories', 'saito-navi' ),
+        'texts'           => 'navi_stories_module_texts',
         'icon'            => '▶️',
         'icon_svg'        => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>',
-        'description'     => __( 'Bulles vidéo "stories" sur la fiche produit, jusqu\'à 4 par produit (YouTube ou vidéo MP4 importée).', 'saito-navi' ),
         'option_name'     => 'navi_module_active_stories',
         'default_active'  => true,
         // Pas d'icône dans le menu du FAB : les bulles s'affichent déjà sur
