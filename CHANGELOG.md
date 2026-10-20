@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0
+
+- Nouveau menu « Saito » commun à tous les plugins Saito : Navi passe en
+  sous-menu (Saito > Navi, même adresse admin.php?page=navi-main), à côté
+  d'un tableau de bord des plugins Saito, d'une page Outils (CSS et
+  JavaScript additionnels du site) et d'une page Documentation.
+
 ## 0.7.3
 
 - Panier flottant : le sélecteur de teinte/vignette de variation accepte

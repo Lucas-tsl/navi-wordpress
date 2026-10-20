@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Saito Navi
  * Description: Floating engagement hub for WordPress/WooCommerce: cookie consent (Google Consent Mode V2), sticky add-to-cart on the product page, accessibility (language, text size, contrast, cursor, underlined links), all driven from a single button.
- * Version: 0.7.3
+ * Version: 0.8.0
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * Author: Troteseil Lucas
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'NAVI_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'NAVI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'NAVI_VERSION', '0.7.3' );
+define( 'NAVI_VERSION', '0.8.0' );
 
 // Pas d'appel à load_plugin_textdomain() : discouraged depuis WP 4.6 pour
 // les plugins hébergés sur WordPress.org, qui chargent automatiquement les
@@ -43,6 +43,19 @@ function navi_notice_woocommerce_manquant() {
         <p><?php esc_html_e( 'Navi : WooCommerce est inactif. Les modules "Panier automatique" et "Stories" ne fonctionneront pas tant que WooCommerce ne sera pas réactivé.', 'saito-navi' ); ?></p>
     </div>
     <?php
+}
+
+// Menu « Saito » commun aux plugins Saito (Outils, Documentation) : voir
+// includes/saito-hub/hub.php. Navi y apparaît en sous-menu.
+require_once NAVI_PLUGIN_DIR . 'includes/saito-hub/load.php';
+add_filter( 'saito_hub_plugins', 'navi_register_in_saito_hub' );
+function navi_register_in_saito_hub( $plugins ) {
+    $plugins['navi'] = array(
+        'version'      => NAVI_VERSION,
+        'settings_url' => admin_url( 'admin.php?page=navi-main' ),
+        'menu_slugs'   => array( 'navi-main' ),
+    );
+    return $plugins;
 }
 
 // Noyau : registre de modules, helpers, menu admin, bouton flottant (FAB)

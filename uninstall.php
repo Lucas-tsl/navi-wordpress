@@ -3,6 +3,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit;
 }
 
+// Réglages partagés de Saito > Outils : supprimés seulement avec le dernier plugin Saito.
+require __DIR__ . '/includes/saito-hub/uninstall.php';
+
 $navi_options = array(
     // Activation/désactivation des modules (réglage central du hub)
     'navi_module_active_cookie-consent',
