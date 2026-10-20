@@ -46,4 +46,25 @@ final class ModuleRegistryTest extends TestCase {
         $this->assertArrayHasKey( 'test-registry-all-a', $all );
         $this->assertArrayHasKey( 'test-registry-all-b', $all );
     }
+
+    public function test_texts_callback_is_resolved_on_first_read_only() {
+        $calls = 0;
+        Navi_Module_Registry::register( 'test-registry-texts', array(
+            'available' => false, // is_active() s'arrête là, sans get_option().
+            'texts'     => function () use ( &$calls ) {
+                $calls++;
+                return array( 'label' => 'Libellé traduit', 'short_label' => 'Court' );
+            },
+        ) );
+
+        Navi_Module_Registry::is_active( 'test-registry-texts' );
+        $this->assertSame( 0, $calls );
+
+        $module = Navi_Module_Registry::get( 'test-registry-texts' );
+        Navi_Module_Registry::all();
+
+        $this->assertSame( 1, $calls );
+        $this->assertSame( 'Libellé traduit', $module['label'] );
+        $this->assertSame( 'Court', $module['short_label'] );
+    }
 }

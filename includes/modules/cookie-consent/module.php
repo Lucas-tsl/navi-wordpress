@@ -40,14 +40,22 @@ function navi_cookie_logo_url() {
     return ! empty( $configured ) ? $configured : navi_cookie_logo_url_par_defaut();
 }
 
+// Libellés traduits du module, lus à la demande par le registre (voir
+// 'texts', Navi_Module_Registry::register()).
+function navi_cookie_module_texts() {
+    return array(
+        'label'       => __( 'Consentement cookies', 'saito-navi' ),
+        'short_label' => __( 'Cookies', 'saito-navi' ),
+        'description' => __( 'Bannière RGPD et Google Consent Mode V2, connectée au DataLayer GTM.', 'saito-navi' ),
+    );
+}
+
 Navi_Module_Registry::register(
     'cookie-consent',
     array(
-        'label'           => __( 'Consentement cookies', 'saito-navi' ),
-        'short_label'     => __( 'Cookies', 'saito-navi' ),
+        'texts'           => 'navi_cookie_module_texts',
         'icon'            => '🍪',
         'icon_svg'        => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="8.5" cy="10.5" r="1" fill="currentColor" stroke="none"></circle><circle cx="15" cy="9" r="1" fill="currentColor" stroke="none"></circle><circle cx="15.5" cy="15" r="1" fill="currentColor" stroke="none"></circle><circle cx="9" cy="15.5" r="1" fill="currentColor" stroke="none"></circle></svg>',
-        'description'     => __( 'Bannière RGPD et Google Consent Mode V2, connectée au DataLayer GTM.', 'saito-navi' ),
         'option_name'     => 'navi_module_active_cookie-consent',
         'default_active'  => true,
         'fab_action'      => 'open-cookie-modal',
