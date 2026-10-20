@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.9.0
+
+- Icône du bouton flottant selon la page : panier avec un « + » sur les
+  fiches produit (panier flottant actif), calendrier quand le module
+  Calendrier a un calendrier à proposer, engrenage dès que le pied de page
+  est visible (et partout ailleurs).
+- Nouveau module Calendrier : ouvre un calendrier Saito Calendar Event dans
+  le bouton flottant (Saito > Navi > Calendrier : choix du calendrier, le
+  plus récent par défaut). Masqué sur les pages qui l'affichent déjà et en
+  dehors de sa période de publication. Échap referme la case ouverte sans
+  refermer le panneau.
+- Le bouton flottant passe sous le tiroir du mini-panier WooCommerce quand
+  il s'ouvre.
+- Menu Saito (hub 1.1.0) : les cartes du tableau de bord ne répètent plus
+  le lien « Documentation », déjà en fin de sous-menu.
+
 ## 0.8.0
 
 - Nouveau menu « Saito » commun à tous les plugins Saito : Navi passe en

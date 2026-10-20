@@ -182,6 +182,16 @@ function navi_dictionary_en() {
         // Bannière cookies (mise à jour BO modernisé).
         "Bannière RGPD conforme au Google Consent Mode V2. À chaque choix du visiteur, si %1\$s est défini sur le site, le plugin appelle %2\$s ; il pousse aussi un événement %3\$s dans le dataLayer à chaque changement. Dans GTM : activez le Consent Mode (état par défaut refusé), et utilisez cet événement comme déclencheur personnalisé pour vos propres balises conditionnées au consentement." => "GDPR banner, compliant with Google Consent Mode V2. On every visitor choice, if %1\$s is defined on the site, the plugin calls %2\$s; it also pushes a %3\$s event to the dataLayer on every change. In GTM: enable Consent Mode (default state denied), and use this event as a custom trigger for your own tags gated on consent.",
 
+        // Calendrier (module calendar) et icône du bouton flottant.
+        'Calendrier' => 'Calendar',
+        "Ouvre un calendrier Saito Calendar Event (calendrier de l'Avent, compte à rebours) dans le bouton flottant, sur toutes les pages." => 'Opens a Saito Calendar Event calendar (advent calendar, countdown) in the floating button, on every page.',
+        "Ce module affiche un calendrier du plugin Saito Calendar Event dans le bouton flottant. Installez et activez Saito Calendar Event pour l'utiliser." => 'This module shows a calendar from the Saito Calendar Event plugin in the floating button. Install and activate Saito Calendar Event to use it.',
+        'Installer Saito Calendar Event' => 'Install Saito Calendar Event',
+        "Quand ce module est actif, le bouton flottant prend une icône de calendrier (sauf sur les fiches produit et en bas de page) et son menu propose d'ouvrir le calendrier choisi ci-dessous, sur toutes les pages qui ne l'affichent pas déjà." => 'When this module is active, the floating button shows a calendar icon (except on product pages and at the bottom of the page) and its menu offers to open the calendar chosen below, on every page that does not already show it.',
+        'Calendrier affiché' => 'Calendar shown',
+        'Le plus récent' => 'Most recent',
+        "En dehors de sa période de publication (réglée dans le calendrier), l'icône n'apparaît pas." => 'Outside its publication period (set in the calendar), the icon does not appear.',
+
         // Stories.
         'Stories' => 'Stories',
         'Stories (Navi)' => 'Stories (Navi)',

@@ -185,7 +185,12 @@
     });
 
     document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && state !== 'closed') forceClose();
+        if (event.key !== 'Escape' || state === 'closed') return;
+        // Échap dans une fenêtre modale affichée À L'INTÉRIEUR d'un panneau
+        // (ex. la case ouverte du calendrier, voir le module calendar) : elle
+        // se referme seule, le panneau reste ouvert.
+        if (event.target && event.target.closest && event.target.closest('#navi-fab-detail [aria-modal="true"]')) return;
+        forceClose();
     });
 
     var ticking = false;
@@ -200,6 +205,33 @@
     }, { passive: true });
 
     updateScrollPercent();
+
+    // Icône du bouton fermé : celle de la page (panier sur une fiche produit,
+    // calendrier, voir navi_fab_main_icon() dans includes/core/frontend.php),
+    // remplacée par l'engrenage dès que le pied de page est visible — c'est
+    // là que l'on cherche habituellement les réglages (cookies, accessibilité).
+    var mainIcon = config.mainIcon || 'gear';
+    var footerVisible = false;
+    function updateMainIcon() {
+        fab.setAttribute('data-icon', footerVisible ? 'gear' : mainIcon);
+    }
+    updateMainIcon();
+    if (mainIcon !== 'gear') {
+        var footer = document.querySelector('footer.wp-block-template-part, .site-footer, #colophon, footer[role="contentinfo"], [role="contentinfo"], body > footer, footer');
+        if (footer && typeof IntersectionObserver !== 'undefined') {
+            new IntersectionObserver(function (entries) {
+                footerVisible = entries[0].isIntersecting;
+                updateMainIcon();
+            }).observe(footer);
+        } else {
+            // Pas de pied de page repérable : bas de page atteint.
+            window.addEventListener('scroll', function () {
+                var wasVisible = footerVisible;
+                footerVisible = scrollPercent >= 98;
+                if (wasVisible !== footerVisible) updateMainIcon();
+            }, { passive: true });
+        }
+    }
 
     // API exposée aux modules (cookie, sticky cart, accessibilité...) pour
     // afficher/masquer LEUR contenu dans le slot #navi-fab-detail. Le noyau ne
@@ -275,6 +307,10 @@
         if (!drawer) return;
         miniCartWatched = true;
         var observer = new MutationObserver(function () {
+            // Tiroir ouvert : le bouton passe sous lui (voir
+            // .navi-fab.navi-fab--behind-drawer, assets/css/core.css) plutôt
+            // que de rester par-dessus le mini-panier.
+            fab.classList.toggle('navi-fab--behind-drawer', drawer.getAttribute('aria-hidden') === 'false');
             if (drawer.getAttribute('aria-hidden') === 'false' && state !== 'closed') {
                 // Le panier sticky affiche sa confirmation "✓ Ajouté" pendant 900ms
                 // (assets/js/sticky-cart.js, showAddedConfirmation) juste après le

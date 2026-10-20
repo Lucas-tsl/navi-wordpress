@@ -90,6 +90,11 @@ function navi_enqueue_core_assets() {
         if ( empty( $module['fab_action'] ) ) {
             continue;
         }
+        // Module actif mais sans rien à afficher sur cette page (ex. le
+        // calendrier quand Saito Calendar Event est absent) : pas d'icône.
+        if ( ! empty( $module['fab_enabled_callback'] ) && is_callable( $module['fab_enabled_callback'] ) && ! call_user_func( $module['fab_enabled_callback'] ) ) {
+            continue;
+        }
         $items[] = array(
             'id'         => $module_id,
             'icon'       => $module['icon'],
@@ -104,15 +109,33 @@ function navi_enqueue_core_assets() {
         );
     }
 
+    $is_product = function_exists( 'is_product' ) && is_product();
+    $item_ids   = wp_list_pluck( $items, 'id' );
+
     wp_localize_script(
         'navi-core-js',
         'naviConfig',
         array(
             'items'      => $items,
-            'isProduct'  => function_exists( 'is_product' ) && is_product(),
+            'isProduct'  => $is_product,
+            'mainIcon'   => navi_fab_main_icon( $is_product, $item_ids ),
             'closeLabel' => __( 'Fermer', 'saito-navi' ),
         )
     );
+}
+
+// Icône du bouton fermé selon la page : panier sur une fiche produit (panier
+// flottant actif), calendrier si un calendrier Saito est proposé, engrenage
+// sinon. L'engrenage revient de toute façon dès que le pied de page est
+// visible (assets/js/core.js) : c'est là qu'on cherche les réglages du site.
+function navi_fab_main_icon( $is_product, $item_ids ) {
+    if ( $is_product && in_array( 'sticky-cart', $item_ids, true ) ) {
+        return 'cart';
+    }
+    if ( in_array( 'calendar', $item_ids, true ) ) {
+        return 'calendar';
+    }
+    return 'gear';
 }
 
 // SVG dessiné plutôt que l'emoji ⚙️, dont le rendu diffère trop d'un
@@ -120,6 +143,12 @@ function navi_enqueue_core_assets() {
 // cohérent — même logique que les icônes SVG des modules
 // (class-navi-module-registry.php).
 define( 'NAVI_GEAR_SVG', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>' );
+
+// Sac de courses avec un « + » : se lit « ajouter au panier » sur une fiche
+// produit, sans être confondu avec l'icône du mini-panier du thème.
+define( 'NAVI_CART_PLUS_SVG', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19.2 13.5l-.8-4.6A1.5 1.5 0 0 0 16.9 7.6H7.1a1.5 1.5 0 0 0-1.5 1.3L4.2 18.6A1.2 1.2 0 0 0 5.4 20H12.5"></path><path d="M8.5 9.5V6.8a3.5 3.5 0 0 1 7 0v2.7"></path><path d="M18 15.5v6"></path><path d="M15 18.5h6"></path></svg>' );
+
+define( 'NAVI_CALENDAR_SVG', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2"></rect><path d="M3.5 10h17"></path><path d="M8 3v4"></path><path d="M16 3v4"></path><path d="M12 13.2l.9 1.8 2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2-1.45-1.4 2-.3z"></path></svg>' );
 
 // Lien d'évitement dédié : sans lui, un utilisateur clavier doit tabuler à
 // travers toute la page avant d'atteindre les réglages (cookies,
@@ -140,9 +169,11 @@ function navi_render_fab_markup() {
     // partagé où chaque module vient afficher son propre contenu (déplacé ou
     // injecté par assets/js/core.js), plutôt que de flotter indépendamment.
     ?>
-    <div id="navi-fab" class="navi-fab" data-state="closed" data-position="<?php echo esc_attr( get_option( 'navi_fab_position', 'right' ) ); ?>">
+    <div id="navi-fab" class="navi-fab" data-state="closed" data-icon="gear" data-position="<?php echo esc_attr( get_option( 'navi_fab_position', 'right' ) ); ?>">
         <button type="button" id="navi-fab-toggle" class="navi-fab-toggle" aria-expanded="false" aria-label="<?php esc_attr_e( 'Ouvrir le menu', 'saito-navi' ); ?>">
             <span class="navi-fab-gear" aria-hidden="true"><?php echo NAVI_GEAR_SVG; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- constante SVG interne, pas une entrée utilisateur. ?></span>
+            <span class="navi-fab-main-icon" data-icon="cart" aria-hidden="true"><?php echo NAVI_CART_PLUS_SVG; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- constante SVG interne. ?></span>
+            <span class="navi-fab-main-icon" data-icon="calendar" aria-hidden="true"><?php echo NAVI_CALENDAR_SVG; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- constante SVG interne. ?></span>
         </button>
         <div id="navi-fab-menu" class="navi-fab-menu" role="menu"></div>
         <div id="navi-fab-detail" class="navi-fab-detail"></div>

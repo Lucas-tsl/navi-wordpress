@@ -240,7 +240,6 @@ function saito_hub_render_dashboard() {
 						<?php elseif ( ! $active && ! empty( $plugin['wporg'] ) ) : ?>
 							<a class="button" href="<?php echo esc_url( $plugin['wporg'] ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Voir sur WordPress.org', 'saito-navi' ); ?></a>
 						<?php endif; ?>
-						<a class="button button-link" href="<?php echo esc_url( admin_url( 'admin.php?page=' . SAITO_HUB_DOCS_PAGE ) ); ?>"><?php esc_html_e( 'Documentation', 'saito-navi' ); ?></a>
 					</p>
 				</div>
 			<?php endforeach; ?>

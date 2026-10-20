@@ -34,6 +34,9 @@ class Navi_Module_Registry {
             // Condition d'affichage de l'icône dans le menu : '' (toujours),
             // 'is_product' (fiche produit) ou 'scroll' (scroll > scrollThreshold %).
             'fab_condition'   => '',
+            // Callable optionnel : false = pas d'icône dans le menu sur cette
+            // page, même module actif (ex. calendrier sans contenu à montrer).
+            'fab_enabled_callback' => null,
             // false = module déclaré mais pas encore développé ("bientôt disponible").
             'available'       => true,
             // Sélecteur(s) CSS ciblant ce que le module affiche sur le site
