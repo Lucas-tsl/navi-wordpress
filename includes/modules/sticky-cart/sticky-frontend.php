@@ -42,14 +42,19 @@ function navi_sticky_enqueue_assets() {
     // essayés en PREMIER par assets/js/sticky-cart.js, avant la chaîne de
     // secours intégrée au plugin — pour un thème dont le balisage prix/nom/
     // image n'est reconnu par aucun des sélecteurs génériques déjà prévus.
-    // Chaîne vide = pas de surcharge, la chaîne intégrée s'applique seule.
+    // swatchSelector suit un principe différent (modèle avec "{value}",
+    // voir getSwatchVisual() dans sticky-cart.js) : il ne remplace pas une
+    // chaîne de secours générique mais complète WCBoost Variation Swatches
+    // pour les thèmes qui affichent leurs propres vignettes de variation.
+    // Chaîne vide = pas de surcharge/vignette personnalisée.
     wp_localize_script(
         'navi-sticky-js',
         'naviStickyCartConfig',
         array(
-            'priceSelector' => get_option( 'navi_sticky_selector_price', '' ),
-            'nameSelector'  => get_option( 'navi_sticky_selector_name', '' ),
-            'imageSelector' => get_option( 'navi_sticky_selector_image', '' ),
+            'priceSelector'  => get_option( 'navi_sticky_selector_price', '' ),
+            'nameSelector'   => get_option( 'navi_sticky_selector_name', '' ),
+            'imageSelector'  => get_option( 'navi_sticky_selector_image', '' ),
+            'swatchSelector' => get_option( 'navi_sticky_selector_swatch', '' ),
         )
     );
 }

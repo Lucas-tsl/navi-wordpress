@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.3
+
+- Panier flottant : le sélecteur de teinte/vignette de variation accepte
+  désormais un sélecteur CSS personnalisé (Navi > Panier) pour les thèmes
+  ou plugins de swatches autres que WCBoost Variation Swatches — modèle
+  avec `{value}` (ex. `#{value}`), une image trouvée dans l'élément ciblé
+  étant utilisée en priorité, sinon sa couleur de fond.
+- Les libellés des modules sont traduits à leur première lecture et non
+  plus au chargement du plugin : plus de notice
+  `_load_textdomain_just_in_time`, qui pouvait casser la connexion à
+  wp-admin avec `WP_DEBUG_DISPLAY` (#47).
+- Stories reconnaît le panneau produit partagé de Saito FAQ 0.2.0.
+
 ## 0.7.2
 
 - Stories s'intègre au panneau "Navi" partagé du plugin compagnon Navi FAQ

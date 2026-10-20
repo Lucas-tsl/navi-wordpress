@@ -43,21 +43,46 @@ class Navi_Module_Registry {
             // Chaîne vide = pas de réglage de visibilité par appareil pour
             // ce module (ex. un futur module sans rien à masquer par écran).
             'visibility_selector' => '',
+            // Callable renvoyant les libellés traduits du module ('label',
+            // 'short_label', 'description'), appelé seulement à la première
+            // lecture via all()/get() : les modules s'enregistrent au
+            // chargement du plugin, avant 'init', trop tôt pour __()
+            // (notice _load_textdomain_just_in_time depuis WP 6.7).
+            'texts'           => null,
         );
 
         self::$modules[ $id ] = wp_parse_args( $args, $defaults );
     }
 
     public static function all() {
+        foreach ( array_keys( self::$modules ) as $id ) {
+            self::resolve_texts( $id );
+        }
         return self::$modules;
     }
 
     public static function get( $id ) {
-        return isset( self::$modules[ $id ] ) ? self::$modules[ $id ] : null;
+        if ( ! isset( self::$modules[ $id ] ) ) {
+            return null;
+        }
+        self::resolve_texts( $id );
+        return self::$modules[ $id ];
     }
 
+    private static function resolve_texts( $id ) {
+        $texts = self::$modules[ $id ]['texts'];
+        if ( ! is_callable( $texts ) ) {
+            return;
+        }
+        self::$modules[ $id ]['texts'] = null;
+        self::$modules[ $id ]          = array_merge( self::$modules[ $id ], (array) call_user_func( $texts ) );
+    }
+
+    // Lit le registre sans passer par get() : appelé au chargement des
+    // modules pour décider des require_once, avant que les libellés
+    // puissent être traduits.
     public static function is_active( $id ) {
-        $module = self::get( $id );
+        $module = isset( self::$modules[ $id ] ) ? self::$modules[ $id ] : null;
         if ( ! $module || ! $module['available'] ) {
             return false;
         }

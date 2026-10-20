@@ -13,7 +13,7 @@
      // essayés en PREMIER, avant la chaîne de secours intégrée ci-dessous —
      // pour un thème dont le balisage n'est reconnu par aucun des sélecteurs
      // génériques déjà prévus. Chaîne vide = pas de surcharge.
-     const stickyConfig = window.naviStickyCartConfig || { priceSelector: '', nameSelector: '', imageSelector: '' };
+     const stickyConfig = window.naviStickyCartConfig || { priceSelector: '', nameSelector: '', imageSelector: '', swatchSelector: '' };
 
      function withCustomSelector(customSelector, fallbackSelectors) {
          return customSelector ? [customSelector].concat(fallbackSelectors) : fallbackSelectors;
@@ -73,26 +73,68 @@
          return '';
      }
 
-     // Couleur d'une variation, lue depuis les vignettes du plugin WCBoost
-     // Variation Swatches si présent sur le site (sélecteur natif de teinte
-     // le plus courant dans l'écosystème WooCommerce) : chaque <li> porte la
-     // valeur de l'attribut dans data-value et sa couleur dans la propriété
-     // CSS inline --wcboost-swatches-item-color. Aucune couleur trouvée si ce
-     // plugin est absent ou si la vignette n'existe pas — voir
-     // .navi-sticky-shade-swatch--empty (assets/css/sticky-cart.css), repli
-     // propre plutôt qu'une pastille de couleur trompeuse. Comparaison
-     // insensible à la casse : la valeur transmise par WooCommerce
-     // (variation.attributes) et celle du DOM (data-value) ne sont pas
-     // garanties d'avoir la même casse.
-     function getSwatchColor(attrValue) {
+     // Remplace le jeton littéral "{value}" d'un sélecteur personnalisé
+     // (Navi > Panier) par la valeur de l'attribut de la variation, échappée
+     // pour rester un sélecteur CSS valide (ex. modèle "#{value}" avec une
+     // valeur "15ml" → "#15ml"). CSS.escape() est absent d'IE11 uniquement,
+     // hors du périmètre de compatibilité de ce plugin.
+     function resolveSwatchSelector(template, value) {
+         if (!template) return '';
+         const safeValue = (typeof CSS !== 'undefined' && CSS.escape) ? CSS.escape(String(value)) : String(value).replace(/["\\]/g, '\\$&');
+         return template.replace(/\{value\}/g, safeValue);
+     }
+
+     // Aperçu (couleur OU image) d'une variation, avec deux sources
+     // possibles par ordre de priorité :
+     //
+     // 1. Plugin WCBoost Variation Swatches si présent (sélecteur natif de
+     //    teinte le plus courant dans l'écosystème WooCommerce) : chaque <li>
+     //    porte la valeur de l'attribut dans data-value et sa couleur dans la
+     //    propriété CSS inline --wcboost-swatches-item-color. Comparaison
+     //    insensible à la casse : la valeur transmise par WooCommerce
+     //    (variation.attributes) et celle du DOM (data-value) ne sont pas
+     //    garanties d'avoir la même casse.
+     // 2. Sélecteur personnalisé (Navi > Panier, "Sélecteur de vignette de
+     //    variation") pour les thèmes qui affichent leurs propres vignettes
+     //    hors WCBoost — un conteneur par valeur (ex. <div id="15ml">...),
+     //    ciblé via un modèle contenant "{value}" (ex. "#{value}"). On y
+     //    cherche d'abord une <img> (vignette-image, cas le plus courant
+     //    d'un thème custom), sinon une couleur de fond CSS.
+     //
+     // Repli sur un objet vide (pastille neutre, voir
+     // .navi-sticky-shade-swatch--empty dans assets/css/sticky-cart.css)
+     // plutôt qu'un aperçu trompeur si aucune des deux sources ne matche.
+     function getSwatchVisual(attrValue) {
          const target = String(attrValue).toLowerCase();
-         const $swatch = $('.wcboost-variation-swatches__item').filter(function() {
+         const $wcboost = $('.wcboost-variation-swatches__item').filter(function() {
              return ($(this).attr('data-value') || '').toLowerCase() === target;
          }).first();
-         if (!$swatch.length) return '';
-         const style = $swatch.attr('style') || '';
-         const match = style.match(/--wcboost-swatches-item-color\s*:\s*(#[0-9a-fA-F]{3,8})/);
-         return match ? match[1] : '';
+         if ($wcboost.length) {
+             const style = $wcboost.attr('style') || '';
+             const match = style.match(/--wcboost-swatches-item-color\s*:\s*(#[0-9a-fA-F]{3,8})/);
+             if (match) return { color: match[1], image: '' };
+         }
+
+         const customSelector = resolveSwatchSelector(stickyConfig.swatchSelector, attrValue);
+         if (customSelector) {
+             let $custom;
+             try {
+                 $custom = $(customSelector).first();
+             } catch {
+                 $custom = $();
+             }
+             if ($custom.length) {
+                 const image = getImgSrc($custom.find('img').first());
+                 if (image) return { color: '', image: image };
+
+                 const bg = $custom.css('background-color');
+                 if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') {
+                     return { color: bg, image: '' };
+                 }
+             }
+         }
+
+         return { color: '', image: '' };
      }
 
      // "#rrggbb" (ou "#rgb") → [r, g, b] : nécessaire pour teinter le fond du
@@ -358,15 +400,18 @@
          $shadeTrigger.find('.navi-sticky-shade-trigger-label').text(stickyI18n.chooseVariationText || attributeName);
 
          orderedValues.forEach(attrValue => {
-             const color = getSwatchColor(attrValue);
+             const visual = getSwatchVisual(attrValue);
              const $option = $('<li class="navi-sticky-shade-option" role="option" tabindex="-1" aria-selected="false"></li>')
                  .attr('data-value', attrValue)
                  // Nom complet en infobulle : la grille à 2 colonnes tronque
                  // les noms les plus longs (ellipsis, voir le CSS).
                  .attr('title', attrValue);
              $('<span class="navi-sticky-shade-option-swatch" aria-hidden="true"></span>')
-                 .css('background-color', color || 'transparent')
-                 .toggleClass('navi-sticky-shade-swatch--empty', !color)
+                 .css({
+                     'background-color': visual.color || 'transparent',
+                     'background-image': visual.image ? `url(${visual.image})` : 'none'
+                 })
+                 .toggleClass('navi-sticky-shade-swatch--empty', !visual.color && !visual.image)
                  .appendTo($option);
              $('<span class="navi-sticky-shade-option-label"></span>').text(attrValue).appendTo($option);
              $shadeListbox.append($option);
@@ -386,19 +431,25 @@
          // que le choix vienne du menu, du clavier, ou d'une confirmation
          // found_variation (sélection faite ailleurs sur la page).
          function updateShadeTrigger(value) {
-             const color = getSwatchColor(value);
-             const rgb = color ? hexToRgb(color) : null;
+             const visual = getSwatchVisual(value);
+             const rgb = visual.color ? hexToRgb(visual.color) : null;
 
              $shadeTrigger.find('.navi-sticky-shade-trigger-swatch')
-                 .css('background-color', color || 'transparent')
-                 .toggleClass('navi-sticky-shade-swatch--empty', !color);
+                 .css({
+                     'background-color': visual.color || 'transparent',
+                     'background-image': visual.image ? `url(${visual.image})` : 'none'
+                 })
+                 .toggleClass('navi-sticky-shade-swatch--empty', !visual.color && !visual.image);
              $shadeTrigger.find('.navi-sticky-shade-trigger-label').text(value || (stickyI18n.chooseVariationText || attributeName));
 
              // Le déclencheur (état fermé) garde volontairement son cadre
              // neutre fixe (assets/css/sticky-cart.css) : la teinte de la
              // couleur choisie ne s'applique QUE dans la liste ouverte,
              // uniquement sur l'option sélectionnée ci-dessous — pas sur le
-             // déclencheur.
+             // déclencheur. Le fond teinté (rgba) suppose une couleur hex
+             // (hexToRgb renvoie null pour une image, ou pour une couleur
+             // calculée type "rgb(...)" issue d'un sélecteur personnalisé) :
+             // dans ces cas, seul le cadre de bordure reste appliqué.
              $shadeListbox.find('.navi-sticky-shade-option').each(function() {
                  const $opt = $(this);
                  const isSelected = $opt.data('value') === value;
@@ -407,7 +458,7 @@
 
                  if (isSelected) {
                      $opt.css({
-                         'border-color': color || '',
+                         'border-color': visual.color || '',
                          'background-color': rgb ? `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.14)` : ''
                      });
                  } else {

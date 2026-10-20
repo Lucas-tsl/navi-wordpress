@@ -4,7 +4,7 @@ Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.7.2
+Stable tag: 0.7.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
@@ -106,6 +106,16 @@ the most common themes. If your theme has an unusual structure, a
 "custom CSS selector" setting per field (price, name, image) is
 available under Navi > Cart.
 
+= Does the color/thumbnail picker on the sticky bar work with any swatches plugin? =
+
+Out of the box it reads colors from WCBoost Variation Swatches if that
+plugin is active. For any other theme or plugin displaying its own
+per-variation thumbnails (image or color), set the "Sélecteur CSS de la
+vignette de variation" field under Navi > Cart to a template such as
+`#{value}` (with `{value}` replaced automatically by each variation's
+value) pointing at your theme's markup — an image found inside is used
+first, otherwise its background color.
+
 = Does the sticky add-to-cart work with block themes (Site Editor)? =
 
 Yes: WooCommerce's default block-based Single Product template still
@@ -153,6 +163,17 @@ exclusively.
     page.
 
 == Changelog ==
+
+= 0.7.3 =
+* Sticky add-to-cart: the variation color/thumbnail picker now supports a
+  custom CSS selector (Navi > Cart, "Sélecteur CSS de la vignette de
+  variation") for themes/plugins other than WCBoost Variation Swatches —
+  reads an image if present in the matched element, otherwise its
+  background color.
+* Fix: module labels are now translated on first use instead of at plugin
+  load (no more "_load_textdomain_just_in_time" notice, which could break
+  the wp-admin login when WP_DEBUG_DISPLAY is on).
+* Stories recognises the shared product panel of Saito FAQ 0.2.0.
 
 = 0.7.2 =
 * Stories now integrates with the companion Navi FAQ plugin when it's
@@ -213,6 +234,10 @@ exclusively.
   Accessibility modules.
 
 == Upgrade Notice ==
+
+= 0.7.3 =
+No action required on upgrade. New optional setting under Navi > Cart for
+sites using a variation swatch other than WCBoost.
 
 = 0.7.2 =
 No action required on upgrade. Product edit screen only changes when the

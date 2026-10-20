@@ -26,6 +26,7 @@ $navi_options = array(
     'navi_sticky_selector_price',
     'navi_sticky_selector_name',
     'navi_sticky_selector_image',
+    'navi_sticky_selector_swatch',
     // Module Stories (Navi > Stories)
     'navi_stories_auto_display',
     'navi_stories_show_label',
