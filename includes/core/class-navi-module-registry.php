@@ -37,6 +37,11 @@ class Navi_Module_Registry {
             // Callable optionnel : false = pas d'icône dans le menu sur cette
             // page, même module actif (ex. calendrier sans contenu à montrer).
             'fab_enabled_callback' => null,
+            // Icône principale du bouton (voir navi_fab_main_icon(),
+            // includes/core/frontend.php) : 'cart', 'calendar'… Hors pied de
+            // page, le bouton prend cette icône et ouvre directement le
+            // module, qui n'apparaît alors jamais dans le menu.
+            'fab_main_icon'   => '',
             // false = module déclaré mais pas encore développé ("bientôt disponible").
             'available'       => true,
             // Sélecteur(s) CSS ciblant ce que le module affiche sur le site

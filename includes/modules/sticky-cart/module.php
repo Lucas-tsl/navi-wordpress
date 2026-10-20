@@ -38,6 +38,7 @@ Navi_Module_Registry::register(
         // assets/js/sticky-cart.js).
         'fab_action'      => 'open-sticky-cart',
         'fab_condition'   => 'is_product',
+        'fab_main_icon'   => 'cart',
         'available'       => true,
         'settings_url'    => admin_url( 'admin.php?page=navi-main#sticky-cart' ),
         'settings_panel_callback' => 'navi_sticky_render_settings_panel',

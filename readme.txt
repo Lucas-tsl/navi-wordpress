@@ -4,7 +4,7 @@ Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.9.0
+Stable tag: 0.9.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
@@ -36,9 +36,12 @@ behind **a single floating button** (gear icon, corner of the screen):
   calendar (advent calendar, countdown) from the floating button, on every
   page that doesn't already show it. Requires Saito Calendar Event.
 
-The floating button adapts its icon to the page: a cart with a "+" on
-product pages, a calendar when a calendar is offered, and the usual gear
-as soon as the footer is in view.
+The floating button adapts to the page: on product pages it is a cart
+with a "+" that opens the sticky add-to-cart directly, on other pages a
+calendar icon that opens the calendar directly (when the Calendar module
+has one to show). The gear and its menu (back to top, cookies,
+accessibility) come back in the footer, or everywhere when there is
+nothing else to show.
 
 Built from the ground up to welcome new modules without touching the
 core: each module registers itself and talks to the central button
@@ -171,6 +174,19 @@ exclusively.
 
 == Changelog ==
 
+= 0.9.1 =
+* Outside the footer, the floating button only shows the page's own icon
+  and opens it directly: the cart with a "+" on product pages, the
+  calendar elsewhere. The gear and its menu (back to top, cookies,
+  accessibility) only come back in the footer, and that menu no longer
+  lists the cart or the calendar.
+* The calendar is never offered on product pages.
+* The close button of the calendar and of the sticky add-to-cart now
+  closes the floating button completely instead of going back to the menu.
+* Opened by a click, the sticky add-to-cart stays open while the page's
+  own "Add to cart" button is in view (until closed or the footer).
+* A click on the cart icon right after the page loads is no longer lost.
+
 = 0.9.0 =
 * The floating button's icon now depends on the page: a cart with a "+"
   on product pages (sticky add-to-cart active), a calendar when the
@@ -263,6 +279,9 @@ exclusively.
   Accessibility modules.
 
 == Upgrade Notice ==
+
+= 0.9.1 =
+The floating button opens the cart (product pages) or the calendar directly; its menu is only shown in the footer.
 
 = 0.9.0 =
 Contextual icon for the floating button and a new optional Calendar module (requires Saito Calendar Event). No action required.

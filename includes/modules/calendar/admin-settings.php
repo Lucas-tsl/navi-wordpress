@@ -41,7 +41,7 @@ function navi_calendar_render_settings_panel() {
         <?php navi_render_hash_preserving_referer_field(); ?>
         <div class="navi-admin-card">
             <p class="description">
-                <?php esc_html_e( 'Quand ce module est actif, le bouton flottant prend une icône de calendrier (sauf sur les fiches produit et en bas de page) et son menu propose d\'ouvrir le calendrier choisi ci-dessous, sur toutes les pages qui ne l\'affichent pas déjà.', 'saito-navi' ); ?>
+                <?php esc_html_e( 'Quand ce module est actif, le bouton flottant prend une icône de calendrier qui ouvre directement le calendrier choisi ci-dessous, sur toutes les pages qui ne l\'affichent pas déjà (sauf les fiches produit). Dans le pied de page, il redevient l\'engrenage des réglages.', 'saito-navi' ); ?>
             </p>
             <table class="form-table">
                 <?php navi_render_module_active_field( 'calendar' ); ?>

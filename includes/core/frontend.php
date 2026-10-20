@@ -106,6 +106,7 @@ function navi_enqueue_core_assets() {
             'shortLabel' => ! empty( $module['short_label'] ) ? $module['short_label'] : $module['label'],
             'action'     => $module['fab_action'],
             'condition'  => $module['fab_condition'],
+            'mainIcon'   => $module['fab_main_icon'],
         );
     }
 
@@ -120,14 +121,16 @@ function navi_enqueue_core_assets() {
             'isProduct'  => $is_product,
             'mainIcon'   => navi_fab_main_icon( $is_product, $item_ids ),
             'closeLabel' => __( 'Fermer', 'saito-navi' ),
+            'menuLabel'  => __( 'Ouvrir le menu', 'saito-navi' ),
         )
     );
 }
 
 // Icône du bouton fermé selon la page : panier sur une fiche produit (panier
 // flottant actif), calendrier si un calendrier Saito est proposé, engrenage
-// sinon. L'engrenage revient de toute façon dès que le pied de page est
-// visible (assets/js/core.js) : c'est là qu'on cherche les réglages du site.
+// sinon. Avec le panier ou le calendrier, le bouton ouvre directement ce
+// module ; l'engrenage et son menu (haut de page, cookies, accessibilité) ne
+// reviennent que dans le pied de page (assets/js/core.js).
 function navi_fab_main_icon( $is_product, $item_ids ) {
     if ( $is_product && in_array( 'sticky-cart', $item_ids, true ) ) {
         return 'cart';

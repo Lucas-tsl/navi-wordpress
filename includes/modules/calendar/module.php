@@ -55,7 +55,8 @@ function navi_calendar_markup() {
     }
     $markup = '';
     $id     = navi_calendar_id();
-    if ( ! $id ) {
+    // Fiche produit : le bouton y est réservé à l'ajout au panier.
+    if ( ! $id || ( function_exists( 'is_product' ) && is_product() ) ) {
         return $markup;
     }
     // La page affiche déjà ce calendrier (shortcode ou bloc) : inutile de le
@@ -84,6 +85,7 @@ Navi_Module_Registry::register(
         'fab_action'      => 'open-calendar-panel',
         'fab_condition'   => '',
         'fab_enabled_callback' => 'navi_calendar_has_content',
+        'fab_main_icon'   => 'calendar',
         'available'       => true,
         'settings_url'    => admin_url( 'admin.php?page=navi-main#calendar' ),
         'settings_panel_callback' => 'navi_calendar_render_settings_panel',
