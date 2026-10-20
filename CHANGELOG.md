@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.9.1
+
+- Hors pied de page, le bouton flottant n'affiche que l'icône de la page
+  et l'ouvre directement : panier + sur les fiches produit, calendrier sur
+  les autres pages. L'engrenage et son menu (haut de page, cookies,
+  accessibilité) ne reviennent que dans le pied de page, et ce menu ne
+  propose plus le panier ni le calendrier.
+- Le calendrier n'est jamais proposé sur les fiches produit.
+- La croix du calendrier et du panier flottant referme entièrement le
+  bouton au lieu de revenir au menu.
+- Ouvert d'un clic, le panier flottant reste ouvert même si le bouton
+  « Ajouter au panier » de la page est visible (jusqu'à la croix ou au
+  pied de page).
+- Un clic sur l'icône panier juste après le chargement de la page n'est
+  plus perdu.
+
 ## 0.9.0
 
 - Icône du bouton flottant selon la page : panier avec un « + » sur les

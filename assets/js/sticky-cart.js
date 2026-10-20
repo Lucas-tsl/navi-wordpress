@@ -960,6 +960,18 @@
          });
      }
 
+     // Clic sur l'icône panier du bouton flottant avant que le panneau ne
+     // soit prêt (créé 300 à 800 ms après le chargement, voir
+     // initStickyBar) : retenu, puis appliqué dès la fin de
+     // handleStickyVisibility() plutôt que perdu.
+     let stickyReady = false;
+     let pendingOpen = false;
+     document.addEventListener('navi:action', function (event) {
+         if (!stickyReady && event.detail && event.detail.action === 'open-sticky-cart') {
+             pendingOpen = true;
+         }
+     });
+
      // Gérer l'affichage/masquage du sticky bar
     function handleStickyVisibility() {
         const $stickyBar = $('#navi-sticky-bar');
@@ -974,13 +986,17 @@
         // rendant la fermeture inutile.
         let dismissedManually = false;
 
+        // Ouvert d'un clic sur le bouton flottant (icône panier) : reste
+        // ouvert même si le vrai bouton « Ajouter au panier » de la page est
+        // à l'écran, jusqu'à la croix ou au pied de page.
+        let openedManually = false;
+
         // Le panneau panier est le même objet visuel que l'engrenage (voir
         // assets/js/core.js) : l'afficher fait grandir #navi-fab jusqu'à
-        // l'état détail. `manual` distingue une fermeture voulue par
-        // l'utilisateur (croix : revient au choix des icônes) d'une
-        // fermeture automatique liée au scroll (referme entièrement, pas
-        // d'intérêt à rouvrir le menu tout seul).
-        function setStickyBarVisible(visible, manual) {
+        // l'état détail. Fermeture manuelle (croix) ou automatique (scroll) :
+        // le bouton se referme entièrement — le panier s'ouvre directement
+        // depuis le bouton, pas depuis le menu.
+        function setStickyBarVisible(visible) {
             if (!window.navi) {
                 $stickyBar.toggleClass('visible', visible);
                 return;
@@ -988,10 +1004,6 @@
             if (visible) {
                 window.navi.showDetail('sticky-cart', function () {
                     $stickyBar.addClass('visible');
-                });
-            } else if (manual) {
-                window.navi.backToMenu('sticky-cart', function () {
-                    $stickyBar.removeClass('visible');
                 });
             } else {
                 window.navi.hideDetail('sticky-cart', function () {
@@ -1005,13 +1017,15 @@
         // jour notre propre état d'affichage sans redéclencher de fermeture.
         document.addEventListener('navi:closed', function (event) {
             if (event.detail && event.detail.id === 'sticky-cart') {
+                openedManually = false;
                 $stickyBar.removeClass('visible');
             }
         });
 
         $stickyBar.on('click', '.navi-sticky-panel-close', function () {
+            openedManually = false;
             dismissedManually = true;
-            setStickyBarVisible(false, true);
+            setStickyBarVisible(false);
         });
 
         // Icône panier du menu du bouton flottant (voir includes/modules/sticky-cart/module.php,
@@ -1021,9 +1035,18 @@
         document.addEventListener('navi:action', function (event) {
             if (event.detail && event.detail.action === 'open-sticky-cart') {
                 dismissedManually = false;
+                openedManually = true;
                 setStickyBarVisible(true);
             }
         });
+
+        stickyReady = true;
+        if (pendingOpen) {
+            pendingOpen = false;
+            dismissedManually = false;
+            openedManually = true;
+            setStickyBarVisible(true);
+        }
 
         function findAddToCartBtn() {
             // Chercher le bouton d'ajout au panier dans tous les contextes possibles
@@ -1100,6 +1123,7 @@
 
                 // Si on chevauche le footer, masquer
                 if (windowBottom >= footerTop) {
+                    openedManually = false;
                     setStickyBarVisible(false);
                     return;
                 }
@@ -1110,6 +1134,11 @@
                     setStickyBarVisible(false);
                     return;
                 }
+            }
+
+            // Ouvert d'un clic : pas de masquage automatique (voir openedManually).
+            if (openedManually) {
+                return;
             }
 
             // 2. Vérifier si le bouton "Ajouter au panier" réel est visible - MASQUER la sticky bar

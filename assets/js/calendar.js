@@ -22,13 +22,14 @@
         }
     }
 
-    // Croix : retour au choix des icônes (état 2), voir assets/js/core.js.
+    // Croix : referme entièrement le bouton (le calendrier s'ouvre
+    // directement depuis le bouton, pas depuis le menu).
     function closePanel() {
         function apply() {
             panel.classList.remove('navi-calendar-panel-open');
         }
         if (window.navi) {
-            window.navi.backToMenu('calendar', apply);
+            window.navi.hideDetail('calendar', apply);
         } else {
             apply();
         }

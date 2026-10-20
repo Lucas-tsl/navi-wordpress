@@ -59,8 +59,11 @@
         fab.style.setProperty('--navi-scroll', String(scrollPercent));
     }
 
+    // Modules ouverts directement par le bouton (panier, calendrier) : jamais
+    // dans le menu, qui ne garde que haut de page, cookies et accessibilité.
     function visibleItems() {
         return config.items.filter(function (item) {
+            if (item.mainIcon) return false;
             if (item.condition === 'is_product') return !!config.isProduct;
             if (item.condition === 'scroll') return scrollPercent >= (item.scrollThreshold || 100);
             return true;
@@ -160,11 +163,27 @@
         }
     }
 
+    // Module ouvert directement par le bouton quand il porte son icône
+    // (data-icon, voir updateMainIcon plus bas), sinon null : menu.
+    function mainItem() {
+        var icon = fab.getAttribute('data-icon');
+        if (!icon || icon === 'gear') return null;
+        for (var i = 0; i < config.items.length; i++) {
+            if (config.items[i].mainIcon === icon) return config.items[i];
+        }
+        return null;
+    }
+
     toggle.addEventListener('click', function () {
-        if (state === 'closed') {
-            openMenu();
-        } else {
+        if (state !== 'closed') {
             forceClose();
+            return;
+        }
+        var item = mainItem();
+        if (item) {
+            document.dispatchEvent(new CustomEvent('navi:action', { detail: item }));
+        } else {
+            openMenu();
         }
     });
 
@@ -214,10 +233,19 @@
     var footerVisible = false;
     function updateMainIcon() {
         fab.setAttribute('data-icon', footerVisible ? 'gear' : mainIcon);
+        var item = mainItem();
+        toggle.setAttribute('aria-label', item ? item.label : (config.menuLabel || 'Ouvrir le menu'));
     }
     updateMainIcon();
     if (mainIcon !== 'gear') {
-        var footer = document.querySelector('footer.wp-block-template-part, .site-footer, #colophon, footer[role="contentinfo"], [role="contentinfo"], body > footer, footer');
+        // Même repérage que le panier flottant (assets/js/sticky-cart.js) :
+        // le repère contentinfo, sinon le DERNIER <footer> (un <footer> peut
+        // aussi être un sous-élément, ex. le bloc « Derniers commentaires »).
+        var footer = document.querySelector('[role="contentinfo"]');
+        if (!footer) {
+            var footers = document.querySelectorAll('footer');
+            footer = footers.length ? footers[footers.length - 1] : null;
+        }
         if (footer && typeof IntersectionObserver !== 'undefined') {
             new IntersectionObserver(function (entries) {
                 footerVisible = entries[0].isIntersecting;
