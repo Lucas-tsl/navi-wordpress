@@ -170,6 +170,10 @@ exclusively.
   variation") for themes/plugins other than WCBoost Variation Swatches —
   reads an image if present in the matched element, otherwise its
   background color.
+* Fix: module labels are now translated on first use instead of at plugin
+  load (no more "_load_textdomain_just_in_time" notice, which could break
+  the wp-admin login when WP_DEBUG_DISPLAY is on).
+* Stories recognises the shared product panel of Saito FAQ 0.2.0.
 
 = 0.7.2 =
 * Stories now integrates with the companion Navi FAQ plugin when it's
