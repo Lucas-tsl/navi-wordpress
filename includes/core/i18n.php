@@ -189,7 +189,7 @@ function navi_dictionary_en() {
         'Installer Saito Calendar Event' => 'Install Saito Calendar Event',
         "Quand ce module est actif, le bouton flottant prend une icône de calendrier qui ouvre directement le calendrier choisi ci-dessous, sur toutes les pages qui ne l'affichent pas déjà (sauf les fiches produit). Dans le pied de page, il redevient l'engrenage des réglages." => 'When this module is active, the floating button shows a calendar icon that directly opens the calendar chosen below, on every page that does not already show it (except product pages). In the footer, it turns back into the settings gear.',
         'Calendrier affiché' => 'Calendar shown',
-        'Le plus récent' => 'Most recent',
+        "Le plus récent en cours d'affichage" => 'Most recent currently displayed',
         "En dehors de sa période de publication (réglée dans le calendrier), l'icône n'apparaît pas." => 'Outside its publication period (set in the calendar), the icon does not appear.',
 
         // Stories.

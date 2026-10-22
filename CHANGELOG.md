@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.2
+
+- L'engrenage n'apparaît plus que dans le pied de page : sur les pages sans
+  icône panier ni calendrier, le bouton flottant reste masqué jusqu'au pied
+  de page (il réapparaît au focus clavier, lien « Aller aux réglages »).
+- Module Calendrier : par défaut, le calendrier le plus récent en cours
+  d'affichage (dans sa période de publication) — un calendrier préparé à
+  l'avance ne masque plus celui qui est en ligne.
+
 ## 0.9.1
 
 - Hors pied de page, le bouton flottant n'affiche que l'icône de la page

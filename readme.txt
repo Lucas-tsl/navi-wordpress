@@ -4,7 +4,7 @@ Tags: woocommerce, cookie consent, accessibility, sticky add to cart, stories
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.9.1
+Stable tag: 0.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Requires Plugins: woocommerce
@@ -40,8 +40,9 @@ The floating button adapts to the page: on product pages it is a cart
 with a "+" that opens the sticky add-to-cart directly, on other pages a
 calendar icon that opens the calendar directly (when the Calendar module
 has one to show). The gear and its menu (back to top, cookies,
-accessibility) come back in the footer, or everywhere when there is
-nothing else to show.
+accessibility) only appear in the footer; on pages with nothing else to
+show, the button stays hidden until the footer (keyboard users still
+reach it with the "skip to settings" link).
 
 Built from the ground up to welcome new modules without touching the
 core: each module registers itself and talks to the central button
@@ -174,6 +175,14 @@ exclusively.
 
 == Changelog ==
 
+= 0.9.2 =
+* The gear now only appears in the footer: on pages without a cart or
+  calendar icon, the floating button stays hidden until the footer is in
+  view (it still shows up on keyboard focus).
+* Calendar module: by default, the most recent calendar currently
+  displayed (within its publication period) is used, so a calendar
+  prepared in advance no longer hides the one that is live.
+
 = 0.9.1 =
 * Outside the footer, the floating button only shows the page's own icon
   and opens it directly: the cart with a "+" on product pages, the
@@ -279,6 +288,9 @@ exclusively.
   Accessibility modules.
 
 == Upgrade Notice ==
+
+= 0.9.2 =
+The floating button is hidden outside the footer on pages without a cart or calendar icon.
 
 = 0.9.1 =
 The floating button opens the cart (product pages) or the calendar directly; its menu is only shown in the footer.

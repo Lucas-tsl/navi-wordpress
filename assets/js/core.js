@@ -229,7 +229,9 @@
     // calendrier, voir navi_fab_main_icon() dans includes/core/frontend.php),
     // remplacée par l'engrenage dès que le pied de page est visible — c'est
     // là que l'on cherche habituellement les réglages (cookies, accessibilité).
-    var mainIcon = config.mainIcon || 'gear';
+    // 'none' : rien de propre à la page, bouton masqué hors pied de page
+    // (voir .navi-fab[data-icon="none"], assets/css/core.css).
+    var mainIcon = config.mainIcon || 'none';
     var footerVisible = false;
     function updateMainIcon() {
         fab.setAttribute('data-icon', footerVisible ? 'gear' : mainIcon);
@@ -237,7 +239,7 @@
         toggle.setAttribute('aria-label', item ? item.label : (config.menuLabel || 'Ouvrir le menu'));
     }
     updateMainIcon();
-    if (mainIcon !== 'gear') {
+    (function watchFooter() {
         // Même repérage que le panier flottant (assets/js/sticky-cart.js) :
         // le repère contentinfo, sinon le DERNIER <footer> (un <footer> peut
         // aussi être un sous-élément, ex. le bloc « Derniers commentaires »).
@@ -259,7 +261,7 @@
                 if (wasVisible !== footerVisible) updateMainIcon();
             }, { passive: true });
         }
-    }
+    })();
 
     // API exposée aux modules (cookie, sticky cart, accessibilité...) pour
     // afficher/masquer LEUR contenu dans le slot #navi-fab-detail. Le noyau ne

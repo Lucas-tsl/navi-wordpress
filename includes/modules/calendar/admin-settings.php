@@ -49,7 +49,7 @@ function navi_calendar_render_settings_panel() {
                     <th scope="row"><label for="navi_calendar_id"><?php esc_html_e( 'Calendrier affiché', 'saito-navi' ); ?></label></th>
                     <td>
                         <select name="navi_calendar_id" id="navi_calendar_id">
-                            <option value="0" <?php selected( 0, $current ); ?>><?php esc_html_e( 'Le plus récent', 'saito-navi' ); ?></option>
+                            <option value="0" <?php selected( 0, $current ); ?>><?php esc_html_e( 'Le plus récent en cours d\'affichage', 'saito-navi' ); ?></option>
                             <?php foreach ( $calendars as $calendar ) : ?>
                                 <option value="<?php echo esc_attr( $calendar->ID ); ?>" <?php selected( $calendar->ID, $current ); ?>><?php echo esc_html( $calendar->post_title ? $calendar->post_title : '#' . $calendar->ID ); ?></option>
                             <?php endforeach; ?>

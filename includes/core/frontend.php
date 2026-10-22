@@ -127,10 +127,10 @@ function navi_enqueue_core_assets() {
 }
 
 // Icône du bouton fermé selon la page : panier sur une fiche produit (panier
-// flottant actif), calendrier si un calendrier Saito est proposé, engrenage
-// sinon. Avec le panier ou le calendrier, le bouton ouvre directement ce
-// module ; l'engrenage et son menu (haut de page, cookies, accessibilité) ne
-// reviennent que dans le pied de page (assets/js/core.js).
+// flottant actif), calendrier si un calendrier Saito est proposé, sinon
+// 'none' : bouton masqué. Avec le panier ou le calendrier, le bouton ouvre
+// directement ce module ; l'engrenage et son menu (haut de page, cookies,
+// accessibilité) n'apparaissent que dans le pied de page (assets/js/core.js).
 function navi_fab_main_icon( $is_product, $item_ids ) {
     if ( $is_product && in_array( 'sticky-cart', $item_ids, true ) ) {
         return 'cart';
@@ -138,7 +138,8 @@ function navi_fab_main_icon( $is_product, $item_ids ) {
     if ( in_array( 'calendar', $item_ids, true ) ) {
         return 'calendar';
     }
-    return 'gear';
+    // Rien de propre à la page : bouton masqué hors pied de page.
+    return 'none';
 }
 
 // SVG dessiné plutôt que l'emoji ⚙️, dont le rendu diffère trop d'un
