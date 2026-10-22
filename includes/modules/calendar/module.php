@@ -21,7 +21,9 @@ function navi_calendar_plugin_active() {
 
 /**
  * Calendrier affiché : celui choisi dans Navi > Calendrier, sinon le plus
- * récent publié. 0 si aucun.
+ * récent publié et en cours d'affichage (sa programmation l'affiche
+ * aujourd'hui) — un calendrier préparé à l'avance (ex. la Black Week en
+ * octobre) ne masque pas celui qui est en ligne. 0 si aucun.
  */
 function navi_calendar_id() {
     if ( ! navi_calendar_plugin_active() ) {
@@ -31,15 +33,20 @@ function navi_calendar_id() {
     if ( $id && 'publish' === get_post_status( $id ) && SAITO_CE_POST_TYPE === get_post_type( $id ) ) {
         return $id;
     }
-    $latest = get_posts(
+    $recent = get_posts(
         array(
             'post_type'      => SAITO_CE_POST_TYPE,
             'post_status'    => 'publish',
-            'posts_per_page' => 1,
+            'posts_per_page' => 20,
             'fields'         => 'ids',
         )
     );
-    return $latest ? (int) $latest[0] : 0;
+    foreach ( $recent as $calendar_id ) {
+        if ( ! method_exists( 'Saito_CE_Public', 'get_schedule_state' ) || 'live' === Saito_CE_Public::get_schedule_state( Saito_CE_Public::get_schedule( $calendar_id ) ) ) {
+            return (int) $calendar_id;
+        }
+    }
+    return 0;
 }
 
 /**

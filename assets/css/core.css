@@ -106,7 +106,9 @@
                 border-radius 0.35s ease,
                 background-color 0.35s ease,
                 border-color 0.2s ease,
-                box-shadow 0.35s ease;
+                box-shadow 0.35s ease,
+                opacity 0.25s ease,
+                transform 0.25s ease;
 }
 
 /* Réglage admin (Navi > position du bouton) : évite une collision avec un
@@ -248,6 +250,16 @@
 .navi-fab[data-icon="calendar"] .navi-fab-main-icon[data-icon="calendar"] {
     opacity: 1;
     transform: none;
+}
+
+/* Rien de propre à la page (ni panier ni calendrier) et pied de page hors de
+   vue : bouton masqué (assets/js/core.js). Il reste atteignable au clavier
+   (lien « Aller aux réglages ») : le focus clavier (:focus-visible) le fait
+   réapparaître, pas le focus laissé par un clic souris. */
+.navi-fab[data-icon="none"][data-state="closed"]:not(:has(:focus-visible)) {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
 }
 
 /* Mini-panier WooCommerce ouvert : le bouton passe sous son tiroir. */
